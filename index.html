@@ -322,52 +322,82 @@ async function loadSales() {
     if (!salesEl) return;
 
     salesEl.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <span style="font-size:13px; font-weight:700;">응암점</span>
-        <button onclick="loadSales()" style="font-size:11px; color:var(--text2); padding:3px 8px; border-radius:8px; background:var(--surface2);">↻ 새로고침</button>
+<div class="card">
+  <h2>${data.branch} 매출현황</h2>
+  <p>${data.date} 기준</p>
+
+  <div class="section">
+    <h3>회원 현황</h3>
+    <div class="grid">
+      <div class="item">
+        <span>회원수</span>
+        <strong>${data.memberCount}명</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>오늘 등록</h3>
+    <div class="grid">
+      <div class="item">
+        <span>헬스 신규</span>
+        <strong>${data.healthNew}</strong>
       </div>
 
-      <div style="display:flex; gap:12px; margin-bottom:10px;">
-        <div style="flex:1; background:var(--surface2); border-radius:10px; padding:10px;">
-          <p style="font-size:10px; color:var(--text2); font-weight:700; margin-bottom:8px;">헬스</p>
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span style="font-size:12px; color:var(--text2);">신규</span>
-            <span style="font-size:13px; font-weight:700;">${data.healthNew || 0}명</span>
-          </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span style="font-size:12px; color:var(--text2);">재등록</span>
-            <span style="font-size:13px; font-weight:700;">${data.healthRenewal || 0}명</span>
-          </div>
-        </div>
-        <div style="flex:1; background:var(--surface2); border-radius:10px; padding:10px;">
-          <p style="font-size:10px; color:var(--text2); font-weight:700; margin-bottom:8px;">PT</p>
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span style="font-size:12px; color:var(--text2);">신규</span>
-            <span style="font-size:13px; font-weight:700;">${data.ptNew || 0}명</span>
-          </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span style="font-size:12px; color:var(--text2);">재등록</span>
-            <span style="font-size:13px; font-weight:700;">${data.ptRenewal || 0}명</span>
-          </div>
-        </div>
+      <div class="item">
+        <span>헬스 재등록</span>
+        <strong>${data.healthRenewal}</strong>
       </div>
 
-      <div style="border-top:1px solid var(--border); padding-top:10px;">
-        <p style="font-size:10px; color:var(--text2); font-weight:700; margin-bottom:6px;">이번달 누계</p>
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-          <span style="font-size:12px; color:var(--text2);">회원권</span>
-          <span style="font-size:13px; font-weight:700;">${Number(data.healthTotal||0).toLocaleString()}원</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-          <span style="font-size:12px; color:var(--text2);">PT</span>
-          <span style="font-size:13px; font-weight:700;">${Number(data.ptTotal||0).toLocaleString()}원</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid var(--border);">
-          <span style="font-size:12px; font-weight:700;">총합계</span>
-          <span style="font-size:14px; font-weight:800; color:var(--blue);">${Number(data.grandTotal||0).toLocaleString()}원</span>
-        </div>
+      <div class="item">
+        <span>PT 신규</span>
+        <strong>${data.ptNew}</strong>
       </div>
-    `;
+
+      <div class="item">
+        <span>PT 재등록</span>
+        <strong>${data.ptRenewal}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>오늘 매출</h3>
+    <div class="grid">
+      <div class="item">
+        <span>헬스</span>
+        <strong>${data.todayHealthTotal.toLocaleString()}원</strong>
+      </div>
+
+      <div class="item">
+        <span>PT</span>
+        <strong>${data.todayPtTotal.toLocaleString()}원</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>이번달 누적</h3>
+    <div class="grid">
+      <div class="item">
+        <span>헬스</span>
+        <strong>${data.healthTotal.toLocaleString()}원</strong>
+      </div>
+
+      <div class="item">
+        <span>PT</span>
+        <strong>${data.ptTotal.toLocaleString()}원</strong>
+      </div>
+
+      <div class="item total">
+        <span>총 매출</span>
+        <strong>${data.grandTotal.toLocaleString()}원</strong>
+      </div>
+    </div>
+  </div>
+
+</div>
+`;
   } catch (e) {
     console.log('매출 불러오기 실패:', e);
     const salesEl = document.getElementById('salesBox');
