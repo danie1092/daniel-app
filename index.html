@@ -292,6 +292,32 @@ const COLOR = {personal:"#4a7dff",work:"#f5a623",urgent:"#ff5e3a"};
 const COLOR_LABEL = {personal:"개인",work:"업무",urgent:"긴급"};
 
 let schedules = JSON.parse(localStorage.getItem('schedules')||'[]');
+  const CALENDAR_WEBHOOK_URL = 'https://danielham.app.n8n.cloud/webhook/get-events';
+
+async function fetchGoogleCalendar() {
+  try {
+    const res = await fetch(CALENDAR_WEBHOOK_URL);
+    const data = await res.json();
+    if (data.events) {
+      const googleEvents = data.events.map(e => ({
+        id: 'google_' + e.start,
+        title: e.title,
+        date: new Date(e.start).toISOString(),
+        hour: new Date(e.start).getHours(),
+        minute: new Date(e.start).getMinutes(),
+        color: e.color === '5' ? 'work' : e.color === '6' ? 'urgent' : 'personal',
+        fromGoogle: true
+      }));
+      schedules = [...schedules.filter(s => !s.fromGoogle), ...googleEvents];
+      renderAll();
+    }
+  } catch(e) {
+    console.log('캘린더 불러오기 실패:', e);
+  }
+}
+
+fetchGoogleCalendar();
+setInterval(fetchGoogleCalendar, 5 * 60 * 1000);
 let memos = JSON.parse(localStorage.getItem('memos')||'[]');
 let todos = JSON.parse(localStorage.getItem('todos')||'[]');
 let focuses = JSON.parse(localStorage.getItem('focuses')||'[]');
