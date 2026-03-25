@@ -140,15 +140,9 @@
       <!-- 매출 -->
       <div class="card">
         <p class="card-label">💰 매출 현황</p>
-        <div class="briefing-row">
-          <span style="font-size:13px; color:var(--text2);">오늘 매출</span>
-          <span style="font-size:14px; font-weight:700;">—</span>
+        <div id="salesBox">
+          <p class="empty">매출 데이터를 불러오는 중...</p>
         </div>
-        <div class="briefing-row">
-          <span style="font-size:13px; color:var(--text2);">이번 달 누계</span>
-          <span style="font-size:14px; font-weight:700;">—</span>
-        </div>
-        <p style="font-size:11px; color:var(--text2); margin-top:4px;">구글 시트 연동 시 자동으로 채워져요</p>
       </div>
 
       <!-- 최근 메모 -->
@@ -292,7 +286,8 @@ const COLOR = {personal:"#4a7dff",work:"#f5a623",urgent:"#ff5e3a"};
 const COLOR_LABEL = {personal:"개인",work:"업무",urgent:"긴급"};
 
 let schedules = JSON.parse(localStorage.getItem('schedules')||'[]');
-  const CALENDAR_WEBHOOK_URL = 'https://danielham.app.n8n.cloud/webhook/get-events';
+const CALENDAR_WEBHOOK_URL = 'https://danielham.app.n8n.cloud/webhook/get-events';
+const SALES_WEBHOOK_URL = 'https://danielham.app.n8n.cloud/webhook/get-sales';
 
 async function fetchGoogleCalendar() {
   try {
@@ -316,8 +311,69 @@ async function fetchGoogleCalendar() {
   }
 }
 
+async function loadSales() {
+  try {
+    const res = await fetch(SALES_WEBHOOK_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+
+    const salesEl = document.getElementById('salesBox');
+    if (!salesEl) return;
+
+    salesEl.innerHTML = `
+      <div class="briefing-row">
+        <span style="font-size:13px; color:var(--text2);">${data.branch}</span>
+        <span style="font-size:12px; color:var(--text2);">${data.date}</span>
+      </div>
+
+      <div style="padding:8px 0 2px;">
+        <p style="font-size:12px; font-weight:700; margin-bottom:6px;">헬스</p>
+        <div class="briefing-row">
+          <span style="font-size:13px; color:var(--text2);">회원수</span>
+          <span style="font-size:14px; font-weight:700;">${data.memberCount}명</span>
+        </div>
+        <div class="briefing-row">
+          <span style="font-size:13px; color:var(--text2);">신규</span>
+          <span style="font-size:14px; font-weight:700;">${data.healthNew}명</span>
+        </div>
+        <div class="briefing-row">
+          <span style="font-size:13px; color:var(--text2);">재등록</span>
+          <span style="font-size:14px; font-weight:700;">${data.healthRenewal}명</span>
+        </div>
+      </div>
+
+      <div style="padding:10px 0 2px;">
+        <p style="font-size:12px; font-weight:700; margin-bottom:6px;">PT</p>
+        <div class="briefing-row">
+          <span style="font-size:13px; color:var(--text2);">신규</span>
+          <span style="font-size:14px; font-weight:700;">${data.ptNew}명</span>
+        </div>
+        <div class="briefing-row">
+          <span style="font-size:13px; color:var(--text2);">재등록</span>
+          <span style="font-size:14px; font-weight:700;">${data.ptRenewal}명</span>
+        </div>
+      </div>
+
+      <p style="font-size:11px; color:var(--text2); margin-top:8px;">
+        회원권 ${Number(data.healthTotal || 0).toLocaleString()}원 · PT ${Number(data.ptTotal || 0).toLocaleString()}원
+      </p>
+    `;
+  } catch (e) {
+    console.log('매출 불러오기 실패:', e);
+    const salesEl = document.getElementById('salesBox');
+    if (salesEl) {
+      salesEl.innerHTML = `<p class="empty">매출 데이터를 불러오지 못했어요</p>`;
+    }
+  }
+}
+
 fetchGoogleCalendar();
+loadSales();
+
 setInterval(fetchGoogleCalendar, 5 * 60 * 1000);
+setInterval(loadSales, 5 * 60 * 1000);
+
 let memos = JSON.parse(localStorage.getItem('memos')||'[]');
 let todos = JSON.parse(localStorage.getItem('todos')||'[]');
 let focuses = JSON.parse(localStorage.getItem('focuses')||'[]');
@@ -472,7 +528,6 @@ function renderHome() {
     document.getElementById('homeRecentMemos').innerHTML=memos.slice(0,2).map(m=>`<div class="briefing-row"><span style="font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;">${m.text}</span><span class="tag">${m.category}</span></div>`).join('');
   } else { recentMemoCard.style.display='none'; }
 
-  // Focus
   const activeFocuses=focuses.filter(f=>!f.done);
   document.getElementById('focusCount').textContent=`${activeFocuses.length}/3`;
   document.getElementById('focusList').innerHTML=focuses.map(f=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);"><button onclick="toggleFocus(${f.id})" style="font-size:18px;color:${f.done?'var(--blue)':'var(--text2)'};flex-shrink:0;">${f.done?'✓':'○'}</button><span style="flex:1;font-size:14px;text-decoration:${f.done?'line-through':'none'};color:${f.done?'var(--text2)':'var(--text)'};">${f.text}</span><button class="btn-icon" onclick="deleteFocus(${f.id})">×</button></div>`).join('');
@@ -487,7 +542,7 @@ function renderSchedules() {
   const now = new Date();
   const todayScheds = schedules.filter(s=>new Date(s.date).toDateString()===now.toDateString()).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   const upcomingScheds = schedules.filter(s=>new Date(s.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  
+
   document.getElementById('schedEmpty').style.display=schedules.length===0?'block':'none';
   const todayCard=document.getElementById('todaySchedCard');
   if (todayScheds.length>0) { todayCard.style.display='block'; document.getElementById('todaySchedList').innerHTML=todayScheds.map(s=>`<div class="sched-item"><div class="sched-bar" style="background:${COLOR[s.color]};"></div><div style="flex:1;"><p class="sched-title">${s.title}</p><p class="sched-sub">${fmtTime(s.hour,s.minute)}</p></div><button class="btn-icon" onclick="deleteSchedule(${s.id})">×</button></div>`).join(''); } else { todayCard.style.display='none'; }
@@ -509,9 +564,9 @@ function renderTodos() {
   const active=todos.filter(t=>t.status==='진행중');
   const done=todos.filter(t=>t.status==='완료');
   document.getElementById('todoEmpty').style.display=todos.length===0?'block':'none';
-  
+
   const renderList=(items,container,isDone)=>{ container.innerHTML=items.map(t=>`<div class="todo-item ${isDone?'todo-done':''}"><button onclick="moveTodo(${t.id},'${isDone?'진행중':'완료'}')" style="font-size:18px;color:${isDone?'#aaa':'var(--text2)'};flex-shrink:0;margin-top:1px;">${isDone?'✓':'○'}</button><div style="flex:1;"><p class="todo-text">${t.text}${t.from!=='직접'?`<span class="todo-from">${t.from}</span>`:''}</p></div><div class="todo-actions">${!isDone&&t.status==='진행중'?`<button class="btn-ghost" style="font-size:11px;color:var(--orange);" onclick="moveTodo(${t.id},'ASAP')">ASAP↑</button>`:''}${!isDone&&t.status==='ASAP'?`<button class="btn-ghost" style="font-size:11px;" onclick="moveTodo(${t.id},'진행중')">진행</button>`:''}<button class="btn-icon" onclick="deleteTodo(${t.id})">×</button></div></div>`).join(''); };
-  
+
   const asapSec=document.getElementById('asapSection'); if(asap.length>0){asapSec.style.display='block';document.getElementById('asapCount').textContent=asap.length;renderList(asap,document.getElementById('asapList'),false);}else{asapSec.style.display='none';}
   const activeSec=document.getElementById('activeSection'); if(active.length>0){activeSec.style.display='block';document.getElementById('activeCount').textContent=active.length;renderList(active,document.getElementById('activeList'),false);}else{activeSec.style.display='none';}
   const doneSec=document.getElementById('doneSection'); if(done.length>0){doneSec.style.display='block';document.getElementById('doneCount').textContent=done.length;renderList(done,document.getElementById('doneList'),true);}else{doneSec.style.display='none';}
@@ -526,7 +581,6 @@ function renderAll() {
   renderTodoPriorityPills();
 }
 
-// Init
 const now = new Date();
 const greeting = now.getHours()<12?'굿모닝':now.getHours()<18?'안녕하세요':'굿이브닝';
 document.getElementById('headerDate').textContent = now.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'});
