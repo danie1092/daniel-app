@@ -13,27 +13,12 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     :root {
-      --bg: #f7f7f5;
-      --surface: #ffffff;
-      --surface2: #f0f0ed;
-      --text: #111;
-      --text2: #777;
-      --border: #e4e4e0;
-      --blue: #4a7dff;
-      --yellow: #f5a623;
-      --orange: #ff5e3a;
-      --radius: 14px;
-      --nav-h: 72px;
+      --bg: #f7f7f5; --surface: #ffffff; --surface2: #f0f0ed; --text: #111; --text2: #777;
+      --border: #e4e4e0; --blue: #4a7dff; --yellow: #f5a623; --orange: #ff5e3a;
+      --radius: 14px; --nav-h: 72px;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f0f0e;
-        --surface: #1a1a18;
-        --surface2: #222220;
-        --text: #f0f0ee;
-        --text2: #666;
-        --border: #2c2c2a;
-      }
+      :root { --bg: #0f0f0e; --surface: #1a1a18; --surface2: #222220; --text: #f0f0ee; --text2: #666; --border: #2c2c2a; }
     }
     body { background: var(--bg); font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: var(--text); }
     input, textarea, button { font-family: inherit; }
@@ -102,14 +87,12 @@
     <p class="header-date" id="headerDate"></p>
     <h1 class="header-title" id="headerTitle"></h1>
   </div>
-
   <div class="content">
     <div id="tab-home" class="tab-content active fade">
       <div class="fortune-card">
         <p class="card-label" style="color: var(--blue); margin-bottom: 6px;">오늘의 운세</p>
         <p style="font-size: 14px; line-height: 1.7;" id="fortuneText"></p>
       </div>
-
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <p class="card-label" style="margin-bottom:0;">🎯 오늘의 포커스</p>
@@ -122,39 +105,32 @@
         </div>
         <p id="focusMsg" style="font-size:13px; text-align:center; margin-top:8px; display:none;"></p>
       </div>
-
       <div class="card">
         <p class="card-label">📅 오늘 일정</p>
         <div id="homeTodayScheds"><p class="empty">오늘 일정이 없어요</p></div>
       </div>
-
       <div class="card" id="homeAsapCard" style="display:none;">
         <p class="card-label" style="color:var(--orange);">🔥 ASAP</p>
         <div id="homeAsapList"></div>
       </div>
-
       <div class="card">
         <p class="card-label">💰 매출 현황</p>
-        <div id="salesBox">
-          <p class="empty">매출 데이터를 불러오는 중...</p>
-        </div>
+        <div id="salesBox"><p class="empty">매출 데이터를 불러오는 중...</p></div>
       </div>
-
       <div class="card" id="homeRecentMemoCard" style="display:none;">
         <p class="card-label">📝 최근 메모</p>
         <div id="homeRecentMemos"></div>
       </div>
     </div>
-
     <div id="tab-schedule" class="tab-content fade">
       <div class="card">
         <p class="card-label">일정 추가</p>
         <div class="input-row">
-          <input id="schedInput" class="input-field" placeholder="내일 10:00 PT상담" onkeydown="if(event.key==='Enter') addSchedule()" />
+          <input id="schedInput" class="input-field" placeholder="내일 10시 PT상담" onkeydown="if(event.key==='Enter') addSchedule()" />
           <button class="btn-primary" onclick="addSchedule()">추가</button>
         </div>
         <p class="err" id="schedErr" style="display:none;"></p>
-        <p class="hint">오늘 · 내일 · 모레 · 이번주 금요일 · 다음주 토요일 · MM-DD</p>
+        <p class="hint">오늘 · 내일 · 모레 · 이번주 금요일 · 다음주 토요일 · MM-DD<br>시간: 10시 · 15시 30분 · 10:00</p>
         <div class="color-legend">
           <div style="display:flex;align-items:center;gap:4px;"><div class="legend-dot" style="background:var(--blue)"></div><span class="legend-label">개인</span></div>
           <div style="display:flex;align-items:center;gap:4px;"><div class="legend-dot" style="background:var(--yellow)"></div><span class="legend-label">업무</span></div>
@@ -171,7 +147,6 @@
       </div>
       <p class="empty" id="schedEmpty">등록된 일정이 없어요</p>
     </div>
-
     <div id="tab-memo" class="tab-content fade">
       <div class="search-row">
         <span style="font-size:14px;">🔍</span>
@@ -180,19 +155,16 @@
       </div>
       <div class="card">
         <p class="card-label">메모 추가</p>
-                <div class="cat-pills" id="memoCatPills"></div>
+        <div class="cat-pills" id="memoCatPills"></div>
         <textarea id="memoInput" placeholder="내용 입력... (할 일 관련 메모는 자동으로 할 일에 추가돼요)" rows="3" style="font-size:14px; line-height:1.6; padding:8px 0; border-bottom:1px solid var(--border); resize:none; margin-bottom:10px;"></textarea>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <button id="pinBtn" onclick="toggleMemoPin()" style="font-size:13px; color:var(--text2); display:flex; align-items:center; gap:4px;">☆ 고정</button>
           <button class="btn-primary" onclick="addMemo()">저장</button>
         </div>
       </div>
-      <div class="card" id="memoListCard" style="display:none;">
-        <div id="memoList"></div>
-      </div>
+      <div class="card" id="memoListCard" style="display:none;"><div id="memoList"></div></div>
       <p class="empty" id="memoEmpty">저장된 메모가 없어요</p>
     </div>
-
     <div id="tab-todo" class="tab-content fade">
       <div class="card">
         <p class="card-label">할 일 추가</p>
@@ -229,20 +201,11 @@
       <p class="empty" id="todoEmpty">할 일이 없어요 🎉</p>
     </div>
   </div>
-
   <nav class="nav">
-    <button class="nav-btn active" onclick="switchTab('home')" id="nav-home">
-      <span class="nav-icon">⌂</span><span class="nav-label">홈</span>
-    </button>
-    <button class="nav-btn" onclick="switchTab('schedule')" id="nav-schedule">
-      <span class="nav-icon">◫</span><span class="nav-label">일정</span>
-    </button>
-    <button class="nav-btn" onclick="switchTab('memo')" id="nav-memo">
-      <span class="nav-icon">◪</span><span class="nav-label">메모</span>
-    </button>
-    <button class="nav-btn" onclick="switchTab('todo')" id="nav-todo">
-      <span class="nav-icon">✓</span><span class="nav-label">할 일</span>
-    </button>
+    <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">⌂</span><span class="nav-label">홈</span></button>
+    <button class="nav-btn" onclick="switchTab('schedule')" id="nav-schedule"><span class="nav-icon">◫</span><span class="nav-label">일정</span></button>
+    <button class="nav-btn" onclick="switchTab('memo')" id="nav-memo"><span class="nav-icon">◪</span><span class="nav-label">메모</span></button>
+    <button class="nav-btn" onclick="switchTab('todo')" id="nav-todo"><span class="nav-icon">✓</span><span class="nav-label">할 일</span></button>
   </nav>
 </div>
 
@@ -267,7 +230,7 @@ const FORTUNES = [
   "오늘은 결단력이 강해지는 날이에요.",
   "한 걸음 한 걸음이 모여 큰 성과가 되는 날이에요.",
   "오늘 다니엘의 노력이 주변에 좋은 영향을 줄 거예요 💪",
-  "막혔던 일이 오늘을 기점으로 풀리기 시작할 거예요."
+  "막혔던 일이 오늘을 기점으로 풀리기 시작할 거예요.",
 ];
 
 const WORK_KW = ["PT","상담","센터","면담","교육","보고","본사","회의","미팅","트레이너"];
@@ -278,6 +241,45 @@ const COLOR = {personal:"#4a7dff",work:"#f5a623",urgent:"#ff5e3a"};
 
 const CALENDAR_WEBHOOK_URL = 'https://danielham.app.n8n.cloud/webhook/get-events';
 const SALES_WEBHOOK_URL = 'https://danielham.app.n8n.cloud/webhook/get-sales';
+
+// ── 매출 목표 자동 관리 ──────────────────────────────────────────
+const MAX_TARGET = 120000000; // 상한선 1억 2천
+const GROWTH_RATE = 0.10;     // 월 10% 성장
+
+function getSalesTarget() {
+  const stored = JSON.parse(localStorage.getItem('salesTargetData') || 'null');
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+  // 저장된 목표가 이번달 것이면 그대로 사용
+  if (stored && stored.month === thisMonth) {
+    return stored.target;
+  }
+
+  // 이번달 목표가 없으면 지난달 실적 기반으로 계산
+  if (stored && stored.lastMonthActual > 0) {
+    const newTarget = Math.min(
+      Math.round(stored.lastMonthActual * (1 + GROWTH_RATE)),
+      MAX_TARGET
+    );
+    const targetData = { month: thisMonth, target: newTarget, lastMonthActual: stored.lastMonthActual };
+    localStorage.setItem('salesTargetData', JSON.stringify(targetData));
+    return newTarget;
+  }
+
+  // 최초 실행 시 기본값 1억
+  return 100000000;
+}
+
+function saveSalesActual(grandTotal) {
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const stored = JSON.parse(localStorage.getItem('salesTargetData') || 'null');
+  const target = getSalesTarget();
+  const targetData = { month: thisMonth, target, lastMonthActual: grandTotal };
+  localStorage.setItem('salesTargetData', JSON.stringify(targetData));
+}
+// ─────────────────────────────────────────────────────────────────
 
 let schedules = JSON.parse(localStorage.getItem('schedules') || '[]');
 let memos = JSON.parse(localStorage.getItem('memos') || '[]');
@@ -300,81 +302,60 @@ function getColorId(text) {
   if (WORK_KW.some(k => text.includes(k))) return 'work';
   return 'personal';
 }
-
-function hasTodoIntent(text) {
-  return TODO_KW.some(k => text.includes(k));
-}
+function hasTodoIntent(text) { return TODO_KW.some(k => text.includes(k)); }
 
 function parseNaturalDate(input) {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const dow = today.getDay();
-
   if (input.startsWith('오늘')) return { date: today, rest: input.slice(2).trim() };
-  if (input.startsWith('내일')) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + 1);
-    return { date: d, rest: input.slice(2).trim() };
-  }
-  if (input.startsWith('모레')) {
-    const d = new Date(today);
-    d.setDate(d.getDate() + 2);
-    return { date: d, rest: input.slice(2).trim() };
-  }
-
+  if (input.startsWith('내일')) { const d = new Date(today); d.setDate(d.getDate()+1); return { date: d, rest: input.slice(2).trim() }; }
+  if (input.startsWith('모레')) { const d = new Date(today); d.setDate(d.getDate()+2); return { date: d, rest: input.slice(2).trim() }; }
   const nw = input.match(/^다음\s*주\s*([일월화수목금토])요일\s*/);
-  if (nw) {
-    const t = DAY_MAP[nw[1]];
-    const d = new Date(today);
-    let diff = t - dow;
-    if (diff <= 0) diff += 7;
-    d.setDate(d.getDate() + diff);
-    return { date: d, rest: input.slice(nw[0].length).trim() };
-  }
-
+  if (nw) { const t=DAY_MAP[nw[1]]; const d=new Date(today); let diff=t-dow; if(diff<=0)diff+=7; d.setDate(d.getDate()+diff); return { date: d, rest: input.slice(nw[0].length).trim() }; }
   const tw = input.match(/^이번\s*주\s*([일월화수목금토])요일\s*/);
-  if (tw) {
-    const t = DAY_MAP[tw[1]];
-    const d = new Date(today);
-    let diff = t - dow;
-    if (diff <= 0) diff += 7;
-    d.setDate(d.getDate() + diff);
-    return { date: d, rest: input.slice(tw[0].length).trim() };
-  }
-
+  if (tw) { const t=DAY_MAP[tw[1]]; const d=new Date(today); let diff=t-dow; if(diff<=0)diff+=7; d.setDate(d.getDate()+diff); return { date: d, rest: input.slice(tw[0].length).trim() }; }
   const fd = input.match(/^(\d{4})-(\d{2})-(\d{2})\s*/);
-  if (fd) return { date: new Date(+fd[1], +fd[2] - 1, +fd[3]), rest: input.slice(fd[0].length).trim() };
-
+  if (fd) return { date: new Date(+fd[1],+fd[2]-1,+fd[3]), rest: input.slice(fd[0].length).trim() };
   const sd = input.match(/^(\d{2})-(\d{2})\s*/);
-  if (sd) return { date: new Date(now.getFullYear(), +sd[1] - 1, +sd[2]), rest: input.slice(sd[0].length).trim() };
+  if (sd) return { date: new Date(now.getFullYear(),+sd[1]-1,+sd[2]), rest: input.slice(sd[0].length).trim() };
+  return null;
+}
+
+// ── 시간 파싱 (10시, 15시 30분, 10:00 모두 지원) ─────────────────
+function parseTimeAndTitle(rest) {
+  // "10시 30분 제목" 또는 "10시 제목"
+  const korFull = rest.match(/^(\d{1,2})시\s*(\d{1,2})분\s+(.+)$/);
+  if (korFull) return { hour: +korFull[1], minute: +korFull[2], title: korFull[3] };
+
+  const korHour = rest.match(/^(\d{1,2})시\s+(.+)$/);
+  if (korHour) return { hour: +korHour[1], minute: 0, title: korHour[2] };
+
+  // "10:00 제목"
+  const colon = rest.match(/^(\d{1,2}):(\d{2})\s+(.+)$/);
+  if (colon) return { hour: +colon[1], minute: +colon[2], title: colon[3] };
 
   return null;
 }
+// ─────────────────────────────────────────────────────────────────
 
 function parseScheduleInput(text) {
   const p = parseNaturalDate(text.trim());
   if (!p) return null;
-  const m = p.rest.match(/^(\d{1,2}):(\d{2})\s+(.+)$/);
-  if (!m) return null;
-  return { date: p.date, hour: +m[1], minute: +m[2], title: m[3] };
+  const t = parseTimeAndTitle(p.rest);
+  if (!t) return null;
+  return { date: p.date, hour: t.hour, minute: t.minute, title: t.title };
 }
 
-function fmt(d) {
-  return new Date(d).toLocaleDateString('ko-KR', { month:'short', day:'numeric', weekday:'short' });
-}
-function fmtTime(h, m) {
-  const p = h < 12 ? 'AM' : 'PM';
-  return `${p} ${h % 12 || 12}:${String(m).padStart(2, '0')}`;
-}
-function fmtMemoTime(d) {
-  return new Date(d).toLocaleString('ko-KR', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-}
+function fmt(d) { return new Date(d).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'}); }
+function fmtTime(h,m) { const p=h<12?'AM':'PM'; return `${p} ${h%12||12}:${String(m).padStart(2,'0')}`; }
+function fmtMemoTime(d) { return new Date(d).toLocaleString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
 
 function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('nav-' + tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
   currentTab = tab;
   renderAll();
 }
@@ -383,342 +364,131 @@ function addSchedule() {
   const input = document.getElementById('schedInput').value;
   const p = parseScheduleInput(input);
   const errEl = document.getElementById('schedErr');
-  if (!p) {
-    errEl.textContent = '형식: 내일 10:00 PT상담 · 다음주 토요일 14:00 회의';
-    errEl.style.display = 'block';
-    return;
-  }
-  errEl.style.display = 'none';
+  if (!p) { errEl.textContent='형식: 내일 10시 PT상담 / 다음주 토요일 14시 30분 회의'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
   const color = getColorId(p.title);
-  schedules.push({ ...p, date: p.date.toISOString(), id: Date.now(), color });
-  if (color === 'urgent' || hasTodoIntent(p.title)) {
-    todos.push({ id: Date.now() + 1, text: p.title, status: color === 'urgent' ? 'ASAP' : '진행중', from: '일정', date: new Date().toISOString() });
+  schedules.push({...p, date:p.date.toISOString(), id:Date.now(), color});
+  if (color==='urgent'||hasTodoIntent(p.title)) {
+    todos.push({id:Date.now()+1, text:p.title, status:color==='urgent'?'ASAP':'진행중', from:'일정', date:new Date().toISOString()});
   }
-  document.getElementById('schedInput').value = '';
-  save();
-  renderAll();
+  document.getElementById('schedInput').value='';
+  save(); renderAll();
 }
 
-function deleteSchedule(id) {
-  schedules = schedules.filter(s => s.id !== id);
-  save();
-  renderAll();
-}
+function deleteSchedule(id) { schedules=schedules.filter(s=>s.id!==id); save(); renderAll(); }
 
 function addMemo() {
   const text = document.getElementById('memoInput').value.trim();
   if (!text) return;
-  memos.unshift({ id: Date.now(), text, category: memoCat, pinned: memoPin, date: new Date().toISOString() });
-  if (hasTodoIntent(text)) todos.push({ id: Date.now() + 1, text, status: '진행중', from: '메모', date: new Date().toISOString() });
-  document.getElementById('memoInput').value = '';
-  memoPin = false;
-  document.getElementById('pinBtn').textContent = '☆ 고정';
-  document.getElementById('pinBtn').style.color = 'var(--text2)';
-  save();
-  renderAll();
+  memos.unshift({id:Date.now(), text, category:memoCat, pinned:memoPin, date:new Date().toISOString()});
+  if (hasTodoIntent(text)) todos.push({id:Date.now()+1, text, status:'진행중', from:'메모', date:new Date().toISOString()});
+  document.getElementById('memoInput').value='';
+  memoPin=false;
+  document.getElementById('pinBtn').textContent='☆ 고정';
+  document.getElementById('pinBtn').style.color='var(--text2)';
+  save(); renderAll();
 }
-
-function deleteMemo(id) {
-  memos = memos.filter(m => m.id !== id);
-  save();
-  renderAll();
-}
-
-function togglePin(id) {
-  memos = memos.map(m => m.id === id ? { ...m, pinned: !m.pinned } : m);
-  save();
-  renderAll();
-}
-
+function deleteMemo(id) { memos=memos.filter(m=>m.id!==id); save(); renderAll(); }
+function togglePin(id) { memos=memos.map(m=>m.id===id?{...m,pinned:!m.pinned}:m); save(); renderAll(); }
 function toggleMemoPin() {
-  memoPin = !memoPin;
-  const btn = document.getElementById('pinBtn');
-  btn.textContent = (memoPin ? '⭐' : '☆') + ' 고정';
-  btn.style.color = memoPin ? 'var(--yellow)' : 'var(--text2)';
+  memoPin=!memoPin;
+  const btn=document.getElementById('pinBtn');
+  btn.textContent=(memoPin?'⭐':'☆')+' 고정';
+  btn.style.color=memoPin?'var(--yellow)':'var(--text2)';
 }
-
-function setMemoCat(cat) {
-  memoCat = cat;
-  renderMemoCatPills();
-}
+function setMemoCat(cat) { memoCat=cat; renderMemoCatPills(); }
 
 function addTodo() {
-  const text = document.getElementById('todoInput').value.trim();
+  const text=document.getElementById('todoInput').value.trim();
   if (!text) return;
-  todos.push({ id: Date.now(), text, status: todoPriority, from: '직접', date: new Date().toISOString() });
-  document.getElementById('todoInput').value = '';
-  save();
-  renderAll();
+  todos.push({id:Date.now(), text, status:todoPriority, from:'직접', date:new Date().toISOString()});
+  document.getElementById('todoInput').value='';
+  save(); renderAll();
 }
-
-function moveTodo(id, status) {
-  todos = todos.map(t => t.id === id ? { ...t, status } : t);
-  save();
-  renderAll();
-}
-
-function deleteTodo(id) {
-  todos = todos.filter(t => t.id !== id);
-  save();
-  renderAll();
-}
-
-function setTodoPriority(p) {
-  todoPriority = p;
-  renderTodoPriorityPills();
-}
+function moveTodo(id,status) { todos=todos.map(t=>t.id===id?{...t,status}:t); save(); renderAll(); }
+function deleteTodo(id) { todos=todos.filter(t=>t.id!==id); save(); renderAll(); }
+function setTodoPriority(p) { todoPriority=p; renderTodoPriorityPills(); }
 
 function addFocus() {
-  const input = document.getElementById('focusInput');
-  const text = input.value.trim();
-  if (!text || focuses.filter(f => !f.done).length >= 3) return;
-  focuses.push({ id: Date.now(), text, done: false, date: new Date().toISOString() });
-  input.value = '';
-  save();
-  renderAll();
+  const input=document.getElementById('focusInput');
+  const text=input.value.trim();
+  if (!text||focuses.filter(f=>!f.done).length>=3) return;
+  focuses.push({id:Date.now(), text, done:false, date:new Date().toISOString()});
+  input.value='';
+  save(); renderAll();
 }
-
-function toggleFocus(id) {
-  focuses = focuses.map(f => f.id === id ? { ...f, done: !f.done } : f);
-  save();
-  renderAll();
-}
-
-function deleteFocus(id) {
-  focuses = focuses.filter(f => f.id !== id);
-  save();
-  renderAll();
-}
+function toggleFocus(id) { focuses=focuses.map(f=>f.id===id?{...f,done:!f.done}:f); save(); renderAll(); }
+function deleteFocus(id) { focuses=focuses.filter(f=>f.id!==id); save(); renderAll(); }
 
 function renderMemoCatPills() {
-  const cats = ['일반','업무','아이디어','개인'];
-  document.getElementById('memoCatPills').innerHTML = cats.map(c => `
-    <button class="cat-pill ${c === memoCat ? 'active' : 'inactive'}" onclick="setMemoCat('${c}')">${c}</button>
-  `).join('');
+  const cats=['일반','업무','아이디어','개인'];
+  document.getElementById('memoCatPills').innerHTML=cats.map(c=>`<button class="cat-pill ${c===memoCat?'active':'inactive'}" onclick="setMemoCat('${c}')">${c}</button>`).join('');
 }
-
 function renderTodoPriorityPills() {
-  const priorities = ['ASAP','진행중'];
-  document.getElementById('todoPriorityPills').innerHTML = priorities.map(p => {
-    const isActive = p === todoPriority;
-    const style = isActive && p === 'ASAP' ? 'style="background:var(--orange);color:#fff;"' : '';
-    return `<button class="cat-pill ${isActive ? 'active' : 'inactive'}" onclick="setTodoPriority('${p}')" ${style}>${p === 'ASAP' ? '🔥 ASAP' : '▶ 진행중'}</button>`;
+  const priorities=['ASAP','진행중'];
+  document.getElementById('todoPriorityPills').innerHTML=priorities.map(p=>{
+    const isActive=p===todoPriority;
+    const style=isActive&&p==='ASAP'?'style="background:var(--orange);color:#fff;"':'';
+    return `<button class="cat-pill ${isActive?'active':'inactive'}" onclick="setTodoPriority('${p}')" ${style}>${p==='ASAP'?'🔥 ASAP':'▶ 진행중'}</button>`;
   }).join('');
 }
 
 function renderHome() {
   const now = new Date();
-  const todayScheds = schedules
-    .filter(s => new Date(s.date).toDateString() === now.toDateString())
-    .sort((a,b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute));
-
-  const asapTodos = todos.filter(t => t.status === 'ASAP');
-
-  const todayEl = document.getElementById('homeTodayScheds');
-  if (todayScheds.length === 0) {
-    todayEl.innerHTML = '<p class="empty">오늘 일정이 없어요</p>';
-  } else {
-    todayEl.innerHTML = todayScheds.map(s => `
-      <div class="briefing-row">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div style="width:7px;height:7px;border-radius:50%;background:${COLOR[s.color]};flex-shrink:0;"></div>
-          <span style="font-size:14px;">${s.title}</span>
-        </div>
-        <span style="font-size:12px;color:var(--text2);">${fmtTime(s.hour,s.minute)}</span>
-      </div>
-    `).join('');
-  }
-
-  const asapCard = document.getElementById('homeAsapCard');
-  if (asapTodos.length > 0) {
-    asapCard.style.display = 'block';
-    document.getElementById('homeAsapList').innerHTML = asapTodos.map(t => `
-      <div class="briefing-row">
-        <span style="font-size:14px;">${t.text}</span>
-        <button class="btn-ghost" onclick="moveTodo(${t.id},'완료')" style="font-size:11px;">완료</button>
-      </div>
-    `).join('');
-  } else {
-    asapCard.style.display = 'none';
-  }
-
-  const recentMemoCard = document.getElementById('homeRecentMemoCard');
-  if (memos.length > 0) {
-    recentMemoCard.style.display = 'block';
-    document.getElementById('homeRecentMemos').innerHTML = memos.slice(0,2).map(m => `
-      <div class="briefing-row">
-        <span style="font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;">${m.text}</span>
-        <span class="tag">${m.category}</span>
-      </div>
-    `).join('');
-  } else {
-    recentMemoCard.style.display = 'none';
-  }
-
-  const activeFocuses = focuses.filter(f => !f.done);
-  document.getElementById('focusCount').textContent = `${activeFocuses.length}/3`;
-  document.getElementById('focusList').innerHTML = focuses.map(f => `
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">
-      <button onclick="toggleFocus(${f.id})" style="font-size:18px;color:${f.done ? 'var(--blue)' : 'var(--text2)'};flex-shrink:0;">${f.done ? '✓' : '○'}</button>
-      <span style="flex:1;font-size:14px;text-decoration:${f.done ? 'line-through' : 'none'};color:${f.done ? 'var(--text2)' : 'var(--text)'};">${f.text}</span>
-      <button class="btn-icon" onclick="deleteFocus(${f.id})">×</button>
-    </div>
-  `).join('');
-
-  document.getElementById('focusInputArea').style.display = activeFocuses.length < 3 ? 'flex' : 'none';
-
-  const focusMsg = document.getElementById('focusMsg');
-  if (focuses.length > 0 && focuses.every(f => f.done)) {
-    focusMsg.style.display = 'block';
-    focusMsg.style.color = 'var(--blue)';
-    focusMsg.textContent = '🎉 오늘 포커스 완료! 수고했어요';
-  } else if (focuses.some(f => !f.done) && asapTodos.length > 0) {
-    focusMsg.style.display = 'block';
-    focusMsg.style.color = 'var(--orange)';
-    focusMsg.textContent = '👀 포커스 미완료 상태에서 ASAP이 있어요';
-  } else {
-    focusMsg.style.display = 'none';
-  }
+  const todayScheds = schedules.filter(s=>new Date(s.date).toDateString()===now.toDateString()).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
+  const asapTodos = todos.filter(t=>t.status==='ASAP');
+  const todayEl=document.getElementById('homeTodayScheds');
+  if (todayScheds.length===0) { todayEl.innerHTML='<p class="empty">오늘 일정이 없어요</p>'; }
+  else { todayEl.innerHTML=todayScheds.map(s=>`<div class="briefing-row"><div style="display:flex;align-items:center;gap:8px;"><div style="width:7px;height:7px;border-radius:50%;background:${COLOR[s.color]};flex-shrink:0;"></div><span style="font-size:14px;">${s.title}</span></div><span style="font-size:12px;color:var(--text2);">${fmtTime(s.hour,s.minute)}</span></div>`).join(''); }
+  const asapCard=document.getElementById('homeAsapCard');
+  if (asapTodos.length>0) { asapCard.style.display='block'; document.getElementById('homeAsapList').innerHTML=asapTodos.map(t=>`<div class="briefing-row"><span style="font-size:14px;">${t.text}</span><button class="btn-ghost" onclick="moveTodo(${t.id},'완료')" style="font-size:11px;">완료</button></div>`).join(''); } else { asapCard.style.display='none'; }
+  const recentMemoCard=document.getElementById('homeRecentMemoCard');
+  if (memos.length>0) { recentMemoCard.style.display='block'; document.getElementById('homeRecentMemos').innerHTML=memos.slice(0,2).map(m=>`<div class="briefing-row"><span style="font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;">${m.text}</span><span class="tag">${m.category}</span></div>`).join(''); } else { recentMemoCard.style.display='none'; }
+  const activeFocuses=focuses.filter(f=>!f.done);
+  document.getElementById('focusCount').textContent=`${activeFocuses.length}/3`;
+  document.getElementById('focusList').innerHTML=focuses.map(f=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);"><button onclick="toggleFocus(${f.id})" style="font-size:18px;color:${f.done?'var(--blue)':'var(--text2)'};flex-shrink:0;">${f.done?'✓':'○'}</button><span style="flex:1;font-size:14px;text-decoration:${f.done?'line-through':'none'};color:${f.done?'var(--text2)':'var(--text)'};">${f.text}</span><button class="btn-icon" onclick="deleteFocus(${f.id})">×</button></div>`).join('');
+  document.getElementById('focusInputArea').style.display=activeFocuses.length<3?'flex':'none';
+  const focusMsg=document.getElementById('focusMsg');
+  if (focuses.length>0&&focuses.every(f=>f.done)) { focusMsg.style.display='block'; focusMsg.style.color='var(--blue)'; focusMsg.textContent='🎉 오늘 포커스 완료! 수고했어요'; }
+  else if (focuses.some(f=>!f.done)&&asapTodos.length>0) { focusMsg.style.display='block'; focusMsg.style.color='var(--orange)'; focusMsg.textContent='👀 포커스 미완료 상태에서 ASAP이 있어요'; }
+  else { focusMsg.style.display='none'; }
 }
 
 function renderSchedules() {
   const now = new Date();
-  const todayScheds = schedules
-    .filter(s => new Date(s.date).toDateString() === now.toDateString())
-    .sort((a,b) => a.hour * 60 + a.minute - (b.hour * 60 + b.minute));
-
-  const upcomingScheds = schedules
-    .filter(s => new Date(s.date) > now)
-    .sort((a,b) => new Date(a.date) - new Date(b.date));
-
-  document.getElementById('schedEmpty').style.display = schedules.length === 0 ? 'block' : 'none';
-
-  const todayCard = document.getElementById('todaySchedCard');
-  if (todayScheds.length > 0) {
-    todayCard.style.display = 'block';
-    document.getElementById('todaySchedList').innerHTML = todayScheds.map(s => `
-      <div class="sched-item">
-        <div class="sched-bar" style="background:${COLOR[s.color]};"></div>
-        <div style="flex:1;">
-          <p class="sched-title">${s.title}</p>
-          <p class="sched-sub">${fmtTime(s.hour,s.minute)}</p>
-        </div>
-        <button class="btn-icon" onclick="deleteSchedule(${s.id})">×</button>
-      </div>
-    `).join('');
-  } else {
-    todayCard.style.display = 'none';
-  }
-
-  const upCard = document.getElementById('upcomingSchedCard');
-  if (upcomingScheds.length > 0) {
-    upCard.style.display = 'block';
-    document.getElementById('upcomingSchedList').innerHTML = upcomingScheds.map(s => `
-      <div class="sched-item">
-        <div class="sched-bar" style="background:${COLOR[s.color]};"></div>
-        <div style="flex:1;">
-          <p class="sched-title">${s.title}</p>
-          <p class="sched-sub">${fmt(s.date)} · ${fmtTime(s.hour,s.minute)}</p>
-        </div>
-        <button class="btn-icon" onclick="deleteSchedule(${s.id})">×</button>
-      </div>
-    `).join('');
-  } else {
-    upCard.style.display = 'none';
-  }
+  const todayScheds = schedules.filter(s=>new Date(s.date).toDateString()===now.toDateString()).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
+  const upcomingScheds = schedules.filter(s=>new Date(s.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('schedEmpty').style.display=schedules.length===0?'block':'none';
+  const todayCard=document.getElementById('todaySchedCard');
+  if (todayScheds.length>0) { todayCard.style.display='block'; document.getElementById('todaySchedList').innerHTML=todayScheds.map(s=>`<div class="sched-item"><div class="sched-bar" style="background:${COLOR[s.color]};"></div><div style="flex:1;"><p class="sched-title">${s.title}</p><p class="sched-sub">${fmtTime(s.hour,s.minute)}</p></div><button class="btn-icon" onclick="deleteSchedule(${s.id})">×</button></div>`).join(''); } else { todayCard.style.display='none'; }
+  const upCard=document.getElementById('upcomingSchedCard');
+  if (upcomingScheds.length>0) { upCard.style.display='block'; document.getElementById('upcomingSchedList').innerHTML=upcomingScheds.map(s=>`<div class="sched-item"><div class="sched-bar" style="background:${COLOR[s.color]};"></div><div style="flex:1;"><p class="sched-title">${s.title}</p><p class="sched-sub">${fmt(s.date)} · ${fmtTime(s.hour,s.minute)}</p></div><button class="btn-icon" onclick="deleteSchedule(${s.id})">×</button></div>`).join(''); } else { upCard.style.display='none'; }
 }
 
 function renderMemos() {
-  const search = document.getElementById('memoSearch').value.toLowerCase();
-  const filtered = memos
-    .filter(m => search === '' || m.text.toLowerCase().includes(search) || m.category.includes(search))
-    .sort((a,b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || new Date(b.date) - new Date(a.date));
-
-  const listCard = document.getElementById('memoListCard');
-  const emptyEl = document.getElementById('memoEmpty');
-
-  if (filtered.length === 0) {
-    listCard.style.display = 'none';
-    emptyEl.style.display = 'block';
-    emptyEl.textContent = search ? '검색 결과가 없어요' : '저장된 메모가 없어요';
-  } else {
-    listCard.style.display = 'block';
-    emptyEl.style.display = 'none';
-    document.getElementById('memoList').innerHTML = filtered.map(m => `
-      <div class="memo-item">
-        <div class="memo-header">
-          <div style="display:flex;align-items:center;gap:6px;">
-            ${m.pinned ? '<span style="font-size:14px;">⭐</span>' : ''}
-            <span class="tag">${m.category}</span>
-          </div>
-          <div style="display:flex;gap:4px;">
-            <button class="btn-icon" onclick="togglePin(${m.id})" style="font-size:14px;">${m.pinned ? '⭐' : '☆'}</button>
-            <button class="btn-icon" onclick="deleteMemo(${m.id})">×</button>
-          </div>
-        </div>
-        <p class="memo-text">${m.text}</p>
-        <p class="memo-date">${fmtMemoTime(m.date)}</p>
-      </div>
-    `).join('');
-  }
+  const search=document.getElementById('memoSearch').value.toLowerCase();
+  const filtered=memos.filter(m=>search===''||m.text.toLowerCase().includes(search)||m.category.includes(search)).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||new Date(b.date)-new Date(a.date));
+  const listCard=document.getElementById('memoListCard');
+  const emptyEl=document.getElementById('memoEmpty');
+  if (filtered.length===0) { listCard.style.display='none'; emptyEl.style.display='block'; emptyEl.textContent=search?'검색 결과가 없어요':'저장된 메모가 없어요'; }
+  else { listCard.style.display='block'; emptyEl.style.display='none'; document.getElementById('memoList').innerHTML=filtered.map(m=>`<div class="memo-item"><div class="memo-header"><div style="display:flex;align-items:center;gap:6px;">${m.pinned?'<span style="font-size:14px;">⭐</span>':''}<span class="tag">${m.category}</span></div><div style="display:flex;gap:4px;"><button class="btn-icon" onclick="togglePin(${m.id})" style="font-size:14px;">${m.pinned?'⭐':'☆'}</button><button class="btn-icon" onclick="deleteMemo(${m.id})">×</button></div></div><p class="memo-text">${m.text}</p><p class="memo-date">${fmtMemoTime(m.date)}</p></div>`).join(''); }
 }
 
 function renderTodos() {
-  const asap = todos.filter(t => t.status === 'ASAP');
-  const active = todos.filter(t => t.status === '진행중');
-  const done = todos.filter(t => t.status === '완료');
-
-  document.getElementById('todoEmpty').style.display = todos.length === 0 ? 'block' : 'none';
-
-  const renderList = (items, container, isDone) => {
-    container.innerHTML = items.map(t => `
-      <div class="todo-item ${isDone ? 'todo-done' : ''}">
-        <button onclick="moveTodo(${t.id},'${isDone ? '진행중' : '완료'}')" style="font-size:18px;color:${isDone ? '#aaa' : 'var(--text2)'};flex-shrink:0;margin-top:1px;">${isDone ? '✓' : '○'}</button>
-        <div style="flex:1;">
-          <p class="todo-text">${t.text}${t.from !== '직접' ? `<span class="todo-from">${t.from}</span>` : ''}</p>
-        </div>
-        <div class="todo-actions">
-          ${!isDone && t.status === '진행중' ? `<button class="btn-ghost" style="font-size:11px;color:var(--orange);" onclick="moveTodo(${t.id},'ASAP')">ASAP↑</button>` : ''}
-          ${!isDone && t.status === 'ASAP' ? `<button class="btn-ghost" style="font-size:11px;" onclick="moveTodo(${t.id},'진행중')">진행</button>` : ''}
-          <button class="btn-icon" onclick="deleteTodo(${t.id})">×</button>
-        </div>
-      </div>
-    `).join('');
-  };
-
-  const asapSec = document.getElementById('asapSection');
-  if (asap.length > 0) {
-    asapSec.style.display = 'block';
-    document.getElementById('asapCount').textContent = asap.length;
-    renderList(asap, document.getElementById('asapList'), false);
-  } else {
-    asapSec.style.display = 'none';
-  }
-
-  const activeSec = document.getElementById('activeSection');
-  if (active.length > 0) {
-    activeSec.style.display = 'block';
-    document.getElementById('activeCount').textContent = active.length;
-    renderList(active, document.getElementById('activeList'), false);
-  } else {
-    activeSec.style.display = 'none';
-  }
-
-  const doneSec = document.getElementById('doneSection');
-  if (done.length > 0) {
-    doneSec.style.display = 'block';
-    document.getElementById('doneCount').textContent = done.length;
-    renderList(done, document.getElementById('doneList'), true);
-  } else {
-    doneSec.style.display = 'none';
-  }
+  const asap=todos.filter(t=>t.status==='ASAP');
+  const active=todos.filter(t=>t.status==='진행중');
+  const done=todos.filter(t=>t.status==='완료');
+  document.getElementById('todoEmpty').style.display=todos.length===0?'block':'none';
+  const renderList=(items,container,isDone)=>{ container.innerHTML=items.map(t=>`<div class="todo-item ${isDone?'todo-done':''}"><button onclick="moveTodo(${t.id},'${isDone?'진행중':'완료'}')" style="font-size:18px;color:${isDone?'#aaa':'var(--text2)'};flex-shrink:0;margin-top:1px;">${isDone?'✓':'○'}</button><div style="flex:1;"><p class="todo-text">${t.text}${t.from!=='직접'?`<span class="todo-from">${t.from}</span>`:''}</p></div><div class="todo-actions">${!isDone&&t.status==='진행중'?`<button class="btn-ghost" style="font-size:11px;color:var(--orange);" onclick="moveTodo(${t.id},'ASAP')">ASAP↑</button>`:''}${!isDone&&t.status==='ASAP'?`<button class="btn-ghost" style="font-size:11px;" onclick="moveTodo(${t.id},'진행중')">진행</button>`:''}<button class="btn-icon" onclick="deleteTodo(${t.id})">×</button></div></div>`).join(''); };
+  const asapSec=document.getElementById('asapSection'); if(asap.length>0){asapSec.style.display='block';document.getElementById('asapCount').textContent=asap.length;renderList(asap,document.getElementById('asapList'),false);}else{asapSec.style.display='none';}
+  const activeSec=document.getElementById('activeSection'); if(active.length>0){activeSec.style.display='block';document.getElementById('activeCount').textContent=active.length;renderList(active,document.getElementById('activeList'),false);}else{activeSec.style.display='none';}
+  const doneSec=document.getElementById('doneSection'); if(done.length>0){doneSec.style.display='block';document.getElementById('doneCount').textContent=done.length;renderList(done,document.getElementById('doneList'),true);}else{doneSec.style.display='none';}
 }
 
 async function fetchGoogleCalendar() {
   try {
     const res = await fetch(CALENDAR_WEBHOOK_URL);
     const data = await res.json();
-
     if (data.events) {
       const googleEvents = data.events.map(e => ({
         id: 'google_' + e.start,
@@ -729,49 +499,36 @@ async function fetchGoogleCalendar() {
         color: e.color === '5' ? 'work' : e.color === '6' ? 'urgent' : 'personal',
         fromGoogle: true
       }));
-
       schedules = [...schedules.filter(s => !s.fromGoogle), ...googleEvents];
-      save();
       renderAll();
     }
-  } catch (e) {
-    console.log('캘린더 불러오기 실패:', e);
-  }
+  } catch(e) { console.log('캘린더 불러오기 실패:', e); }
 }
 
 async function loadSales() {
   const salesEl = document.getElementById('salesBox');
   if (!salesEl) return;
-
   salesEl.innerHTML = `<p class="empty">매출 데이터를 불러오는 중...</p>`;
-
   try {
     const res = await fetch(SALES_WEBHOOK_URL);
     const raw = await res.json();
     const data = Array.isArray(raw) ? raw[0] : raw;
 
-    const dynamicTarget = 100000000;
-    const strategicTarget = 120000000;
-
     const grandTotalNum = Number(data.grandTotal || 0);
-    const progressPercent = Math.min((grandTotalNum / dynamicTarget) * 100, 100);
-    const remainingToTarget = Math.max(dynamicTarget - grandTotalNum, 0);
-    const overTarget = Math.max(grandTotalNum - dynamicTarget, 0);
+
+    // 이번달 실적 저장 (다음달 목표 계산용)
+    saveSalesActual(grandTotalNum);
+
+    const target = getSalesTarget();
+    const progressPercent = Math.min((grandTotalNum / target) * 100, 100);
+    const remaining = Math.max(target - grandTotalNum, 0);
+    const over = Math.max(grandTotalNum - target, 0);
+    const isAtMax = target >= MAX_TARGET;
 
     salesEl.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <div>
-          <div style="font-size:13px; font-weight:800;">응암점</div>
-          <div style="font-size:11px; color:var(--text2); margin-top:2px;">
-            ${data.date || ''} · 회원수 ${Number(data.memberCount || 0).toLocaleString()}명
-          </div>
-          <div style="font-size:11px; color:var(--text2); margin-top:2px;">
-            회원권 ${Number(data.todayHealthTotal || 0).toLocaleString()}원 · PT ${Number(data.todayPtTotal || 0).toLocaleString()}원
-          </div>
-        </div>
-        <button onclick="loadSales()" style="font-size:11px; color:var(--text2); padding:4px 8px; border-radius:8px; background:var(--surface2);">
-          ↻ 새로고침
-        </button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:13px; font-weight:800;">응암점</span>
+        <button onclick="loadSales()" style="font-size:11px; color:var(--text2); padding:4px 8px; border-radius:8px; background:var(--surface2);">↻ 새로고침</button>
       </div>
 
       <div style="display:flex; gap:12px; margin-bottom:12px;">
@@ -779,64 +536,55 @@ async function loadSales() {
           <p style="font-size:10px; color:var(--text2); font-weight:700; margin-bottom:8px;">헬스</p>
           <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
             <span style="font-size:12px; color:var(--text2);">신규</span>
-            <span style="font-size:13px; font-weight:700;">${Number(data.healthNew || 0)}명</span>
+            <span style="font-size:13px; font-weight:700;">${Number(data.healthNew||0)}명</span>
           </div>
           <div style="display:flex; justify-content:space-between;">
             <span style="font-size:12px; color:var(--text2);">재등록</span>
-            <span style="font-size:13px; font-weight:700;">${Number(data.healthRenewal || 0)}명</span>
+            <span style="font-size:13px; font-weight:700;">${Number(data.healthRenewal||0)}명</span>
           </div>
         </div>
-
         <div style="flex:1; background:var(--surface2); border-radius:10px; padding:10px;">
           <p style="font-size:10px; color:var(--text2); font-weight:700; margin-bottom:8px;">PT</p>
           <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
             <span style="font-size:12px; color:var(--text2);">신규</span>
-            <span style="font-size:13px; font-weight:700;">${Number(data.ptNew || 0)}명</span>
+            <span style="font-size:13px; font-weight:700;">${Number(data.ptNew||0)}명</span>
           </div>
           <div style="display:flex; justify-content:space-between;">
             <span style="font-size:12px; color:var(--text2);">재등록</span>
-            <span style="font-size:13px; font-weight:700;">${Number(data.ptRenewal || 0)}명</span>
+            <span style="font-size:13px; font-weight:700;">${Number(data.ptRenewal||0)}명</span>
           </div>
         </div>
       </div>
 
       <div style="border-top:1px solid var(--border); padding-top:10px;">
         <p style="font-size:10px; color:var(--text2); font-weight:700; margin-bottom:6px;">이번달 누계</p>
-
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
           <span style="font-size:12px; color:var(--text2);">회원권</span>
-          <span style="font-size:13px; font-weight:700;">${Number(data.healthTotal || 0).toLocaleString()}원</span>
+          <span style="font-size:13px; font-weight:700;">${Number(data.healthTotal||0).toLocaleString()}원</span>
         </div>
-
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
           <span style="font-size:12px; color:var(--text2);">PT</span>
-          <span style="font-size:13px; font-weight:700;">${Number(data.ptTotal || 0).toLocaleString()}원</span>
+          <span style="font-size:13px; font-weight:700;">${Number(data.ptTotal||0).toLocaleString()}원</span>
         </div>
-
-        <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; padding-top:6px; border-top:1px solid var(--border); margin-bottom:10px;">
           <span style="font-size:12px; font-weight:700;">총합계</span>
           <span style="font-size:14px; font-weight:800; color:var(--blue);">${grandTotalNum.toLocaleString()}원</span>
         </div>
 
-        <div style="margin-top:10px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:11px; color:var(--text2);">이번달 목표 ${dynamicTarget.toLocaleString()}원</span>
-            <span style="font-size:11px; font-weight:700;">${progressPercent.toFixed(1)}%</span>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <span style="font-size:11px; color:var(--text2);">
+              ${isAtMax ? '🏆 목표 유지 ' : '이번달 목표 '}${target.toLocaleString()}원
+            </span>
+            <span style="font-size:11px; font-weight:700; color:${progressPercent>=100?'var(--blue)':'var(--text)'};">${progressPercent.toFixed(1)}%</span>
           </div>
-
           <div style="width:100%; height:8px; background:var(--surface2); border-radius:999px; overflow:hidden;">
-            <div style="width:${progressPercent}%; height:100%; background:var(--blue); border-radius:999px;"></div>
+            <div style="width:${progressPercent}%; height:100%; background:${progressPercent>=100?'var(--blue)':'var(--blue)'}; border-radius:999px; transition:width 0.5s ease;"></div>
           </div>
-
-          <div style="margin-top:6px; font-size:11px; color:var(--text2); text-align:right;">
-            ${overTarget > 0
-              ? `목표 ${overTarget.toLocaleString()}원 초과`
-              : `목표까지 ${remainingToTarget.toLocaleString()}원 남음`}
+          <div style="margin-top:5px; font-size:11px; color:var(--text2); text-align:right;">
+            ${over > 0 ? `🎉 목표 ${over.toLocaleString()}원 초과달성!` : `목표까지 ${remaining.toLocaleString()}원 남음`}
           </div>
-
-          <div style="margin-top:2px; font-size:10px; color:var(--text2); text-align:right;">
-            장기 목표 ${strategicTarget.toLocaleString()}원
-          </div>
+          ${!isAtMax ? `<div style="margin-top:2px; font-size:10px; color:var(--text2); text-align:right;">장기 목표 ${MAX_TARGET.toLocaleString()}원 · 매월 10% 성장</div>` : ''}
         </div>
       </div>
     `;
@@ -844,9 +592,7 @@ async function loadSales() {
     console.log('매출 불러오기 실패:', e);
     salesEl.innerHTML = `
       <div style="font-size:12px; color:var(--text2);">매출 데이터를 불러오지 못했어요</div>
-      <button onclick="loadSales()" style="margin-top:8px; font-size:11px; color:var(--text2); padding:4px 8px; border-radius:8px; background:var(--surface2);">
-        ↻ 다시 시도
-      </button>
+      <button onclick="loadSales()" style="margin-top:8px; font-size:11px; color:var(--text2); padding:4px 8px; border-radius:8px; background:var(--surface2);">↻ 다시 시도</button>
     `;
   }
 }
@@ -861,21 +607,15 @@ function renderAll() {
 }
 
 const now = new Date();
-const greeting = now.getHours() < 12 ? '굿모닝' : now.getHours() < 18 ? '안녕하세요' : '굿이브닝';
-
-document.getElementById('headerDate').textContent = now.toLocaleDateString('ko-KR', {
-  month:'long',
-  day:'numeric',
-  weekday:'long'
-});
-
+const greeting = now.getHours()<12?'굿모닝':now.getHours()<18?'안녕하세요':'굿이브닝';
+document.getElementById('headerDate').textContent = now.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'});
 document.getElementById('headerTitle').textContent = `${greeting}, 다니엘 👋`;
-document.getElementById('fortuneText').textContent = '🔮 ' + FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+document.getElementById('fortuneText').textContent = '🔮 ' + FORTUNES[Math.floor(Math.random()*FORTUNES.length)];
 
 fetchGoogleCalendar();
 loadSales();
-
 setInterval(fetchGoogleCalendar, 5 * 60 * 1000);
+setInterval(loadSales, 30 * 60 * 1000);
 
 renderAll();
 </script>
