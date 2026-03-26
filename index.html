@@ -982,27 +982,60 @@ function renderAll() {
 async function initApp(user) {
   try {
     currentUser = user;
-    currentProfile = await ensureProfile(user);
 
+    // 먼저 화면부터 보여주기
+    showMainApp();
+
+    // 기본 UI 먼저 채우기
+    document.getElementById('headerDate').textContent =
+      new Date().toLocaleDateString('ko-KR', { month:'long', day:'numeric', weekday:'long' });
+
+    document.getElementById('fortuneText').textContent =
+      '🔮 ' + FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+
+    // 기본 헤더 임시 표시
+    const fallbackName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.email?.split('@')[0] ||
+      'User';
+
+    document.getElementById('headerTitle').textContent = `안녕하세요, ${fallbackName} 👋`;
+
+    // 이제 백그라운드에서 데이터 로드
+    currentProfile = await ensureProfile(user);
     await migrateFromLocalStorage(user.id);
     await loadFromSupabase(user.id);
 
     updateUserUI();
-    showMainApp();
-
-    document.getElementById('headerDate').textContent = new Date().toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'long'});
-    document.getElementById('fortuneText').textContent = '🔮 ' + FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+    renderAll();
 
     fetchGoogleCalendar();
     loadSales();
     setInterval(fetchGoogleCalendar, 5 * 60 * 1000);
     setInterval(loadSales, 30 * 60 * 1000);
 
-    renderAll();
   } catch (error) {
     console.error('앱 초기화 실패:', error);
-    alert('앱 초기화 중 오류가 발생했습니다: ' + error.message);
-    showLoginScreen();
+
+    // 최소한 로그인된 사용자는 앱 화면은 보이게 유지
+    showMainApp();
+
+    document.getElementById('headerDate').textContent =
+      new Date().toLocaleDateString('ko-KR', { month:'long', day:'numeric', weekday:'long' });
+
+    document.getElementById('fortuneText').textContent =
+      '🔮 오늘은 천천히 정리하면서 시작해보세요';
+
+    const fallbackName =
+      user?.user_metadata?.full_name ||
+      user?.user_metadata?.name ||
+      user?.email?.split('@')[0] ||
+      'User';
+
+    document.getElementById('headerTitle').textContent = `안녕하세요, ${fallbackName} 👋`;
+
+    renderAll();
   }
 }
 
