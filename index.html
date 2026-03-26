@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>다니엘 어시스턴트</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    body{font-family:-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f7f7f5;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .card{width:min(92vw,360px);background:#fff;border-radius:20px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:center}
+    h1{font-size:24px;margin:0 0 8px}
+    p{color:#666;line-height:1.6}
+    button{width:100%;border:none;border-radius:14px;padding:14px 16px;font-weight:700;cursor:pointer}
+    .primary{background:#111;color:#fff;margin-top:18px}
+    .secondary{background:#eee;color:#111;margin-top:10px}
+    #app{display:none}
+  </style>
+</head>
+<body>
+  <div class="card" id="loginCard">
+    <h1>다니엘 어시스턴트</h1>
+    <p>지점 운영을 스마트하게<br>구글 계정으로 로그인해주세요</p>
+    <button class="primary" onclick="login()">Google 로그인</button>
+  </div>
+
+  <div class="card" id="app">
+    <h1>로그인 성공</h1>
+    <p id="emailText"></p>
+    <button class="secondary" onclick="logout()">로그아웃</button>
+  </div>
+
+<script>
+const SUPABASE_URL = "https://ksrvkezznejsnqjkuezi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_3yAUPpBWBl1L0Lm-2tOZkg_wbI1MTOC";
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function showLogin(){
+  document.getElementById("loginCard").style.display = "block";
+  document.getElementById("app").style.display = "none";
+}
+function showApp(user){
+  document.getElementById("loginCard").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  document.getElementById("emailText").innerText = user.email || "";
+}
+
+async function login(){
+  await sb.auth.signInWithOAuth({
+    provider:"google",
+    options:{
+      redirectTo: window.location.origin
+    }
+  });
+}
+
+async function logout(){
+  await sb.auth.signOut();
+  showLogin();
+}
+
+async function init(){
+  const { data, error } = await sb.auth.getSession();
+  if(error){
+    console.error(error);
+    showLogin();
+    return;
+  }
+  if(data.session?.user){
+    showApp(data.session.user);
+  }else{
+    showLogin();
+  }
+}
+
+sb.auth.onAuthStateChange((_event, session)=>{
+  if(session?.user){
+    showApp(session.user);
+  }else{
+    showLogin();
+  }
+});
+
+init();
+</script>
+</body>
+</html>
