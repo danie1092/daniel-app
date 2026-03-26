@@ -1039,10 +1039,11 @@ async function initApp(user) {
   }
 }
 
-sb.auth.onAuthStateChange(async (event, session) => {
+sb.auth.onAuthStateChange((event, session) => {
   console.log('Auth state change:', event);
+
   if (session?.user) {
-    await initApp(session.user);
+    initApp(session.user);
   } else {
     showLoginScreen();
   }
