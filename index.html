@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="다니엘" />
+  <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0f0f0e" media="(prefers-color-scheme: dark)" />
+  <title>다니엘 어시스턴트</title>
+  <link rel="manifest" href="manifest.json" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: #f7f7f5; --surface: #ffffff; --surface2: #f0f0ed; --text: #111; --text2: #777;
+      --border: #e4e4e0; --blue: #4a7dff; --green: #16a34a; --red: #ff5e3a; --amber: #f5a623;
+      --radius: 14px; --nav-h: 72px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0f0f0e; --surface: #1a1a18; --surface2: #222220; --text: #f0f0ee; --text2: #666; --border: #2c2c2a; }
+    }
+    body { background: var(--bg); font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: var(--text); }
+    input, textarea, button { font-family: inherit; }
+    input, textarea { background: none; border: none; outline: none; color: var(--text); width: 100%; }
+    button { cursor: pointer; border: none; background: none; color: var(--text); }
+    .app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 8px); }
+    .header { padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+    .header-left .header-date { font-size: 12px; color: var(--text2); margin-bottom: 2px; }
+    .header-left .header-title { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    .user-chip { display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 6px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); }
+    .user-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--blue); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; flex-shrink:0; }
+    .user-name-text { font-size: 11px; font-weight: 600; }
+    .user-role { font-size: 10px; color: var(--text2); }
+    .content { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .card { background: var(--surface); border-radius: var(--radius); padding: 14px; border: 1px solid var(--border); }
+    .card-label { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text2); margin-bottom: 10px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-header .card-label { margin-bottom: 0; }
+    .row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .row:last-child { border-bottom: none; }
+    .input-row { display: flex; gap: 8px; align-items: center; }
+    .input-field { flex: 1; font-size: 14px; padding: 9px 12px; border-radius: 10px; background: var(--surface2); }
+    .select-field { font-size: 13px; padding: 8px 10px; border-radius: 10px; background: var(--surface2); border: none; outline: none; color: var(--text); }
+    .btn-primary { font-size: 13px; font-weight: 700; color: var(--bg); background: var(--text); padding: 9px 18px; border-radius: 20px; white-space: nowrap; }
+    .btn-sm { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: var(--surface2); color: var(--text2); }
+    .btn-icon { font-size: 15px; color: var(--text2); padding: 3px 6px; }
+    .badge { font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 600; }
+    .badge-blue { background: #e8eeff; color: var(--blue); }
+    .badge-green { background: #dcfce7; color: var(--green); }
+    .badge-gray { background: var(--surface2); color: var(--text2); }
+    .empty { font-size: 13px; color: var(--text2); text-align: center; padding: 16px 0; }
+    .hint { font-size: 11px; color: var(--text2); margin-top: 5px; }
+    .err { font-size: 12px; color: var(--red); margin-top: 4px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: flex; flex-direction: column; gap: 10px; }
+    .nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: var(--nav-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: flex-start; padding-top: 8px; padding-bottom: env(safe-area-inset-bottom); }
+    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0; color: var(--text2); }
+    .nav-btn.active { color: var(--text); }
+    .nav-icon { font-size: 20px; line-height: 1; }
+    .nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
+    #loginScreen { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 40px 32px; }
+    #loginScreen.show { display: flex; }
+    .login-logo { font-size: 52px; }
+    .login-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; text-align: center; }
+    .login-sub { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.7; }
+    .btn-google { display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 20px; background: var(--text); color: var(--bg); font-size: 15px; font-weight: 700; width: 100%; max-width: 280px; justify-content: center; }
+    .login-loading { font-size: 13px; color: var(--text2); }
+    .focus-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .focus-item:last-child { border-bottom: none; }
+    .focus-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; }
+    .focus-check.done { background: var(--blue); border-color: var(--blue); color: #fff; font-size: 11px; }
+    .sched-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .sched-item:last-child { border-bottom: none; }
+    .sched-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .sched-title { font-size: 14px; font-weight: 600; }
+    .sched-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .color-legend { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .memo-item { padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .memo-item:last-child { border-bottom: none; }
+    .memo-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+    .memo-text { font-size: 14px; line-height: 1.6; }
+    .memo-meta { font-size: 11px; color: var(--text2); margin-top: 4px; }
+    .memo-type-pills { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+    .type-pill { font-size: 12px; padding: 5px 14px; border-radius: 20px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; }
+    .type-pill.active { border-color: var(--blue); color: var(--blue); background: #e8eeff; }
+    .type-pill.inactive { background: var(--surface2); color: var(--text2); }
+    .trainer-select-row { display: none; margin-bottom: 10px; }
+    .trainer-select-row.show { display: flex; align-items: center; gap: 8px; }
+    .search-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; }
+    .filter-pills { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+    .todo-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface2); margin-bottom: 6px; }
+    .todo-text { font-size: 14px; line-height: 1.5; flex: 1; }
+    .todo-done .todo-text { text-decoration: line-through; color: var(--text2); }
+    .section-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; margin-top: 4px; }
+    .sales-period-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 14px; }
+    .period-tab { flex: 1; text-align: center; font-size: 12px; font-weight: 600; padding: 7px 4px; border-radius: 8px; cursor: pointer; color: var(--text2); }
+    .period-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { font-size: 13px; color: var(--text2); }
+    .stat-value { font-size: 14px; font-weight: 700; }
+    .stat-total { font-size: 15px; font-weight: 800; color: var(--blue); }
+    .trainer-card { background: var(--surface2); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+    .trainer-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .trainer-name { font-size: 14px; font-weight: 700; }
+    .trainer-sales { font-size: 13px; font-weight: 700; color: var(--blue); }
+    .rate-good { color: var(--green); font-size: 11px; }
+    .rate-mid { color: var(--amber); font-size: 11px; }
+    .rate-low { color: var(--red); font-size: 11px; }
+    .team-trainer-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; cursor: pointer; }
+    .team-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .team-trainer-name { font-size: 15px; font-weight: 800; }
+    .team-trainer-sales { font-size: 13px; color: var(--blue); font-weight: 700; margin-top: 2px; }
+    .team-memo-preview { font-size: 12px; color: var(--text2); margin-top: 8px; line-height: 1.5; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; }
+    .overlay.show { display: block; }
+    .overlay-panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px 16px; max-height: 80vh; overflow-y: auto; z-index: 1001; }
+    .overlay-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
+    .overlay-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .fade { animation: fadeIn 0.2s ease; }
+    .progress-bar { width: 100%; height: 6px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+    .progress-fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width 0.5s ease; }
+  </style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-logo">🏋️</div>
+  <h1 class="login-title">다니엘 어시스턴트</h1>
+  <p class="login-sub">지점 운영을 스마트하게<br>구글 계정으로 로그인해주세요</p>
+  <button class="btn-google" onclick="signInWithGoogle()">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#fff" d="M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z"/><path fill="#fff" d="M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#fff" d="M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z"/><path fill="#fff" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z"/></svg>
+    Google로 로그인
+  </button>
+  <p class="login-loading" id="loginLoading" style="display:none;">로그인 중...</p>
+</div>
+
+<div class="overlay" id="trainerOverlay" onclick="closeTrainerOverlay()"></div>
+<div class="overlay-panel" id="trainerPanel" style="display:none;">
+  <div class="overlay-handle"></div>
+  <div id="trainerPanelContent"></div>
+</div>
+
+<div class="app" id="mainApp" style="display:none;">
+  <div class="header">
+    <div class="header-left">
+      <p class="header-date" id="headerDate"></p>
+      <h1 class="header-title" id="headerTitle"></h1>
+    </div>
+    <div class="header-right">
+      <div class="user-chip" id="userChip" style="display:none;">
+        <div class="user-avatar" id="userAvatar"></div>
+        <div>
+          <div class="user-name-text" id="userNameText"></div>
+          <div class="user-role" id="userRoleText"></div>
+        </div>
+      </div>
+      <button onclick="signOut()" style="font-size:11px; color:var(--text2); padding:5px 8px; border-radius:8px; background:var(--surface); border:1px solid var(--border);">나가기</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- 홈 -->
+    <div id="tab-home" class="tab-content active fade">
+      <div class="card" id="homeSalesCard">
+        <div class="card-header">
+          <span class="card-label" style="margin-bottom:0;">💰 이번달 매출</span>
+          <button class="btn-sm" onclick="loadSalesFromSupabase()">↻</button>
+        </div>
+        <div id="homeSalesBox"><p class="empty" style="padding:8px 0;">불러오는 중...</p></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label" style="margin-bottom:0;">🎯 오늘의 포커스</span>
+          <span style="font-size:11px; color:var(--text2);" id="focusCount">0/3</span>
+        </div>
+        <div id="focusList"></div>
+        <div id="focusInputArea" style="display:flex; gap:8px; margin-top:8px;">
+          <input id="focusInput" class="input-field" placeholder="오늘 가장 중요한 일 하나는?" style="font-size:13px; padding:8px 10px;" onkeydown="if(event.key==='Enter') addFocus()" />
+          <button class="btn-primary" onclick="addFocus()" style="padding:8px 14px; font-size:13px;">+</button>
+        </div>
+        <p id="focusMsg" style="font-size:12px; text-align:center; margin-top:8px; display:none;"></p>
+      </div>
+      <div class="card">
+        <p class="card-label">📅 오늘 일정</p>
+        <div id="homeTodayScheds"><p class="empty">오늘 일정이 없어요</p></div>
+      </div>
+      <div class="card">
+        <p class="card-label">📝 빠른 메모</p>
+        <div class="memo-type-pills" id="quickMemoTypePills"></div>
+        <div class="trainer-select-row" id="quickTrainerRow">
+          <span style="font-size:12px; color:var(--text2);">트레이너</span>
+          <select class="select-field" id="quickTrainerSelect" style="flex:1;"></select>
+        </div>
+        <div class="input-row">
+          <input id="quickMemoInput" class="input-field" placeholder="메모 내용..." onkeydown="if(event.key==='Enter') addQuickMemo()" />
+          <button class="btn-primary" onclick="addQuickMemo()">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 일정 -->
+    <div id="tab-schedule" class="tab-content fade">
+      <div class="card">
+        <p class="card-label">일정 추가</p>
+        <div class="input-row">
+          <input id="schedInput" class="input-field" placeholder="내일 10시 PT상담" onkeydown="if(event.key==='Enter') addSchedule()" />
+          <button class="btn-primary" onclick="addSchedule()">추가</button>
+        </div>
+        <p class="err" id="schedErr" style="display:none;"></p>
+        <p class="hint">오늘·내일·모레·이번주 금요일·다음주 토요일·MM-DD / 시간: 10시·15시 30분·10:00</p>
+        <div class="color-legend">
+          <div style="display:flex;align-items:center;gap:4px;"><div style="width:7px;height:7px;border-radius:50%;background:#4a7dff;"></div><span style="font-size:11px;color:var(--text2);">개인</span></div>
+          <div style="display:flex;align-items:center;gap:4px;"><div style="width:7px;height:7px;border-radius:50%;background:#f5a623;"></div><span style="font-size:11px;color:var(--text2);">업무</span></div>
+          <div style="display:flex;align-items:center;gap:4px;"><div style="width:7px;height:7px;border-radius:50%;background:#ff5e3a;"></div><span style="font-size:11px;color:var(--text2);">긴급</span></div>
+        </div>
+      </div>
+      <div class="card" id="todaySchedCard" style="display:none;"><p class="card-label">오늘</p><div id="todaySchedList"></div></div>
+      <div class="card" id="upcomingSchedCard" style="display:none;"><p class="card-label">예정</p><div id="upcomingSchedList"></div></div>
+      <p class="empty" id="schedEmpty">등록된 일정이 없어요</p>
+    </div>
+
+    <!-- 메모 -->
+    <div id="tab-memo" class="tab-content fade">
+      <div class="search-row">
+        <span style="font-size:14px;">🔍</span>
+        <input style="font-size:13px;flex:1;" id="memoSearch" placeholder="메모 검색..." oninput="renderMemos()" />
+        <button class="btn-icon" onclick="document.getElementById('memoSearch').value='';renderMemos()">×</button>
+      </div>
+      <div class="filter-pills" id="memoFilterPills"></div>
+      <div class="card">
+        <p class="card-label">메모 추가</p>
+        <div class="memo-type-pills" id="memoTypePills"></div>
+        <div class="trainer-select-row" id="memoTrainerRow">
+          <span style="font-size:12px; color:var(--text2); flex-shrink:0;">트레이너</span>
+          <select class="select-field" id="memoTrainerSelect" style="flex:1;"></select>
+        </div>
+        <textarea id="memoInput" placeholder="내용 입력..." rows="3" style="font-size:14px;line-height:1.6;padding:8px 0;border-bottom:1px solid var(--border);resize:none;margin-bottom:10px;"></textarea>
+        <div style="display:flex;justify-content:flex-end;">
+          <button class="btn-primary" onclick="addMemo()">저장</button>
+        </div>
+      </div>
+      <div class="card" id="memoListCard" style="display:none;"><div id="memoList"></div></div>
+      <p class="empty" id="memoEmpty">저장된 메모가 없어요</p>
+    </div>
+
+    <!-- 할 일 -->
+    <div id="tab-todo" class="tab-content fade">
+      <div class="card">
+        <p class="card-label">할 일 추가</p>
+        <div class="input-row">
+          <input id="todoInput" class="input-field" placeholder="할 일 입력..." onkeydown="if(event.key==='Enter') addTodo()" />
+          <button class="btn-primary" onclick="addTodo()">추가</button>
+        </div>
+      </div>
+      <div id="activeSection" style="display:none;">
+        <div class="section-header">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);"></div>
+          <span style="font-size:12px;font-weight:800;color:var(--blue);">진행중</span>
+          <span style="font-size:11px;color:var(--text2);" id="activeCount"></span>
+        </div>
+        <div id="activeList"></div>
+      </div>
+      <div id="doneSection" style="display:none;">
+        <div class="section-header">
+          <div style="width:8px;height:8px;border-radius:50%;background:#aaa;"></div>
+          <span style="font-size:12px;font-weight:800;color:var(--text2);">완료</span>
+          <span style="font-size:11px;color:var(--text2);" id="doneCount"></span>
+        </div>
+        <div id="doneList"></div>
+      </div>
+      <p class="empty" id="todoEmpty">할 일이 없어요 🎉</p>
+    </div>
+
+    <!-- 매출 -->
+    <div id="tab-sales" class="tab-content fade">
+      <div class="card">
+        <div class="sales-period-tabs">
+          <div class="period-tab active" onclick="setSalesPeriod('month')" id="period-month">이번달</div>
+          <div class="period-tab" onclick="setSalesPeriod('week')" id="period-week">이번주</div>
+          <div class="period-tab" onclick="setSalesPeriod('today')" id="period-today">오늘</div>
+        </div>
+        <div id="salesSummaryBox"><p class="empty">데이터 불러오는 중...</p></div>
+      </div>
+      <div class="card">
+        <p class="card-label">트레이너별 매출</p>
+        <div id="trainerSalesList"><p class="empty">데이터 불러오는 중...</p></div>
+      </div>
+    </div>
+
+    <!-- 팀 -->
+    <div id="tab-team" class="tab-content fade">
+      <div class="card" style="padding:10px 14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="card-label" style="margin-bottom:0;">👥 트레이너 현황</span>
+          <span style="font-size:11px;color:var(--text2);">매출 높은 순</span>
+        </div>
+      </div>
+      <div id="teamTrainerList"><p class="empty">데이터 불러오는 중...</p></div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">⌂</span><span class="nav-label">홈</span></button>
+    <button class="nav-btn" onclick="switchTab('schedule')" id="nav-schedule"><span class="nav-icon">◫</span><span class="nav-label">일정</span></button>
+    <button class="nav-btn" onclick="switchTab('memo')" id="nav-memo"><span class="nav-icon">◪</span><span class="nav-label">메모</span></button>
+    <button class="nav-btn" onclick="switchTab('todo')" id="nav-todo"><span class="nav-icon">✓</span><span class="nav-label">할일</span></button>
+    <button class="nav-btn" onclick="switchTab('sales')" id="nav-sales"><span class="nav-icon">₩</span><span class="nav-label">매출</span></button>
+    <button class="nav-btn" onclick="switchTab('team')" id="nav-team"><span class="nav-icon">👥</span><span class="nav-label">팀</span></button>
+  </nav>
+</div>
+
+<script>
+// ── 설정 ─────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://ksrvkezznejsnqjkuezi.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_3yAUPpBWBl1L0Lm-2tOZkg_wbI1MTOC';
+const CALENDAR_WEBHOOK = 'https://danielham.app.n8n.cloud/webhook/get-events';
+const BRANCH = '응암점';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── 상태 ─────────────────────────────────────────────────────────
+let currentUser = null;
+let currentProfile = null;
+let schedules = [];
+let memos = [];
+let todos = [];
+let focuses = [];
+let salesSummaryData = {}; // { month: {...}, week: {...}, today: {...} }
+let trainerSalesData = {}; // { month: [...], week: [...], today: [...] }
+let trainerNames = []; // 드롭다운용
+let currentMemoType = 'personal';
+let quickMemoType = 'personal';
+let currentMemoFilter = 'all';
+let currentSalesPeriod = 'month';
+let currentTab = 'home';
+
+// setInterval 중복 방지
+let calendarIntervalId = null;
+let salesIntervalId = null;
+
+const MEMO_TYPES = {
+  personal: { label: '개인', emoji: '👤' },
+  branch:   { label: '지점', emoji: '🏢' },
+  trainer:  { label: '트레이너', emoji: '💪' }
+};
+const WORK_KW = ["PT","상담","센터","면담","교육","보고","본사","회의","미팅","트레이너"];
+const URGENT_KW = ["긴급","필수"];
+const DAY_MAP = {일:0,월:1,화:2,수:3,목:4,금:5,토:6};
+const COLORS = {personal:"#4a7dff", work:"#f5a623", urgent:"#ff5e3a"};
+const FORTUNES = [
+  "오늘은 작은 결단이 큰 변화를 만드는 날이에요.",
+  "주변 사람들과의 대화에서 뜻밖의 아이디어를 얻을 수 있어요.",
+  "오늘 흘린 땀은 내일의 자신감이 될 거예요.",
+  "오늘은 직감을 믿어보세요. 생각보다 정확할 거예요.",
+  "계획한 일들이 순조롭게 풀리는 날이에요.",
+  "잠시 멈추고 주변을 돌아보면 기회가 보일 거예요.",
+  "오늘의 노력은 반드시 좋은 결실로 돌아올 거예요.",
+  "마음먹은 대로 이루어지는 날이에요.",
+  "진심 어린 노력은 반드시 누군가에게 닿아요.",
+  "오늘은 결단력이 강해지는 날이에요.",
+  "한 걸음 한 걸음이 모여 큰 성과가 되는 날이에요.",
+  "오늘 다니엘의 노력이 주변에 좋은 영향을 줄 거예요 💪",
+  "막혔던 일이 오늘을 기점으로 풀리기 시작할 거예요.",
+];
+
+// ── 인증 ─────────────────────────────────────────────────────────
+function showLoginScreen() {
+  document.getElementById('loginScreen').classList.add('show');
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginLoading').style.display = 'none';
+}
+function showMainApp() {
+  document.getElementById('loginScreen').classList.remove('show');
+  document.getElementById('mainApp').style.display = 'block';
+}
+async function signInWithGoogle() {
+  document.getElementById('loginLoading').style.display = 'block';
+  try {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    });
+    if (error) throw error;
+  } catch (e) {
+    document.getElementById('loginLoading').style.display = 'none';
+    alert('로그인 실패: ' + e.message);
+  }
+}
+async function signOut() {
+  await sb.auth.signOut().catch(()=>{});
+  currentUser = null; currentProfile = null;
+  showLoginScreen();
+}
+async function ensureProfile(user) {
+  const { data: existing } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (existing) return existing;
+  const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+  await sb.from('profiles').upsert({ id: user.id, email: user.email, name, role: 'manager' }, { onConflict: 'id' });
+  const { data } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  return data;
+}
+
+// ── Supabase 데이터 로드 ──────────────────────────────────────────
+async function loadFromSupabase(userId) {
+  const today = new Date().toISOString().split('T')[0];
+  const [schedsRes, memosRes, todosRes, focusesRes] = await Promise.all([
+    sb.from('schedules').select('*').is('deleted_at', null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
+    sb.from('memos').select('*').eq('user_id', userId).is('deleted_at', null).order('created_at', {ascending:false}),
+    sb.from('todos').select('*').eq('user_id', userId).is('deleted_at', null),
+    sb.from('focuses').select('*').eq('user_id', userId).eq('date', today).is('deleted_at', null)
+  ]);
+  schedules = (schedsRes.data||[]).map(s=>({
+    id:s.id, title:s.title, date:s.date+'T00:00:00',
+    hour:s.hour, minute:s.minute, shared:s.shared,
+    color: s.color==='#4a7dff'?'personal': s.color==='#f5a623'?'work':'urgent',
+    fromSupabase:true
+  }));
+  memos = (memosRes.data||[]).map(m=>({
+    id:m.id, text:m.text, type:m.category||'personal',
+    trainer_name:m.trainer_name||null, pinned:m.pinned,
+    date:m.created_at, fromSupabase:true
+  }));
+  todos = (todosRes.data||[]).map(t=>({
+    id:t.id, text:t.text, status:t.status, source:t.source, date:t.created_at, fromSupabase:true
+  }));
+  focuses = (focusesRes.data||[]).map(f=>({
+    id:f.id, text:f.text, done:f.done, date:f.created_at, fromSupabase:true
+  }));
+}
+
+// ── 매출 데이터 (Supabase 직접 조회) ─────────────────────────────
+async function loadSalesFromSupabase() {
+  try {
+    const [summaryRes, trainersRes] = await Promise.all([
+      sb.from('sales_summary').select('*').eq('branch', BRANCH),
+      sb.from('sales_trainers').select('*')
+    ]);
+
+    // sales_summary → period별로 정리
+    salesSummaryData = {};
+    for (const row of (summaryRes.data || [])) {
+      salesSummaryData[row.period_type] = row;
+    }
+
+    // sales_trainers → period별로 정리 + 트레이너 이름 목록
+    trainerSalesData = { month: [], week: [], today: [] };
+    const nameSet = new Set();
+    for (const row of (trainersRes.data || [])) {
+      if (trainerSalesData[row.period_type]) {
+        trainerSalesData[row.period_type].push(row);
+      }
+      nameSet.add(row.trainer_name);
+    }
+    // 각 period 매출 높은 순 정렬
+    for (const p of ['month','week','today']) {
+      trainerSalesData[p].sort((a,b)=>Number(b.net_sales||0)-Number(a.net_sales||0));
+    }
+    trainerNames = [...nameSet].sort();
+    renderTrainerSelects();
+    renderHomeSales();
+    if (currentTab === 'sales') renderSalesTab();
+    if (currentTab === 'team') renderTeamTab();
+  } catch(e) {
+    console.log('매출 로드 실패:', e);
+    document.getElementById('homeSalesBox').innerHTML = '<p class="empty">매출 데이터를 불러오지 못했어요</p>';
+  }
+}
+
+function renderHomeSales() {
+  const d = salesSummaryData['month'];
+  if (!d) { document.getElementById('homeSalesBox').innerHTML = '<p class="empty">데이터 없음</p>'; return; }
+  const grand = Number(d.grand_total||0);
+  const target = 100000000; // 기본 1억 (추후 동적으로)
+  const pct = Math.min((grand/target)*100, 100);
+  const remaining = Math.max(target-grand, 0);
+  const over = Math.max(grand-target, 0);
+  const renewal = Number(d.member_renewal||0);
+  const renewalTarget = Number(d.renewal_target||50);
+  document.getElementById('homeSalesBox').innerHTML = `
+    <div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div>
+    <div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div>
+    <div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>
+    <div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div>
+    <div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${renewal}명 / 목표 ${renewalTarget}명</span></div>
+    <div style="margin-top:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;">
+        <span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div>
+      <div style="font-size:11px;color:var(--text2);text-align:right;margin-top:4px;">
+        ${over>0?`🎉 목표 ${over.toLocaleString()}원 초과!`:`목표까지 ${remaining.toLocaleString()}원 남음`}
+      </div>
+    </div>`;
+}
+
+function setSalesPeriod(period) {
+  currentSalesPeriod = period;
+  ['month','week','today'].forEach(p=>{
+    document.getElementById('period-'+p).classList.toggle('active', p===period);
+  });
+  renderSalesTab();
+}
+
+function renderSalesTab() {
+  const d = salesSummaryData[currentSalesPeriod];
+  const box = document.getElementById('salesSummaryBox');
+  if (!d) { box.innerHTML = '<p class="empty">데이터가 없어요</p>'; }
+  else {
+    const grand = Number(d.grand_total||0);
+    box.innerHTML = `
+      <div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div>
+      <div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div>
+      <div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>
+      ${currentSalesPeriod!=='week'?`
+      <div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div>
+      <div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>`:''}`;
+  }
+  // 트레이너별
+  const trainers = trainerSalesData[currentSalesPeriod] || [];
+  const list = document.getElementById('trainerSalesList');
+  if (!trainers.length) { list.innerHTML = '<p class="empty">데이터가 없어요</p>'; return; }
+  list.innerHTML = trainers.map(t=>{
+    const sales = Number(t.net_sales||0);
+    const target = Number(t.target||0);
+    const rate = target>0?(sales/target*100):0;
+    const rateClass = rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low';
+    const reviewBadge = currentSalesPeriod==='week' && t.review_count===1
+      ? '<span class="badge badge-green" style="margin-left:6px;">리뷰 ✓</span>' : '';
+    return `<div class="trainer-card">
+      <div class="trainer-card-header">
+        <span class="trainer-name">${t.trainer_name}${reviewBadge}</span>
+        <span class="trainer-sales">${sales.toLocaleString()}원</span>
+      </div>
+      ${target>0?`<span class="${rateClass}">${rate.toFixed(1)}% 달성</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderTeamTab() {
+  const container = document.getElementById('teamTrainerList');
+  const trainers = trainerSalesData['month'] || [];
+  if (!trainers.length) { container.innerHTML = '<p class="empty">데이터를 불러오는 중...</p>'; return; }
+  container.innerHTML = trainers.map(t=>{
+    const sales = Number(t.net_sales||0);
+    const target = Number(t.target||0);
+    const rate = target>0?(sales/target*100):0;
+    const rateClass = rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low';
+    const trainerMemos = memos.filter(m=>m.type==='trainer'&&m.trainer_name===t.trainer_name);
+    const preview = trainerMemos.slice(0,2).map(m=>`• ${m.text.substring(0,40)}${m.text.length>40?'...':''}`).join('<br>');
+    return `<div class="team-trainer-card" onclick="openTrainerOverlay('${t.trainer_name}')">
+      <div class="team-card-header">
+        <div>
+          <div class="team-trainer-name">${t.trainer_name}</div>
+          <div class="team-trainer-sales">${sales.toLocaleString()}원</div>
+        </div>
+        <div style="text-align:right;">
+          ${target>0?`<div class="${rateClass}">${rate.toFixed(1)}%</div>`:''}
+          <span class="badge badge-gray" style="margin-top:4px;">메모 ${trainerMemos.length}</span>
+        </div>
+      </div>
+      ${preview?`<div class="team-memo-preview">${preview}</div>`:'<div style="font-size:12px;color:var(--text2);margin-top:6px;">메모 없음</div>'}
+    </div>`;
+  }).join('');
+}
+
+function openTrainerOverlay(trainerName) {
+  const monthData = (trainerSalesData['month']||[]).find(t=>t.trainer_name===trainerName)||{};
+  const weekData  = (trainerSalesData['week']||[]).find(t=>t.trainer_name===trainerName)||{};
+  const trainerMemos = memos.filter(m=>m.type==='trainer'&&m.trainer_name===trainerName);
+  const target = Number(monthData.target||0);
+  const monthSales = Number(monthData.net_sales||0);
+  const rate = target>0?(monthSales/target*100):0;
+  document.getElementById('trainerPanelContent').innerHTML = `
+    <div class="overlay-title">${trainerName}</div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="stat-row"><span class="stat-label">이번달 순매출</span><span class="stat-total">${monthSales.toLocaleString()}원</span></div>
+      ${target>0?`<div class="stat-row"><span class="stat-label">목표 달성률</span><span class="stat-value">${rate.toFixed(1)}%</span></div>`:''}
+      <div class="stat-row"><span class="stat-label">이번주 매출</span><span class="stat-value">${Number(weekData.net_sales||0).toLocaleString()}원</span></div>
+      <div class="stat-row"><span class="stat-label">이번주 리뷰</span><span class="stat-value">${weekData.review_count===1?'✅ 완료':'❌ 미완료'}</span></div>
+    </div>
+    <p class="card-label">메모 내역 (${trainerMemos.length}개)</p>
+    <div style="margin-bottom:12px;">
+      ${trainerMemos.length ? trainerMemos.map(m=>`
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+          <div style="font-size:13px;line-height:1.5;">${m.text}</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:3px;">${fmtDate(m.date)}</div>
+        </div>`).join('') : '<p class="empty" style="padding:12px 0;">메모가 없어요</p>'}
+    </div>
+    <p class="card-label">메모 추가</p>
+    <div class="input-row" style="margin-top:4px;">
+      <input id="overlayMemoInput" class="input-field" placeholder="${trainerName} 메모..." onkeydown="if(event.key==='Enter') addTrainerMemoFromOverlay('${trainerName}')" />
+      <button class="btn-primary" onclick="addTrainerMemoFromOverlay('${trainerName}')">저장</button>
+    </div>`;
+  document.getElementById('trainerOverlay').classList.add('show');
+  document.getElementById('trainerPanel').style.display = 'block';
+}
+
+async function addTrainerMemoFromOverlay(trainerName) {
+  const input = document.getElementById('overlayMemoInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const { data } = await sb.from('memos').insert({
+    user_id:currentUser.id, text, category:'trainer', trainer_name:trainerName, pinned:false
+  }).select().single();
+  if (data) memos.unshift({id:data.id, text, type:'trainer', trainer_name:trainerName, pinned:false, date:data.created_at, fromSupabase:true});
+  input.value='';
+  openTrainerOverlay(trainerName);
+  renderTeamTab();
+}
+
+function closeTrainerOverlay() {
+  document.getElementById('trainerOverlay').classList.remove('show');
+  document.getElementById('trainerPanel').style.display = 'none';
+}
+
+function renderTrainerSelects() {
+  const opts = `<option value="">트레이너 선택...</option>` + trainerNames.map(n=>`<option value="${n}">${n}</option>`).join('');
+  document.getElementById('quickTrainerSelect').innerHTML = opts;
+  document.getElementById('memoTrainerSelect').innerHTML = opts;
+}
+
+// ── localStorage 마이그레이션 ──────────────────────────────────────
+async function migrateFromLocalStorage(userId) {
+  if (localStorage.getItem('supabase_migrated') === 'true') return;
+  const lsSchedules = JSON.parse(localStorage.getItem('schedules')||'[]');
+  const lsMemos = JSON.parse(localStorage.getItem('memos')||'[]');
+  const lsTodos = JSON.parse(localStorage.getItem('todos')||'[]');
+  const lsFocuses = JSON.parse(localStorage.getItem('focuses')||'[]');
+  if (!lsSchedules.length && !lsMemos.length && !lsTodos.length && !lsFocuses.length) {
+    localStorage.setItem('supabase_migrated','true'); return;
+  }
+  try {
+    if (lsSchedules.length) await sb.from('schedules').insert(lsSchedules.filter(s=>!s.fromGoogle).map(s=>({
+      user_id:userId, title:s.title, date:new Date(s.date).toISOString().split('T')[0],
+      hour:s.hour||0, minute:s.minute||0, color:'#4a7dff', shared:false, status:'pending'
+    })));
+    if (lsMemos.length) await sb.from('memos').insert(lsMemos.map(m=>({
+      user_id:userId, text:m.text, category:m.category||'personal', pinned:m.pinned||false
+    })));
+    if (lsTodos.length) await sb.from('todos').insert(lsTodos.map(t=>({
+      user_id:userId, text:t.text, status:(t.status==='ASAP'||t.status==='진행중')?'진행중':'완료', source:t.from||'manual'
+    })));
+    if (lsFocuses.length) await sb.from('focuses').insert(lsFocuses.map(f=>({
+      user_id:userId, text:f.text, done:f.done||false, date:new Date().toISOString().split('T')[0]
+    })));
+    localStorage.setItem('supabase_migrated','true');
+  } catch(e) { console.log('마이그레이션 실패:', e); }
+}
+
+// ── UI ────────────────────────────────────────────────────────────
+function updateUserUI() {
+  if (!currentProfile) return;
+  const name = currentProfile.display_name || currentProfile.name || 'User';
+  const hour = new Date().getHours();
+  const greeting = hour<12?'굿모닝':hour<18?'안녕하세요':'굿이브닝';
+  document.getElementById('headerTitle').textContent = `${greeting}, ${name}`;
+  document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('userNameText').textContent = name;
+  document.getElementById('userRoleText').textContent = currentProfile.role==='manager'?'매니저':'팀장';
+  document.getElementById('userChip').style.display = 'flex';
+}
+
+// ── 탭 ────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+  currentTab = tab;
+  renderAll();
+}
+
+// ── 파싱 유틸 ─────────────────────────────────────────────────────
+function parseNaturalDate(input) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dow = today.getDay();
+  if (input.startsWith('오늘')) return {date:today, rest:input.slice(2).trim()};
+  if (input.startsWith('내일')) { const d=new Date(today); d.setDate(d.getDate()+1); return {date:d, rest:input.slice(2).trim()}; }
+  if (input.startsWith('모레')) { const d=new Date(today); d.setDate(d.getDate()+2); return {date:d, rest:input.slice(2).trim()}; }
+  const nw=input.match(/^다음\s*주\s*([일월화수목금토])요일\s*/);
+  if (nw) { const t=DAY_MAP[nw[1]]; const d=new Date(today); let diff=t-dow; if(diff<=0)diff+=7; d.setDate(d.getDate()+diff); return {date:d, rest:input.slice(nw[0].length).trim()}; }
+  const tw=input.match(/^이번\s*주\s*([일월화수목금토])요일\s*/);
+  if (tw) { const t=DAY_MAP[tw[1]]; const d=new Date(today); let diff=t-dow; if(diff<=0)diff+=7; d.setDate(d.getDate()+diff); return {date:d, rest:input.slice(tw[0].length).trim()}; }
+  const fd=input.match(/^(\d{4})-(\d{2})-(\d{2})\s*/);
+  if (fd) return {date:new Date(+fd[1],+fd[2]-1,+fd[3]), rest:input.slice(fd[0].length).trim()};
+  const sd=input.match(/^(\d{2})-(\d{2})\s*/);
+  if (sd) return {date:new Date(now.getFullYear(),+sd[1]-1,+sd[2]), rest:input.slice(sd[0].length).trim()};
+  return null;
+}
+function parseTimeAndTitle(rest) {
+  const korFull = rest.match(/^(\d{1,2})시\s*(\d{1,2})분\s+(.+)$/);
+  if (korFull) return {hour:+korFull[1], minute:+korFull[2], title:korFull[3]};
+  const korHour = rest.match(/^(\d{1,2})시\s+(.+)$/);
+  if (korHour) return {hour:+korHour[1], minute:0, title:korHour[2]};
+  const colon = rest.match(/^(\d{1,2}):(\d{2})\s+(.+)$/);
+  if (colon) return {hour:+colon[1], minute:+colon[2], title:colon[3]};
+  return null;
+}
+function getColorId(text) {
+  if (URGENT_KW.some(k=>text.includes(k))) return 'urgent';
+  if (WORK_KW.some(k=>text.includes(k))) return 'work';
+  return 'personal';
+}
+function fmt(d) { return new Date(d).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'}); }
+function fmtTime(h,m) { const p=h<12?'AM':'PM'; return `${p} ${h%12||12}:${String(m).padStart(2,'0')}`; }
+function fmtDate(d) { return new Date(d).toLocaleString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
+// ── 일정 ─────────────────────────────────────────────────────────
+async function addSchedule() {
+  const input = document.getElementById('schedInput').value;
+  const p = parseNaturalDate(input.trim());
+  const errEl = document.getElementById('schedErr');
+  if (!p) { errEl.textContent='형식: 내일 10시 PT상담'; errEl.style.display='block'; return; }
+  const t = parseTimeAndTitle(p.rest);
+  if (!t) { errEl.textContent='시간 형식: 10시, 15시 30분, 10:00'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
+  const color = getColorId(t.title);
+  const { data } = await sb.from('schedules').insert({
+    user_id: currentUser.id, title: t.title,
+    date: p.date.toISOString().split('T')[0],
+    hour: t.hour, minute: t.minute,
+    color: color==='personal'?'#4a7dff': color==='work'?'#f5a623':'#ff5e3a',
+    shared: currentProfile?.role==='team_leader', status: 'pending'
+  }).select().single();
+  if (data) schedules.push({id:data.id, title:t.title, date:p.date.toISOString(), hour:t.hour, minute:t.minute, color, shared:data.shared, fromSupabase:true});
+  document.getElementById('schedInput').value='';
+  renderAll();
+}
+async function deleteSchedule(id) {
+  schedules = schedules.filter(s=>s.id!==id);
+  if (typeof id==='string'&&id.includes('-')) await sb.from('schedules').update({deleted_at:new Date().toISOString()}).eq('id',id);
+  renderAll();
+}
+
+// ── 메모 ─────────────────────────────────────────────────────────
+function setMemoType(type, isQuick=false) {
+  if (isQuick) { quickMemoType=type; renderQuickMemoTypePills(); document.getElementById('quickTrainerRow').classList.toggle('show', type==='trainer'); }
+  else { currentMemoType=type; renderMemoTypePills(); document.getElementById('memoTrainerRow').classList.toggle('show', type==='trainer'); }
+}
+async function addMemo() {
+  const text = document.getElementById('memoInput').value.trim();
+  if (!text) return;
+  const trainer = currentMemoType==='trainer' ? document.getElementById('memoTrainerSelect').value : null;
+  const now = new Date();
+  const day = now.getDay();
+  const diff = day===0?-6:1-day;
+  const monday = new Date(now); monday.setDate(now.getDate()+diff);
+  const weekStart = monday.toISOString().split('T')[0];
+  const { data } = await sb.from('memos').insert({
+    user_id:currentUser.id, text, category:currentMemoType,
+    trainer_name:trainer||null, pinned:false,
+    week_start:weekStart, author_role:currentProfile?.role||'manager'
+  }).select().single();
+  if (data) memos.unshift({id:data.id, text, type:currentMemoType, trainer_name:trainer||null, pinned:false, date:data.created_at, fromSupabase:true});
+  document.getElementById('memoInput').value='';
+  renderAll();
+}
+async function addQuickMemo() {
+  const text = document.getElementById('quickMemoInput').value.trim();
+  if (!text) return;
+  const trainer = quickMemoType==='trainer' ? document.getElementById('quickTrainerSelect').value : null;
+  const now = new Date();
+  const day = now.getDay();
+  const diff = day===0?-6:1-day;
+  const monday = new Date(now); monday.setDate(now.getDate()+diff);
+  const weekStart = monday.toISOString().split('T')[0];
+  const { data } = await sb.from('memos').insert({
+    user_id:currentUser.id, text, category:quickMemoType,
+    trainer_name:trainer||null, pinned:false,
+    week_start:weekStart, author_role:currentProfile?.role||'manager'
+  }).select().single();
+  if (data) memos.unshift({id:data.id, text, type:quickMemoType, trainer_name:trainer||null, pinned:false, date:data.created_at, fromSupabase:true});
+  document.getElementById('quickMemoInput').value='';
+  renderAll();
+}
+async function deleteMemo(id) {
+  memos = memos.filter(m=>m.id!==id);
+  if (typeof id==='string'&&id.includes('-')) await sb.from('memos').update({deleted_at:new Date().toISOString()}).eq('id',id);
+  renderAll();
+}
+function setMemoFilter(f) { currentMemoFilter=f; renderMemos(); renderMemoFilterPills(); }
+
+// ── 할 일 ─────────────────────────────────────────────────────────
+async function addTodo() {
+  const text = document.getElementById('todoInput').value.trim();
+  if (!text) return;
+  const { data } = await sb.from('todos').insert({user_id:currentUser.id, text, status:'진행중', source:'manual'}).select().single();
+  if (data) todos.push({id:data.id, text, status:'진행중', source:'manual', date:data.created_at, fromSupabase:true});
+  document.getElementById('todoInput').value='';
+  renderAll();
+}
+async function moveTodo(id, status) {
+  todos = todos.map(t=>t.id===id?{...t,status}:t);
+  if (typeof id==='string'&&id.includes('-')) await sb.from('todos').update({status}).eq('id',id);
+  renderAll();
+}
+async function deleteTodo(id) {
+  todos = todos.filter(t=>t.id!==id);
+  if (typeof id==='string'&&id.includes('-')) await sb.from('todos').update({deleted_at:new Date().toISOString()}).eq('id',id);
+  renderAll();
+}
+
+// ── 포커스 ────────────────────────────────────────────────────────
+async function addFocus() {
+  const input = document.getElementById('focusInput');
+  const text = input.value.trim();
+  if (!text || focuses.filter(f=>!f.done).length>=3) return;
+  const { data } = await sb.from('focuses').insert({user_id:currentUser.id, text, done:false, date:new Date().toISOString().split('T')[0]}).select().single();
+  if (data) focuses.push({id:data.id, text, done:false, date:data.created_at, fromSupabase:true});
+  input.value='';
+  renderAll();
+}
+async function toggleFocus(id) {
+  focuses = focuses.map(f=>f.id===id?{...f,done:!f.done}:f);
+  const focus = focuses.find(f=>f.id===id);
+  if (focus && typeof id==='string'&&id.includes('-')) await sb.from('focuses').update({done:focus.done}).eq('id',id);
+  renderAll();
+}
+async function deleteFocus(id) {
+  focuses = focuses.filter(f=>f.id!==id);
+  if (typeof id==='string'&&id.includes('-')) await sb.from('focuses').update({deleted_at:new Date().toISOString()}).eq('id',id);
+  renderAll();
+}
+
+// ── 구글 캘린더 ───────────────────────────────────────────────────
+async function fetchGoogleCalendar() {
+  try {
+    const res = await fetch(CALENDAR_WEBHOOK);
+    const data = await res.json();
+    if (data.events) {
+      const gEvents = data.events.map(e=>({
+        id:'google_'+e.start, title:e.title,
+        date:new Date(e.start).toISOString(),
+        hour:new Date(e.start).getHours(), minute:new Date(e.start).getMinutes(),
+        color:e.color==='5'?'work':e.color==='6'?'urgent':'personal',
+        fromGoogle:true, shared:false  // 구글 일정은 개인 일정
+      }));
+      schedules = [...schedules.filter(s=>!s.fromGoogle), ...gEvents];
+      renderAll();
+    }
+  } catch(e) { console.log('캘린더 실패:', e); }
+}
+
+// ── 렌더 함수들 ───────────────────────────────────────────────────
+function renderHome() {
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const todayScheds = schedules.filter(s=>new Date(s.date).toDateString()===todayStr&&!s.shared).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
+  const todayEl = document.getElementById('homeTodayScheds');
+  todayEl.innerHTML = todayScheds.length ? todayScheds.map(s=>`
+    <div class="row">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="sched-dot" style="background:${COLORS[s.color]};"></div>
+        <span style="font-size:14px;">${s.title}</span>
+      </div>
+      <span style="font-size:12px;color:var(--text2);">${fmtTime(s.hour,s.minute)}</span>
+    </div>`).join('') : '<p class="empty">오늘 일정이 없어요</p>';
+  const active = focuses.filter(f=>!f.done);
+  document.getElementById('focusCount').textContent = `${active.length}/3`;
+  document.getElementById('focusList').innerHTML = focuses.map(f=>`
+    <div class="focus-item">
+      <div class="focus-check ${f.done?'done':''}" onclick="toggleFocus('${f.id}')">${f.done?'✓':''}</div>
+      <span style="flex:1;font-size:14px;${f.done?'text-decoration:line-through;color:var(--text2);':''}">${f.text}</span>
+      <button class="btn-icon" onclick="deleteFocus('${f.id}')">×</button>
+    </div>`).join('');
+  document.getElementById('focusInputArea').style.display = active.length<3?'flex':'none';
+  const fm = document.getElementById('focusMsg');
+  if (focuses.length>0&&focuses.every(f=>f.done)) { fm.style.display='block'; fm.style.color='var(--blue)'; fm.textContent='🎉 오늘 포커스 완료! 수고했어요'; }
+  else { fm.style.display='none'; }
+}
+function renderQuickMemoTypePills() {
+  document.getElementById('quickMemoTypePills').innerHTML = Object.entries(MEMO_TYPES).map(([key,val])=>`
+    <button class="type-pill ${quickMemoType===key?'active':'inactive'}" onclick="setMemoType('${key}',true)">${val.emoji} ${val.label}</button>`).join('');
+}
+function renderMemoTypePills() {
+  document.getElementById('memoTypePills').innerHTML = Object.entries(MEMO_TYPES).map(([key,val])=>`
+    <button class="type-pill ${currentMemoType===key?'active':'inactive'}" onclick="setMemoType('${key}',false)">${val.emoji} ${val.label}</button>`).join('');
+}
+function renderMemoFilterPills() {
+  const filters = [{key:'all',label:'전체'},{key:'personal',label:'👤 개인'},{key:'branch',label:'🏢 지점'},{key:'trainer',label:'💪 트레이너'}];
+  document.getElementById('memoFilterPills').innerHTML = filters.map(f=>`
+    <button class="type-pill ${currentMemoFilter===f.key?'active':'inactive'}" onclick="setMemoFilter('${f.key}')">${f.label}</button>`).join('');
+}
+function renderSchedules() {
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const todayS = schedules.filter(s=>new Date(s.date).toDateString()===todayStr).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
+  const upS = schedules.filter(s=>new Date(s.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('schedEmpty').style.display = schedules.length===0?'block':'none';
+  const tc = document.getElementById('todaySchedCard');
+  if (todayS.length) { tc.style.display='block'; document.getElementById('todaySchedList').innerHTML=todayS.map(s=>`
+    <div class="sched-item">
+      <div class="sched-dot" style="background:${COLORS[s.color]};"></div>
+      <div style="flex:1;"><div class="sched-title">${s.title}</div><div class="sched-sub">${fmtTime(s.hour,s.minute)}</div></div>
+      ${!s.fromGoogle?`<button class="btn-icon" onclick="deleteSchedule('${s.id}')">×</button>`:''}
+    </div>`).join(''); } else { tc.style.display='none'; }
+  const uc = document.getElementById('upcomingSchedCard');
+  if (upS.length) { uc.style.display='block'; document.getElementById('upcomingSchedList').innerHTML=upS.map(s=>`
+    <div class="sched-item">
+      <div class="sched-dot" style="background:${COLORS[s.color]};"></div>
+      <div style="flex:1;"><div class="sched-title">${s.title}</div><div class="sched-sub">${fmt(s.date)} · ${fmtTime(s.hour,s.minute)}</div></div>
+      ${!s.fromGoogle?`<button class="btn-icon" onclick="deleteSchedule('${s.id}')">×</button>`:''}
+    </div>`).join(''); } else { uc.style.display='none'; }
+}
+function renderMemos() {
+  const search = (document.getElementById('memoSearch')?.value||'').toLowerCase();
+  let filtered = memos;
+  if (currentMemoFilter!=='all') filtered = filtered.filter(m=>m.type===currentMemoFilter);
+  if (search) filtered = filtered.filter(m=>m.text.toLowerCase().includes(search)||(m.trainer_name||'').toLowerCase().includes(search));
+  filtered = filtered.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||new Date(b.date)-new Date(a.date));
+  const lc = document.getElementById('memoListCard');
+  const me = document.getElementById('memoEmpty');
+  if (!filtered.length) { if(lc)lc.style.display='none'; if(me){me.style.display='block';me.textContent=search?'검색 결과가 없어요':'저장된 메모가 없어요';} return; }
+  if(lc)lc.style.display='block'; if(me)me.style.display='none';
+  document.getElementById('memoList').innerHTML = filtered.map(m=>`
+    <div class="memo-item">
+      <div class="memo-top">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="badge badge-gray">${MEMO_TYPES[m.type]?.emoji||''} ${MEMO_TYPES[m.type]?.label||m.type}</span>
+          ${m.trainer_name?`<span class="badge badge-blue">${m.trainer_name}</span>`:''}
+        </div>
+        <button class="btn-icon" onclick="deleteMemo('${m.id}')">×</button>
+      </div>
+      <p class="memo-text">${m.text}</p>
+      <p class="memo-meta">${fmtDate(m.date)}</p>
+    </div>`).join('');
+}
+function renderTodos() {
+  const active = todos.filter(t=>t.status==='진행중');
+  const done = todos.filter(t=>t.status==='완료');
+  document.getElementById('todoEmpty').style.display = todos.length===0?'block':'none';
+  const as = document.getElementById('activeSection');
+  if (active.length) { as.style.display='block'; document.getElementById('activeCount').textContent=active.length;
+    document.getElementById('activeList').innerHTML=active.map(t=>`
+      <div class="todo-item">
+        <button onclick="moveTodo('${t.id}','완료')" style="font-size:18px;color:var(--text2);flex-shrink:0;">○</button>
+        <div style="flex:1;"><p class="todo-text">${t.text}</p></div>
+        <button class="btn-icon" onclick="deleteTodo('${t.id}')">×</button>
+      </div>`).join(''); } else { as.style.display='none'; }
+  const ds = document.getElementById('doneSection');
+  if (done.length) { ds.style.display='block'; document.getElementById('doneCount').textContent=done.length;
+    document.getElementById('doneList').innerHTML=done.map(t=>`
+      <div class="todo-item todo-done">
+        <button onclick="moveTodo('${t.id}','진행중')" style="font-size:18px;color:#aaa;flex-shrink:0;">✓</button>
+        <div style="flex:1;"><p class="todo-text">${t.text}</p></div>
+        <button class="btn-icon" onclick="deleteTodo('${t.id}')">×</button>
+      </div>`).join(''); } else { ds.style.display='none'; }
+}
+function renderAll() {
+  renderHome();
+  renderSchedules();
+  renderMemos();
+  renderTodos();
+  renderQuickMemoTypePills();
+  renderMemoTypePills();
+  renderMemoFilterPills();
+  if (currentTab==='sales') renderSalesTab();
+  if (currentTab==='team') renderTeamTab();
+}
+
+// ── 앱 초기화 ─────────────────────────────────────────────────────
+async function initApp(user) {
+  currentUser = user;
+  showMainApp();
+  document.getElementById('headerDate').textContent = new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'});
+  document.getElementById('headerTitle').textContent = `안녕하세요, ${user.user_metadata?.full_name||user.email?.split('@')[0]||'User'}`;
+  document.getElementById('fortuneText') && (document.getElementById('fortuneText').textContent = '🔮 ' + FORTUNES[Math.floor(Math.random()*FORTUNES.length)]);
+  try {
+    currentProfile = await ensureProfile(user);
+    await migrateFromLocalStorage(user.id);
+    await loadFromSupabase(user.id);
+    updateUserUI();
+    renderAll();
+
+    // setInterval 중복 방지
+    if (calendarIntervalId) clearInterval(calendarIntervalId);
+    if (salesIntervalId) clearInterval(salesIntervalId);
+
+    fetchGoogleCalendar();
+    loadSalesFromSupabase();
+
+    calendarIntervalId = setInterval(fetchGoogleCalendar, 5*60*1000);
+    salesIntervalId = setInterval(loadSalesFromSupabase, 15*60*1000);
+  } catch(e) {
+    console.error('초기화 오류:', e);
+    renderAll();
+  }
+}
+
+// ── 세션 관리 ─────────────────────────────────────────────────────
+let appInitialized = false;
+
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_OUT') {
+    appInitialized = false;
+    currentUser = null; currentProfile = null;
+    showLoginScreen();
+  }
+  if (event === 'SIGNED_IN' && !appInitialized) {
+    appInitialized = true;
+    initApp(session.user);
+  }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { data } = await sb.auth.getSession();
+    if (data.session?.user) {
+      appInitialized = true;
+      await initApp(data.session.user);
+    } else {
+      showLoginScreen();
+    }
+  } catch(e) { showLoginScreen(); }
+});
+</script>
+</body>
+</html>
