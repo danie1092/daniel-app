@@ -662,7 +662,7 @@ function updateUserUI() {
   document.getElementById('headerTitle').textContent = `${greeting}, ${name}`;
   document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
   document.getElementById('userNameText').textContent = name;
-  document.getElementById('userRoleText').textContent = currentProfile.role==='admin'?'관리자':currentProfile.role==='manager'?'매니저':'팀장';
+  document.getElementById('userRoleText').textContent = currentProfile.role==='admin'?'관리자':'';
   document.getElementById('userChip').style.display = 'flex';
 }
 
