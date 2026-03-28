@@ -781,8 +781,16 @@ async function addQuickMemo() {
   renderAll();
 }
 async function deleteMemo(id) {
-  memos = memos.filter(m=>m.id!==id);
-  if (typeof id==='string'&&id.includes('-')) await sb.from('memos').update({deleted_at:new Date().toISOString()}).eq('id',id);
+  const { error } = await sb.from('memos')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', id)
+    .eq('user_id', currentUser.id);
+  if (error) {
+    console.error('메모 삭제 실패:', error);
+    alert('삭제 실패: ' + error.message);
+    return;
+  }
+  memos = memos.filter(m => m.id !== id);
   renderAll();
 }
 function setMemoFilter(f) { currentMemoFilter=f; renderMemos(); renderMemoFilterPills(); }
