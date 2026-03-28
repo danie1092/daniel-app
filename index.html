@@ -785,7 +785,7 @@ async function addQuickMemo() {
 }
 async function deleteMemo(id) {
   const { error } = await sb.from('memos')
-    .update({ deleted_at: new Date().toISOString() })
+    .delete()
     .eq('id', id)
     .eq('user_id', currentUser.id);
   if (error) {
