@@ -936,7 +936,7 @@ function renderMemos() {
           <span class="badge badge-gray">${MEMO_TYPES[m.type]?.emoji||''} ${MEMO_TYPES[m.type]?.label||m.type}</span>
           ${m.trainer_name?`<span class="badge badge-blue">${m.trainer_name}</span>`:''}
         </div>
-        <button class="btn-icon" onclick="deleteMemo('${m.id}')">×</button>
+        <button class="btn-icon" onclick="deleteMemo(\`${m.id}\`)">×</button>
       </div>
       <p class="memo-text">${m.text}</p>
       <p class="memo-meta">${fmtDate(m.date)}</p>
