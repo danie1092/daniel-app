@@ -42,7 +42,7 @@
     .row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
     .row:last-child { border-bottom: none; }
     .input-row { display: flex; gap: 8px; align-items: center; }
-    .input-field { flex: 1; font-size: 14px; padding: 9px 12px; border-radius: 10px; background: var(--surface2); }
+    .input-field { flex: 1; font-size: 16px; padding: 9px 12px; border-radius: 10px; background: var(--surface2); }
     .select-field { font-size: 13px; padding: 8px 10px; border-radius: 10px; background: var(--surface2); border: none; outline: none; color: var(--text); }
     .btn-primary { font-size: 13px; font-weight: 700; color: var(--bg); background: var(--text); padding: 9px 18px; border-radius: 20px; white-space: nowrap; }
     .btn-sm { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: var(--surface2); color: var(--text2); }
@@ -763,8 +763,11 @@ async function addMemo() {
   renderAll();
 }
 async function addQuickMemo() {
-  const text = document.getElementById('quickMemoInput').value.trim();
+  const input = document.getElementById('quickMemoInput');
+  const text = input.value.trim();
   if (!text) return;
+  input.disabled = true;
+  input.disabled = false;
   const trainer = quickMemoType==='trainer' ? document.getElementById('quickTrainerSelect').value : null;
   const now = new Date();
   const day = now.getDay();
@@ -787,7 +790,6 @@ async function deleteMemo(id) {
     .eq('user_id', currentUser.id);
   if (error) {
     console.error('메모 삭제 실패:', error);
-    alert('삭제 실패: ' + error.message);
     return;
   }
   memos = memos.filter(m => m.id !== id);
