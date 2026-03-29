@@ -401,7 +401,7 @@ async function ensureProfile(user) {
   const { data: existing } = await sb.from('profiles').select('*').eq('id', user.id).single();
   if (existing) return existing;
   const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User';
-  await sb.from('profiles').upsert({ id: user.id, email: user.email, name, role: 'manager' }, { onConflict: 'id' });
+  await sb.from('profiles').upsert({ id: user.id, email: user.email, name, role: 'team_leader' }, { onConflict: 'id' });
   const { data } = await sb.from('profiles').select('*').eq('id', user.id).single();
   return data;
 }
