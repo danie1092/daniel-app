@@ -777,7 +777,8 @@ async function addQuickMemo() {
   const { data } = await sb.from('memos').insert({
     user_id:currentUser.id, text, category:quickMemoType,
     trainer_name:trainer||null, pinned:false,
-    week_start:weekStart, author_role:currentProfile?.role||'manager'
+    week_start:weekStart, author_role:currentProfile?.role||'team_leader',
+    author_name:currentProfile?.name||currentProfile?.display_name||''
   }).select().single();
   if (data) memos.unshift({id:data.id, text, type:quickMemoType, trainer_name:trainer||null, pinned:false, date:data.created_at, fromSupabase:true});
   input.value='';
