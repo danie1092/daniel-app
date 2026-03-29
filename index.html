@@ -787,7 +787,7 @@ async function addQuickMemo() {
 }
 async function deleteMemo(id) {
   const { error } = await sb.from('memos')
-    .update({ deleted_at: new Date().toISOString() })
+    .delete()
     .eq('id', id);
   if (error) { console.error('메모 삭제 실패:', error); return; }
   memos = memos.filter(m => m.id !== id);
