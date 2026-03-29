@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="다니엘" />
+  <meta name="apple-mobile-web-app-title" content="업무 어시스턴트" />
   <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0f0f0e" media="(prefers-color-scheme: dark)" />
-  <title>다니엘 어시스턴트</title>
+  <title>업무 어시스턴트</title>
   <link rel="manifest" href="manifest.json" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
@@ -130,7 +130,7 @@
 
 <div id="loginScreen">
   <div class="login-logo">🏋️</div>
-  <h1 class="login-title">다니엘 어시스턴트</h1>
+  <h1 class="login-title">업무 어시스턴트</h1>
   <p class="login-sub">지점 운영을 스마트하게<br>구글 계정으로 로그인해주세요</p>
   <button class="btn-google" onclick="signInWithGoogle()">
     <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#fff" d="M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z"/><path fill="#fff" d="M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#fff" d="M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z"/><path fill="#fff" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z"/></svg>
@@ -411,7 +411,7 @@ async function loadFromSupabase(userId) {
   const today = new Date().toISOString().split('T')[0];
   const [schedsRes, memosRes, todosRes, focusesRes] = await Promise.all([
     sb.from('schedules').select('*').is('deleted_at', null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
-    sb.from('memos').select('*').eq('user_id', userId).is('deleted_at', null).order('created_at', {ascending:false}),
+    sb.from('memos').select('*').is('deleted_at', null).order('created_at', {ascending:false}),
     sb.from('todos').select('*').eq('user_id', userId).is('deleted_at', null),
     sb.from('focuses').select('*').eq('user_id', userId).eq('date', today).is('deleted_at', null)
   ]);
