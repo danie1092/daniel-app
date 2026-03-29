@@ -786,21 +786,10 @@ async function addQuickMemo() {
   renderAll();
 }
 async function deleteMemo(id) {
-  const isAdmin = currentProfile?.role === 'admin';
-  if (isAdmin) {
-    // admin은 소프트 딜리트
-    const { error } = await sb.from('memos')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', id);
-    if (error) { console.error('메모 삭제 실패:', error); return; }
-  } else {
-    // 일반 유저는 본인 것만 소프트 딜리트
-    const { error } = await sb.from('memos')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', id)
-      .eq('user_id', currentUser.id);
-    if (error) { console.error('메모 삭제 실패:', error); return; }
-  }
+  const { error } = await sb.from('memos')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) { console.error('메모 삭제 실패:', error); return; }
   memos = memos.filter(m => m.id !== id);
   renderAll();
 }
