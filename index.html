@@ -759,7 +759,7 @@ user_id:currentUser.id, text, category:currentMemoType,
     week_start:weekStart, author_role:currentProfile?.role||'team_leader',
     author_name:currentProfile?.name||currentProfile?.display_name||''
   }).select().single();
-  if (data) memos.unshift({id:data.id, text, type:currentMemoType, trainer_name:trainer||null, pinned:false, date:data.created_at, fromSupabase:true});
+  if (data) memos.unshift({id:data.id, text, type:currentMemoType, trainer_name:trainer||null, pinned:false, author_name:currentProfile?.name||null, date:data.created_at, fromSupabase:true});
   document.getElementById('memoInput').value='';
   renderAll();
 }
