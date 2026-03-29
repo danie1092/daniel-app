@@ -754,9 +754,10 @@ async function addMemo() {
   const monday = new Date(now); monday.setDate(now.getDate()+diff);
   const weekStart = monday.toISOString().split('T')[0];
   const { data } = await sb.from('memos').insert({
-    user_id:currentUser.id, text, category:currentMemoType,
+user_id:currentUser.id, text, category:currentMemoType,
     trainer_name:trainer||null, pinned:false,
-    week_start:weekStart, author_role:currentProfile?.role||'manager'
+    week_start:weekStart, author_role:currentProfile?.role||'team_leader',
+    author_name:currentProfile?.name||currentProfile?.display_name||''
   }).select().single();
   if (data) memos.unshift({id:data.id, text, type:currentMemoType, trainer_name:trainer||null, pinned:false, date:data.created_at, fromSupabase:true});
   document.getElementById('memoInput').value='';
