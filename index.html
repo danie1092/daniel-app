@@ -424,7 +424,7 @@ async function loadFromSupabase(userId) {
   memos = (memosRes.data||[]).map(m=>({
     id:m.id, text:m.text, type:m.category||'personal',
     trainer_name:m.trainer_name||null, pinned:m.pinned,
-    date:m.created_at, fromSupabase:true
+    author_name:m.author_name||null, date:m.created_at, fromSupabase:true
   }));
   todos = (todosRes.data||[]).map(t=>({
     id:t.id, text:t.text, status:t.status, source:t.source, date:t.created_at, fromSupabase:true
@@ -948,7 +948,7 @@ function renderMemos() {
         <button class="btn-icon" onclick="deleteMemo(\`${m.id}\`)">×</button>
       </div>
       <p class="memo-text">${m.text}</p>
-      <p class="memo-meta">${fmtDate(m.date)}</p>
+     <p class="memo-meta">${m.author_name ? m.author_name + ' · ' : ''}${fmtDate(m.date)}</p>
     </div>`).join('');
 }
 function renderTodos() {
