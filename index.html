@@ -361,6 +361,12 @@
 </div>
 
 <script>
+  function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 const SUPABASE_URL='https://ksrvkezznejsnqjkuezi.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzcnZrZXp6bmVqc25xamt1ZXppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1Mjg3MjksImV4cCI6MjA5MDEwNDcyOX0.mctJE39vdbfuJBVGjf-30qgNpLh0HJKB-E_00raM5TM';
 const CALENDAR_WEBHOOK='https://danielham.app.n8n.cloud/webhook/get-events';
@@ -550,16 +556,17 @@ function setSchedType(type){
 }
 
 async function addSchedule(){
-  const input=document.getElementById('schedInput').value;
-  const p=parseNaturalDate(input.trim()),errEl=document.getElementById('schedErr');
-  if(!p){errEl.textContent='형식: 내일 10시 PT상담';errEl.style.display='block';return;}
-  const t=parseTimeAndTitle(p.rest);
-  if(!t){errEl.textContent='시간 형식: 10시, 15시 30분, 10:00';errEl.style.display='block';return;}
-  errEl.style.display='none';
-  const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
-  const{data}=await sb.from('schedules').insert({user_id:currentUser.id,title:t.title,date:p.date.toISOString().split('T')[0],hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],shared:false,status:'pending'}).select().single();
-  if(data)schedules.push({id:data.id,title:t.title,date:p.date.toISOString(),hour:t.hour,minute:t.minute,color:currentSchedType,shared:false,fromSupabase:true});
-  document.getElementById('schedInput').value='';renderAll();
+  const input=document.getElementById('schedInput').value;
+  const p=parseNaturalDate(input.trim()),errEl=document.getElementById('schedErr');
+  if(!p){errEl.textContent='형식: 내일 10시 PT상담';errEl.style.display='block';return;}
+  const t=parseTimeAndTitle(p.rest);
+  if(!t){errEl.textContent='시간 형식: 10시, 15시 30분, 10:00';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
+  // 👇 여기가 수정된 부분입니다!
+  const{data}=await sb.from('schedules').insert({user_id:currentUser.id,title:t.title,date:getLocalDateString(p.date),hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],shared:false,status:'pending'}).select().single();
+  if(data)schedules.push({id:data.id,title:t.title,date:getLocalDateString(p.date)+'T00:00:00',hour:t.hour,minute:t.minute,color:currentSchedType,shared:false,fromSupabase:true});
+  document.getElementById('schedInput').value='';renderAll();
 }
 async function deleteSchedule(id){
   schedules=schedules.filter(s=>s.id!==id);
@@ -632,11 +639,12 @@ async function deleteTodo(id){
 }
 
 async function addFocus(){
-  const input=document.getElementById('focusInput'),text=input.value.trim();
-  if(!text||focuses.filter(f=>!f.done).length>=3)return;
-  const{data}=await sb.from('focuses').insert({user_id:currentUser.id,text,done:false,date:new Date().toISOString().split('T')[0]}).select().single();
-  if(data)focuses.push({id:data.id,text,done:false,date:data.created_at,fromSupabase:true});
-  input.value='';renderAll();
+  const input=document.getElementById('focusInput'),text=input.value.trim();
+  if(!text||focuses.filter(f=>!f.done).length>=3)return;
+  // 👇 여기가 수정된 부분입니다!
+  const{data}=await sb.from('focuses').insert({user_id:currentUser.id,text,done:false,date:getLocalDateString(new Date())}).select().single();
+  if(data)focuses.push({id:data.id,text,done:false,date:data.created_at,fromSupabase:true});
+  input.value='';renderAll();
 }
 async function toggleFocus(id){
   focuses=focuses.map(f=>f.id===id?{...f,done:!f.done}:f);
