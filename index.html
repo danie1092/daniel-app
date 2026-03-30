@@ -653,9 +653,13 @@ async function toggleFocus(id){
   renderAll();
 }
 async function deleteFocus(id){
-  focuses=focuses.filter(f=>f.id!==id);
-  if(typeof id==='string'&&id.includes('-'))await sb.from('focuses').update({deleted_at:new Date().toISOString()}).eq('id',id);
-  renderAll();
+  focuses=focuses.filter(f=>f.id!==id);
+  // 👇 여기가 소프트 딜리트에서 하드 딜리트(영구 삭제)로 수정된 부분입니다!
+  if(typeof id==='string'&&id.includes('-')){
+    const{error}=await sb.from('focuses').delete().eq('id',id);
+    if(error)console.error('포커스 삭제 실패:',error);
+  }
+  renderAll();
 }
 
 async function fetchGoogleCalendar(){
