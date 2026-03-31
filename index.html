@@ -69,7 +69,7 @@
     .login-sub { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.7; }
     .btn-google { display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 20px; background: var(--text); color: var(--bg); font-size: 15px; font-weight: 700; width: 100%; max-width: 280px; justify-content: center; }
     .login-loading { font-size: 13px; color: var(--text2); }
-
+ 
     /* 포커스 */
     .focus-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .focus-item:last-child { border-bottom: none; }
@@ -79,7 +79,7 @@
     .focus-item.overdue .focus-text { color: var(--red) !important; font-weight: 600; }
     .focus-item.overdue .focus-check { border-color: var(--red); }
     .overdue-badge { font-size: 9px; font-weight: 700; color: var(--red); background: #fff0ed; border-radius: 6px; padding: 1px 5px; margin-left: 4px; flex-shrink: 0; }
-
+ 
     .sched-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .sched-item:last-child { border-bottom: none; }
     .sched-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
@@ -101,7 +101,7 @@
     .todo-text { font-size: 14px; line-height: 1.5; flex: 1; }
     .todo-done .todo-text { text-decoration: line-through; color: var(--text2); }
     .section-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; margin-top: 4px; }
-
+ 
     /* 매출 탭 */
     .sales-period-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 14px; }
     .period-tab { flex: 1; text-align: center; font-size: 12px; font-weight: 600; padding: 7px 4px; border-radius: 8px; cursor: pointer; color: var(--text2); }
@@ -147,7 +147,7 @@
     .memo-add-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
     .memo-add-body { display: none; border-top: 1px solid var(--border); padding: 14px; }
     .memo-add-body.open { display: block; }
-
+ 
     /* 일정+할일 통합 탭 아코디언 */
     .unified-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
     .unified-section-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
@@ -160,7 +160,7 @@
     .preview-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
     .preview-item:last-child { border-bottom: none; }
     .preview-more { font-size: 11px; color: var(--text2); text-align: center; padding: 4px 0 8px; cursor: pointer; }
-
+ 
     /* 매출 지난달 비교 */
     .compare-badge { font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; }
     .compare-up { background: #dcfce7; color: var(--green); }
@@ -169,7 +169,7 @@
   </style>
 </head>
 <body>
-
+ 
 <div id="loginScreen">
   <div class="login-logo">🏋️</div>
   <h1 class="login-title">업무 어시스턴트</h1>
@@ -180,13 +180,13 @@
   </button>
   <p class="login-loading" id="loginLoading" style="display:none;">로그인 중...</p>
 </div>
-
+ 
 <div class="overlay" id="trainerOverlay" onclick="closeTrainerOverlay()"></div>
 <div class="overlay-panel" id="trainerPanel" style="display:none;">
   <div class="overlay-handle"></div>
   <div id="trainerPanelContent"></div>
 </div>
-
+ 
 <div class="app" id="mainApp" style="display:none;">
   <div class="header">
     <div class="header-left">
@@ -204,9 +204,9 @@
       <button onclick="signOut()" style="font-size:11px; color:var(--text2); padding:5px 8px; border-radius:8px; background:var(--surface); border:1px solid var(--border);">나가기</button>
     </div>
   </div>
-
+ 
   <div class="content">
-
+ 
     <!-- 홈 -->
     <div id="tab-home" class="tab-content active fade">
       <div class="card" id="homeSalesCard">
@@ -233,7 +233,7 @@
         <div id="homeTodayScheds"><p class="empty">오늘 일정이 없어요</p></div>
       </div>
     </div>
-
+ 
     <!-- 일정+할일 통합 -->
     <div id="tab-schedule" class="tab-content fade">
       <!-- 일정 추가 -->
@@ -251,7 +251,7 @@
         <p class="err" id="schedErr" style="display:none;"></p>
         <p class="hint">오늘·내일·모레·이번주 금요일·다음주 토요일·MM-DD / 시간: 10시·15시 30분·10:00</p>
       </div>
-
+ 
       <!-- 할일 추가 -->
       <div class="card">
         <p class="card-label">할 일 추가</p>
@@ -260,7 +260,7 @@
           <button class="btn-primary" onclick="addTodo()">추가</button>
         </div>
       </div>
-
+ 
       <!-- 오늘 일정 아코디언 -->
       <div class="unified-section" id="uniTodayCard">
         <div class="unified-section-header" onclick="toggleUnifiedSection('today')">
@@ -274,7 +274,7 @@
           <div id="todaySchedList" style="padding-bottom:10px;"></div>
         </div>
       </div>
-
+ 
       <!-- 예정 일정 아코디언 -->
       <div class="unified-section" id="uniUpcomingCard">
         <div class="unified-section-header" onclick="toggleUnifiedSection('upcoming')">
@@ -288,7 +288,7 @@
           <div id="upcomingSchedList" style="padding-bottom:10px;"></div>
         </div>
       </div>
-
+ 
       <!-- 할일 진행중 아코디언 -->
       <div class="unified-section" id="uniActiveCard">
         <div class="unified-section-header" onclick="toggleUnifiedSection('active')">
@@ -302,7 +302,7 @@
           <div id="activeList" style="padding:6px 0;"></div>
         </div>
       </div>
-
+ 
       <!-- 할일 완료 아코디언 -->
       <div class="unified-section" id="uniDoneCard">
         <div class="unified-section-header" onclick="toggleUnifiedSection('done')">
@@ -316,10 +316,10 @@
           <div id="doneList" style="padding:6px 0;"></div>
         </div>
       </div>
-
+ 
       <p class="empty" id="schedTodoEmpty" style="display:none;">일정과 할 일이 없어요 🎉</p>
     </div>
-
+ 
     <!-- 메모 -->
     <div id="tab-memo" class="tab-content fade">
       <div class="search-row">
@@ -366,7 +366,7 @@
         <div class="memo-section-body" id="body-trainer"><div id="list-trainer"><p class="empty" style="padding:12px 0;">메모가 없어요</p></div></div>
       </div>
     </div>
-
+ 
     <!-- 매출 -->
     <div id="tab-sales" class="tab-content fade">
       <div class="card">
@@ -387,7 +387,7 @@
         <div id="trainerSalesList"><p class="empty">데이터 불러오는 중...</p></div>
       </div>
     </div>
-
+ 
     <!-- 팀 -->
     <div id="tab-team" class="tab-content fade">
       <div class="card" style="padding:10px 14px;">
@@ -399,7 +399,7 @@
       <div id="teamTrainerList"><p class="empty">데이터 불러오는 중...</p></div>
     </div>
   </div>
-
+ 
   <nav class="nav">
     <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">⌂</span><span class="nav-label">홈</span></button>
     <button class="nav-btn" onclick="switchTab('schedule')" id="nav-schedule"><span class="nav-icon">◫</span><span class="nav-label">일정·할일</span></button>
@@ -408,7 +408,7 @@
     <button class="nav-btn" onclick="switchTab('team')" id="nav-team"><span class="nav-icon">👥</span><span class="nav-label">팀</span></button>
   </nav>
 </div>
-
+ 
 <script>
 function getLocalDateString(date=new Date()){
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -419,7 +419,7 @@ const CALENDAR_WEBHOOK='https://script.google.com/macros/s/AKfycby7hRNhH_nr6_92I
 const BRANCH='응암점';
 const {createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
+ 
 let currentUser=null,currentProfile=null;
 let schedules=[],memos=[],todos=[],focuses=[];
 let salesSummaryData={},trainerSalesData={},trainerNames=[];
@@ -429,11 +429,11 @@ let calendarIntervalId=null,salesIntervalId=null;
 let openMemoSections={};
 let calendarFetchInProgress=false;
 let unifiedSectionState={today:true,upcoming:true,active:true,done:false};
-
+ 
 const MEMO_TYPES={personal:{label:'개인',emoji:'👤'},branch:{label:'지점',emoji:'🏢'},trainer:{label:'트레이너',emoji:'💪'}};
 const DAY_MAP={일:0,월:1,화:2,수:3,목:4,금:5,토:6};
 const COLORS={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
-
+ 
 // ── 인증 ──
 function showLoginScreen(){document.getElementById('loginScreen').classList.add('show');document.getElementById('mainApp').style.display='none';document.getElementById('loginLoading').style.display='none';}
 function showMainApp(){document.getElementById('loginScreen').classList.remove('show');document.getElementById('mainApp').style.display='block';}
@@ -451,7 +451,7 @@ async function ensureProfile(user){
   const{data}=await sb.from('profiles').select('*').eq('id',user.id).single();
   return data;
 }
-
+ 
 // ── 데이터 로드 ──
 async function loadFromSupabase(userId){
   const today=getLocalDateString();
@@ -469,7 +469,7 @@ async function loadFromSupabase(userId){
   // 포커스: 어제 미완료 + 오늘 전체
   focuses=(focusesRes.data||[]).map(f=>({id:f.id,text:f.text,done:f.done,date:f.date||today,createdAt:f.created_at,fromSupabase:true}));
 }
-
+ 
 // ── 매출 ──
 async function loadSalesFromSupabase(){
   document.getElementById('homeSalesBox').innerHTML='<p class="empty" style="padding:8px 0;">새로고침 중... ⏳</p>';
@@ -487,7 +487,7 @@ async function loadSalesFromSupabase(){
     if(currentTab==='team')renderTeamTab();
   }catch(e){console.log('매출 로드 실패:',e);document.getElementById('homeSalesBox').innerHTML='<p class="empty">매출 데이터를 불러오지 못했어요</p>';}
 }
-
+ 
 function renderHomeSales(){
   const d=salesSummaryData['month'];
   if(!d){document.getElementById('homeSalesBox').innerHTML='<p class="empty">데이터 없음</p>';return;}
@@ -522,7 +522,7 @@ function renderHomeSales(){
     </div>
     ${compareHtml}`;
 }
-
+ 
 function setSalesPeriod(p){
   currentSalesPeriod=p;
   ['month','last_month','today'].forEach(x=>{
@@ -531,11 +531,11 @@ function setSalesPeriod(p){
   });
   renderSalesTab();
 }
-
+ 
 function renderSalesTab(){
   const d=salesSummaryData[currentSalesPeriod],box=document.getElementById('salesSummaryBox');
   const compareCard=document.getElementById('compareCard');
-
+ 
   if(!d){box.innerHTML='<p class="empty">데이터가 없어요</p>';}
   else{
     const grand=Number(d.grand_total||0);
@@ -555,7 +555,7 @@ function renderSalesTab(){
       ${currentSalesPeriod!=='today'?`<div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>`:''}
       ${progressHtml}`;
   }
-
+ 
   // 이번달일 때만 지난달 비교 카드
   if(currentSalesPeriod==='month'&&salesSummaryData['last_month']){
     const m=salesSummaryData['month'],lm=salesSummaryData['last_month'];
@@ -580,7 +580,7 @@ function renderSalesTab(){
   } else {
     compareCard.style.display='none';
   }
-
+ 
   // 트레이너 목록: 이번달/지난달은 month 기준, 오늘은 today
   const periodKey=currentSalesPeriod==='last_month'?'last_month':currentSalesPeriod==='today'?'today':'month';
   const trainers=trainerSalesData[periodKey]||[],list=document.getElementById('trainerSalesList');
@@ -602,13 +602,13 @@ function renderSalesTab(){
     </div>`;
   }).join('');
 }
-
+ 
 function renderTeamTab(){
   const container=document.getElementById('teamTrainerList'),trainers=trainerSalesData['month']||[];
   if(!trainers.length){container.innerHTML='<p class="empty">데이터를 불러오는 중...</p>';return;}
   container.innerHTML=trainers.map(t=>{const sales=Number(t.net_sales||0),target=Number(t.target||0),rate=target>0?(sales/target*100):0,rateClass=rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low',trainerMemos=memos.filter(m=>m.type==='trainer'&&m.trainer_name===t.trainer_name),preview=trainerMemos.slice(0,2).map(m=>`• ${m.text.substring(0,40)}${m.text.length>40?'...':''}`).join('<br>');return`<div class="team-trainer-card" onclick="openTrainerOverlay('${t.trainer_name}')"><div class="team-card-header"><div><div class="team-trainer-name">${t.trainer_name}</div><div class="team-trainer-sales">${sales.toLocaleString()}원</div></div><div style="text-align:right;">${target>0?`<div class="${rateClass}">${rate.toFixed(1)}%</div>`:''}<span class="badge badge-gray" style="margin-top:4px;">메모 ${trainerMemos.length}</span></div></div>${preview?`<div class="team-memo-preview">${preview}</div>`:'<div style="font-size:12px;color:var(--text2);margin-top:6px;">메모 없음</div>'}</div>`;}).join('');
 }
-
+ 
 function openTrainerOverlay(trainerName){
   const monthData=(trainerSalesData['month']||[]).find(t=>t.trainer_name===trainerName)||{},weekData=(trainerSalesData['week']||[]).find(t=>t.trainer_name===trainerName)||{};
   const trainerMemos=memos.filter(m=>m.type==='trainer'&&m.trainer_name===trainerName);
@@ -625,7 +625,7 @@ async function addTrainerMemoFromOverlay(trainerName){
 }
 function closeTrainerOverlay(){document.getElementById('trainerOverlay').classList.remove('show');document.getElementById('trainerPanel').style.display='none';}
 function renderTrainerSelects(){const opts=`<option value="">트레이너 선택...</option>`+trainerNames.map(n=>`<option value="${n}">${n}</option>`).join('');document.getElementById('memoTrainerSelect').innerHTML=opts;}
-
+ 
 // ── 마이그레이션 ──
 async function migrateFromLocalStorage(userId){
   if(localStorage.getItem('supabase_migrated')==='true')return;
@@ -639,7 +639,7 @@ async function migrateFromLocalStorage(userId){
     localStorage.setItem('supabase_migrated','true');
   }catch(e){console.log('마이그레이션 실패:',e);}
 }
-
+ 
 // ── UI ──
 function updateUserUI(){
   if(!currentProfile)return;
@@ -658,7 +658,7 @@ function switchTab(tab){
   document.getElementById('nav-'+tab).classList.add('active');
   currentTab=tab;renderAll();
 }
-
+ 
 // ── 파싱 유틸 ──
 function parseNaturalDate(input){
   const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),dow=today.getDay();
@@ -684,7 +684,7 @@ function parseTimeAndTitle(rest){
 function fmt(d){return new Date(d).toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});}
 function fmtTime(h,m){const p=h<12?'AM':'PM';return`${p} ${h%12||12}:${String(m).padStart(2,'0')}`;}
 function fmtDate(d){return new Date(d).toLocaleString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
-
+ 
 // ── 일정 ──
 function setSchedType(type){
   currentSchedType=type;
@@ -729,7 +729,7 @@ async function deleteSchedule(id){
   if(typeof id==='string'&&id.includes('-'))await sb.from('schedules').update({deleted_at:new Date().toISOString()}).eq('id',id);
   renderAll();
 }
-
+ 
 // ── 일정+할일 통합 아코디언 ──
 function toggleUnifiedSection(key){
   unifiedSectionState[key]=!unifiedSectionState[key];
@@ -738,7 +738,7 @@ function toggleUnifiedSection(key){
   body.style.display=unifiedSectionState[key]?'block':'none';
   arrow.classList.toggle('open',unifiedSectionState[key]);
 }
-
+ 
 // ── 메모 아코디언 ──
 function toggleMemoAdd(){
   const body=document.getElementById('memoAddBody'),arrow=document.getElementById('memoAddArrow');
@@ -753,7 +753,7 @@ function toggleMemoSection(type){
   arrow.classList.toggle('open',!isOpen);
   openMemoSections[type]=!isOpen;
 }
-
+ 
 // ── 메모 ──
 function setMemoType(type){currentMemoType=type;renderMemoTypePills();document.getElementById('memoTrainerRow').classList.toggle('show',type==='trainer');}
 async function addMemo(){
@@ -773,7 +773,7 @@ async function deleteMemo(id){
   if(error){console.error('메모 삭제 실패:',error);return;}
   memos=memos.filter(m=>m.id!==id);renderAll();
 }
-
+ 
 // ── 할 일 ──
 async function addTodo(){
   const text=document.getElementById('todoInput').value.trim();if(!text)return;
@@ -791,7 +791,7 @@ async function deleteTodo(id){
   if(error){console.error('할일 삭제 실패:',error);return;}
   todos=todos.filter(t=>t.id!==id);renderAll();
 }
-
+ 
 // ── 포커스 ──
 async function addFocus(){
   const input=document.getElementById('focusInput'),text=input.value.trim();
@@ -816,7 +816,7 @@ async function deleteFocus(id){
   }
   renderAll();
 }
-
+ 
 // ── 구글 캘린더 (CORS 우회: GAS doGet을 jsonp 대신 iframe 없이 처리) ──
 async function fetchGoogleCalendar(){
   if(calendarFetchInProgress)return;
@@ -847,21 +847,21 @@ async function fetchGoogleCalendar(){
   }
   finally{calendarFetchInProgress=false;}
 }
-
+ 
 // ── 렌더 ──
 function renderHome(){
   const now=new Date(),todayStr=now.toDateString(),todayDate=getLocalDateString();
   const todayScheds=schedules.filter(s=>new Date(s.date).toDateString()===todayStr).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   document.getElementById('homeTodayScheds').innerHTML=todayScheds.length?todayScheds.map(s=>`<div class="row"><div style="display:flex;align-items:center;gap:8px;"><div class="sched-dot" style="background:${COLORS[s.color]};"></div><span style="font-size:14px;">${s.title}</span></div><span style="font-size:12px;color:var(--text2);">${fmtTime(s.hour,s.minute)}</span></div>`).join(''):'<p class="empty">오늘 일정이 없어요</p>';
-
+ 
   // 포커스 렌더 (밀린것 포함)
   const yesterday=getLocalDateString(new Date(Date.now()-86400000));
   const overdueFocuses=focuses.filter(f=>f.date===yesterday&&!f.done);
   const todayFocuses=focuses.filter(f=>f.date===todayDate);
   const activeTodayCount=todayFocuses.filter(f=>!f.done).length;
-
+ 
   document.getElementById('focusCount').textContent=`${activeTodayCount}/3`;
-
+ 
   const allFocuses=[...overdueFocuses,...todayFocuses];
   document.getElementById('focusList').innerHTML=allFocuses.map(f=>{
     const isOverdue=f.date===yesterday&&!f.done;
@@ -872,15 +872,15 @@ function renderHome(){
       <button class="btn-icon" onclick="deleteFocus('${f.id}')">×</button>
     </div>`;
   }).join('');
-
+ 
   document.getElementById('focusInputArea').style.display=activeTodayCount<3?'flex':'none';
   const fm=document.getElementById('focusMsg');
   if(todayFocuses.length>0&&todayFocuses.every(f=>f.done)){fm.style.display='block';fm.style.color='var(--blue)';fm.textContent='🎉 오늘 포커스 완료! 수고했어요';}
   else fm.style.display='none';
 }
-
+ 
 function renderMemoTypePills(){document.getElementById('memoTypePills').innerHTML=Object.entries(MEMO_TYPES).map(([key,val])=>`<button class="type-pill ${currentMemoType===key?'active':'inactive'}" onclick="setMemoType('${key}')">${val.emoji} ${val.label}</button>`).join('');}
-
+ 
 function renderSchedules(){
   const now=new Date(),todayStr=now.toDateString();
   const todayS=schedules.filter(s=>new Date(s.date).toDateString()===todayStr).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
@@ -889,32 +889,32 @@ function renderSchedules(){
   const done=todos.filter(t=>t.status==='완료');
   const total=schedules.length+todos.length;
   document.getElementById('schedTodoEmpty').style.display=total===0?'block':'none';
-
+ 
   // 오늘 일정
   document.getElementById('uni-count-today').textContent=todayS.length?`(${todayS.length})`:'';
   document.getElementById('todaySchedList').innerHTML=todayS.length
     ?todayS.map(s=>`<div class="sched-item"><div class="sched-dot" style="background:${COLORS[s.color]};"></div><div style="flex:1;"><div class="sched-title">${s.title}</div><div class="sched-sub">${fmtTime(s.hour,s.minute)}</div></div>${!s.fromGoogle?`<button class="btn-icon" onclick="deleteSchedule('${s.id}')">×</button>`:''}</div>`).join('')
     :'<p class="empty" style="padding:10px 0;">오늘 일정이 없어요</p>';
-
+ 
   // 예정
   document.getElementById('uni-count-upcoming').textContent=upS.length?`(${upS.length})`:'';
   document.getElementById('upcomingSchedList').innerHTML=upS.length
     ?upS.map(s=>`<div class="sched-item"><div class="sched-dot" style="background:${COLORS[s.color]};"></div><div style="flex:1;"><div class="sched-title">${s.title}</div><div class="sched-sub">${fmt(s.date)} · ${fmtTime(s.hour,s.minute)}</div></div>${!s.fromGoogle?`<button class="btn-icon" onclick="deleteSchedule('${s.id}')">×</button>`:''}</div>`).join('')
     :'<p class="empty" style="padding:10px 0;">예정된 일정이 없어요</p>';
-
+ 
   // 할일 진행중
   document.getElementById('uni-count-active').textContent=active.length?`(${active.length})`:'';
   document.getElementById('activeList').innerHTML=active.length
     ?active.map(t=>`<div class="todo-item"><button onclick="moveTodo('${t.id}','완료')" style="font-size:18px;color:var(--text2);flex-shrink:0;">○</button><p class="todo-text">${t.text}</p><button class="btn-icon" onclick="deleteTodo('${t.id}')">×</button></div>`).join('')
     :'<p class="empty" style="padding:10px 0;">진행중인 할 일이 없어요</p>';
-
+ 
   // 할일 완료
   document.getElementById('uni-count-done').textContent=done.length?`(${done.length})`:'';
   document.getElementById('doneList').innerHTML=done.length
     ?done.map(t=>`<div class="todo-item todo-done"><button onclick="moveTodo('${t.id}','진행중')" style="font-size:18px;color:#aaa;flex-shrink:0;">✓</button><p class="todo-text">${t.text}</p><button class="btn-icon" onclick="deleteTodo('${t.id}')">×</button></div>`).join('')
     :'<p class="empty" style="padding:10px 0;">완료한 할 일이 없어요</p>';
 }
-
+ 
 function renderMemos(){
   const search=(document.getElementById('memoSearch')?.value||'').toLowerCase();
   ['personal','branch','trainer'].forEach(type=>{
@@ -927,13 +927,13 @@ function renderMemos(){
     listEl.innerHTML=filtered.map(m=>`<div class="memo-item"><div class="memo-top"><div style="display:flex;align-items:center;gap:6px;">${m.trainer_name?`<span class="badge badge-blue">${m.trainer_name}</span>`:''}</div><button class="btn-icon" onclick="deleteMemo(\`${m.id}\`)">×</button></div><p class="memo-text">${m.text}</p><p class="memo-meta">${m.author_name?m.author_name+' · ':''}${fmtDate(m.date)}</p></div>`).join('');
   });
 }
-
+ 
 function renderAll(){
   renderHome();renderSchedules();renderMemos();renderMemoTypePills();
   if(currentTab==='sales')renderSalesTab();
   if(currentTab==='team')renderTeamTab();
 }
-
+ 
 // ── 초기화 ──
 async function initApp(user){
   currentUser=user;showMainApp();
@@ -952,7 +952,7 @@ async function initApp(user){
     salesIntervalId=setInterval(loadSalesFromSupabase,15*60*1000);
   }catch(e){console.error('초기화 오류:',e);renderAll();}
 }
-
+ 
 // ── 세션 ──
 let appInitialized=false;
 sb.auth.onAuthStateChange((event,session)=>{
@@ -966,3 +966,4 @@ document.addEventListener('DOMContentLoaded',async()=>{
 </script>
 </body>
 </html>
+ 
