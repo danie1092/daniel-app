@@ -546,6 +546,7 @@ function setSchedType(type){
   });
 }
 async function addSchedule(){
+  console.log('addSchedule fired', new Date().toISOString());
   const input=document.getElementById('schedInput').value;
   const p=parseNaturalDate(input.trim()),errEl=document.getElementById('schedErr');
   if(!p){errEl.textContent='형식: 내일 10시 PT상담';errEl.style.display='block';return;}
