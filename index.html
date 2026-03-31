@@ -251,9 +251,9 @@
       <div class="memo-add-section">
         <div class="memo-add-header" onclick="toggleMemoAdd()">
           <span style="font-size:13px;font-weight:700;">✏️ 메모 추가</span>
-          <span id="memoAddArrow" style="font-size:11px;color:var(--text2);transition:transform 0.2s;">▼</span>
+          <span id="memoAddArrow" style="font-size:11px;color:var(--text2);transition:transform 0.2s;transform:rotate(180deg);">▼</span>
         </div>
-        <div class="memo-add-body" id="memoAddBody">
+        <div class="memo-add-body open" id="memoAddBody">
           <div class="memo-type-pills" id="memoTypePills"></div>
           <div class="trainer-select-row" id="memoTrainerRow">
             <span style="font-size:12px;color:var(--text2);flex-shrink:0;">트레이너</span>
@@ -562,17 +562,17 @@ function setSchedType(type){
 }
 
 async function addSchedule(){
-  const input=document.getElementById('schedInput').value;
-  const p=parseNaturalDate(input.trim()),errEl=document.getElementById('schedErr');
-  if(!p){errEl.textContent='형식: 내일 10시 PT상담';errEl.style.display='block';return;}
-  const t=parseTimeAndTitle(p.rest);
-  if(!t){errEl.textContent='시간 형식: 10시, 15시 30분, 10:00';errEl.style.display='block';return;}
-  errEl.style.display='none';
-  const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
-  // 👇 여기가 수정된 부분입니다!
-  const{data}=await sb.from('schedules').insert({user_id:currentUser.id,title:t.title,date:getLocalDateString(p.date),hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],shared:false,status:'pending'}).select().single();
-  if(data)schedules.push({id:data.id,title:t.title,date:getLocalDateString(p.date)+'T00:00:00',hour:t.hour,minute:t.minute,color:currentSchedType,shared:false,fromSupabase:true});
-  document.getElementById('schedInput').value='';renderAll();
+  const input=document.getElementById('schedInput').value;
+  const p=parseNaturalDate(input.trim()),errEl=document.getElementById('schedErr');
+  if(!p){errEl.textContent='형식: 내일 10시 PT상담';errEl.style.display='block';return;}
+  const t=parseTimeAndTitle(p.rest);
+  if(!t){errEl.textContent='시간 형식: 10시, 15시 30분, 10:00';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
+  const isShared=currentSchedType==='work'||currentSchedType==='urgent';
+  const{data}=await sb.from('schedules').insert({user_id:currentUser.id,title:t.title,date:getLocalDateString(p.date),hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],shared:isShared,status:'pending'}).select().single();
+  if(data)schedules.push({id:data.id,title:t.title,date:getLocalDateString(p.date)+'T00:00:00',hour:t.hour,minute:t.minute,color:currentSchedType,shared:isShared,fromSupabase:true});
+  document.getElementById('schedInput').value='';renderAll();
 }
 async function deleteSchedule(id){
   schedules=schedules.filter(s=>s.id!==id);
