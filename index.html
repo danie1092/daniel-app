@@ -69,22 +69,33 @@
     .login-sub { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.7; }
     .btn-google { display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 20px; background: var(--text); color: var(--bg); font-size: 15px; font-weight: 700; width: 100%; max-width: 280px; justify-content: center; }
     .login-loading { font-size: 13px; color: var(--text2); }
-
     /* 포커스 */
     .focus-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .focus-item:last-child { border-bottom: none; }
     .focus-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; }
     .focus-check.done { background: var(--blue); border-color: var(--blue); color: #fff; font-size: 11px; }
-    /* 밀린 포커스 스타일 */
     .focus-item.overdue .focus-text { color: var(--red) !important; font-weight: 600; }
     .focus-item.overdue .focus-check { border-color: var(--red); }
-    .overdue-badge { font-size: 9px; font-weight: 700; color: var(--red); background: #fff0ed; border-radius: 6px; padding: 1px 5px; margin-left: 4px; flex-shrink: 0; }
-
+    .overdue-badge { font-size: 9px; font-weight: 700; color: var(--red); background: #fff0ed; border-radius: 6px; padding: 1px 5px; flex-shrink: 0; }
+    /* 일정 */
     .sched-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .sched-item:last-child { border-bottom: none; }
     .sched-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .sched-title { font-size: 14px; font-weight: 600; }
     .sched-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .sched-cat-btn { font-size: 12px; padding: 6px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2); }
+    .sched-cat-btn.sel-personal { border-color: #4a7dff; color: #4a7dff; background: #e8eeff; }
+    .sched-cat-btn.sel-work { border-color: #f5a623; color: #f5a623; background: #fff8ec; }
+    .sched-cat-btn.sel-urgent { border-color: #ff5e3a; color: #ff5e3a; background: #fff0ed; }
+    .sched-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .sched-section-header { display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; cursor: pointer; user-select: none; }
+    .sched-section-title { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; }
+    .sched-section-arrow { font-size: 11px; color: var(--text2); transition: transform 0.2s; }
+    .sched-section-arrow.open { transform: rotate(180deg); }
+    .sched-section-body { border-top: 1px solid var(--border); padding: 0 14px; }
+    .more-btn { width: 100%; font-size: 11px; font-weight: 600; color: var(--blue); padding: 8px 0; text-align: center; cursor: pointer; }
+    .collapse-btn { width: 100%; font-size: 11px; color: var(--text2); padding: 8px 0; text-align: center; cursor: pointer; }
+    /* 메모 */
     .memo-item { padding: 11px 0; border-bottom: 1px solid var(--border); }
     .memo-item:last-child { border-bottom: none; }
     .memo-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
@@ -97,12 +108,18 @@
     .trainer-select-row { display: none; margin-bottom: 10px; }
     .trainer-select-row.show { display: flex; align-items: center; gap: 8px; }
     .search-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface2); border-radius: 10px; margin-bottom: 10px; }
-    .todo-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--surface2); margin-bottom: 6px; }
-    .todo-text { font-size: 14px; line-height: 1.5; flex: 1; }
-    .todo-done .todo-text { text-decoration: line-through; color: var(--text2); }
-    .section-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; margin-top: 4px; }
-
-    /* 매출 탭 */
+    .memo-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .memo-section-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
+    .memo-section-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+    .memo-section-arrow { font-size: 11px; color: var(--text2); transition: transform 0.2s; }
+    .memo-section-arrow.open { transform: rotate(180deg); }
+    .memo-section-body { display: none; border-top: 1px solid var(--border); padding: 0 14px; }
+    .memo-section-body.open { display: block; }
+    .memo-add-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .memo-add-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
+    .memo-add-body { display: none; border-top: 1px solid var(--border); padding: 14px; }
+    .memo-add-body.open { display: block; }
+    /* 매출 */
     .sales-period-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 14px; }
     .period-tab { flex: 1; text-align: center; font-size: 12px; font-weight: 600; padding: 7px 4px; border-radius: 8px; cursor: pointer; color: var(--text2); }
     .period-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
@@ -118,6 +135,13 @@
     .rate-good { color: var(--green); font-size: 11px; }
     .rate-mid { color: var(--amber); font-size: 11px; }
     .rate-low { color: var(--red); font-size: 11px; }
+    .progress-bar { width: 100%; height: 6px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+    .progress-fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width 0.5s ease; }
+    .compare-badge { font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; }
+    .compare-up { background: #dcfce7; color: var(--green); }
+    .compare-down { background: #fff0ed; color: var(--red); }
+    .compare-same { background: var(--surface2); color: var(--text2); }
+    /* 팀 */
     .team-trainer-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; cursor: pointer; }
     .team-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
     .team-trainer-name { font-size: 15px; font-weight: 800; }
@@ -130,42 +154,6 @@
     .overlay-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .fade { animation: fadeIn 0.2s ease; }
-    .progress-bar { width: 100%; height: 6px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin-top: 6px; }
-    .progress-fill { height: 100%; background: var(--blue); border-radius: 999px; transition: width 0.5s ease; }
-    .sched-cat-btn { font-size: 12px; padding: 6px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2); }
-    .sched-cat-btn.sel-personal { border-color: #4a7dff; color: #4a7dff; background: #e8eeff; }
-    .sched-cat-btn.sel-work { border-color: #f5a623; color: #f5a623; background: #fff8ec; }
-    .sched-cat-btn.sel-urgent { border-color: #ff5e3a; color: #ff5e3a; background: #fff0ed; }
-    .memo-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .memo-section-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
-    .memo-section-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
-    .memo-section-arrow { font-size: 11px; color: var(--text2); transition: transform 0.2s; }
-    .memo-section-arrow.open { transform: rotate(180deg); }
-    .memo-section-body { display: none; border-top: 1px solid var(--border); padding: 0 14px; }
-    .memo-section-body.open { display: block; }
-    .memo-add-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .memo-add-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
-    .memo-add-body { display: none; border-top: 1px solid var(--border); padding: 14px; }
-    .memo-add-body.open { display: block; }
-
-    /* 일정+할일 통합 탭 아코디언 */
-    .unified-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-    .unified-section-header { display: flex; justify-content: space-between; align-items: center; padding: 14px; cursor: pointer; user-select: none; }
-    .unified-section-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
-    .unified-section-count { font-size: 11px; color: var(--text2); }
-    .unified-section-arrow { font-size: 11px; color: var(--text2); transition: transform 0.2s; }
-    .unified-section-arrow.open { transform: rotate(180deg); }
-    .unified-section-body { border-top: 1px solid var(--border); padding: 0 14px; }
-    .unified-preview { padding: 0 14px 10px; }
-    .preview-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
-    .preview-item:last-child { border-bottom: none; }
-    .preview-more { font-size: 11px; color: var(--text2); text-align: center; padding: 4px 0 8px; cursor: pointer; }
-
-    /* 매출 지난달 비교 */
-    .compare-badge { font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; }
-    .compare-up { background: #dcfce7; color: var(--green); }
-    .compare-down { background: #fff0ed; color: var(--red); }
-    .compare-same { background: var(--surface2); color: var(--text2); }
   </style>
 </head>
 <body>
@@ -201,7 +189,7 @@
           <div class="user-role" id="userRoleText"></div>
         </div>
       </div>
-      <button onclick="signOut()" style="font-size:11px; color:var(--text2); padding:5px 8px; border-radius:8px; background:var(--surface); border:1px solid var(--border);">나가기</button>
+      <button onclick="signOut()" style="font-size:11px;color:var(--text2);padding:5px 8px;border-radius:8px;background:var(--surface);border:1px solid var(--border);">나가기</button>
     </div>
   </div>
 
@@ -209,7 +197,7 @@
 
     <!-- 홈 -->
     <div id="tab-home" class="tab-content active fade">
-      <div class="card" id="homeSalesCard">
+      <div class="card">
         <div class="card-header">
           <span class="card-label" style="margin-bottom:0;">💰 이번달 매출</span>
           <button class="btn-sm" onclick="loadSalesFromSupabase()">↻</button>
@@ -219,14 +207,14 @@
       <div class="card">
         <div class="card-header">
           <span class="card-label" style="margin-bottom:0;">🎯 오늘의 포커스</span>
-          <span style="font-size:11px; color:var(--text2);" id="focusCount">0/3</span>
+          <span style="font-size:11px;color:var(--text2);" id="focusCount">0/5</span>
         </div>
         <div id="focusList"></div>
-        <div id="focusInputArea" style="display:flex; gap:8px; margin-top:8px;">
-          <input id="focusInput" class="input-field" placeholder="오늘 가장 중요한 일 하나는?" style="font-size:13px; padding:8px 10px;" onkeydown="if(event.key==='Enter') addFocus()" />
-          <button class="btn-primary" onclick="addFocus()" style="padding:8px 14px; font-size:13px;">+</button>
+        <div id="focusInputArea" style="display:flex;gap:8px;margin-top:8px;">
+          <input id="focusInput" class="input-field" placeholder="오늘 반드시 할 일은?" style="font-size:13px;padding:8px 10px;" onkeydown="if(event.key==='Enter') addFocus()" />
+          <button class="btn-primary" onclick="addFocus()" style="padding:8px 14px;font-size:13px;">+</button>
         </div>
-        <p id="focusMsg" style="font-size:12px; text-align:center; margin-top:8px; display:none;"></p>
+        <p id="focusMsg" style="font-size:12px;text-align:center;margin-top:8px;display:none;"></p>
       </div>
       <div class="card">
         <p class="card-label">📅 오늘 일정</p>
@@ -234,10 +222,9 @@
       </div>
     </div>
 
-    <!-- 일정+할일 통합 -->
+    <!-- 일정 -->
     <div id="tab-schedule" class="tab-content fade">
-      <!-- 일정 추가 -->
-      <div class="card" style="padding-bottom:10px;">
+      <div class="card">
         <p class="card-label">일정 추가</p>
         <div style="display:flex;gap:8px;margin-bottom:10px;" id="schedCatBtns">
           <button class="sched-cat-btn sel-personal" onclick="setSchedType('personal')">개인</button>
@@ -252,89 +239,31 @@
         <p class="hint">오늘·내일·모레·이번주 금요일·다음주 토요일·MM-DD / 시간: 10시·15시 30분·10:00</p>
       </div>
 
-      <!-- 오늘 일정 아코디언 -->
-      <div class="unified-section" id="uniTodayCard">
-        <div class="unified-section-header" onclick="toggleUnifiedSection('today')">
-          <div class="unified-section-title">
-            <span>📅 오늘</span>
-            <span class="unified-section-count" id="uni-count-today"></span>
-          </div>
-          <span class="unified-section-arrow open" id="uni-arrow-today">▼</span>
+      <div class="sched-section">
+        <div class="sched-section-header" onclick="toggleSchedSection('today')">
+          <div class="sched-section-title">📅 오늘 <span style="font-size:11px;color:var(--text2);font-weight:400;" id="sched-count-today"></span></div>
+          <span class="sched-section-arrow open" id="sched-arrow-today">▼</span>
         </div>
-        <div class="unified-section-body" id="uni-body-today" style="display:block;">
-          <div id="todaySchedList" style="padding-bottom:4px;"></div>
+        <div class="sched-section-body" id="sched-body-today">
+          <div id="todaySchedPreview"></div>
           <div id="todaySchedFull" style="display:none;"></div>
-          <div id="todayMoreBtn"></div>
+          <div id="todaySchedMore"></div>
         </div>
       </div>
 
-      <!-- 예정 일정 아코디언 -->
-      <div class="unified-section" id="uniUpcomingCard">
-        <div class="unified-section-header" onclick="toggleUnifiedSection('upcoming')">
-          <div class="unified-section-title">
-            <span>📆 예정</span>
-            <span class="unified-section-count" id="uni-count-upcoming"></span>
-          </div>
-          <span class="unified-section-arrow open" id="uni-arrow-upcoming">▼</span>
+      <div class="sched-section">
+        <div class="sched-section-header" onclick="toggleSchedSection('upcoming')">
+          <div class="sched-section-title">📆 예정 <span style="font-size:11px;color:var(--text2);font-weight:400;" id="sched-count-upcoming"></span></div>
+          <span class="sched-section-arrow open" id="sched-arrow-upcoming">▼</span>
         </div>
-        <div class="unified-section-body" id="uni-body-upcoming" style="display:block;">
-          <div id="upcomingSchedList" style="padding-bottom:4px;"></div>
+        <div class="sched-section-body" id="sched-body-upcoming">
+          <div id="upcomingSchedPreview"></div>
           <div id="upcomingSchedFull" style="display:none;"></div>
-          <div id="upcomingMoreBtn"></div>
+          <div id="upcomingSchedMore"></div>
         </div>
       </div>
 
-      <!-- 일정/할일 구분선 -->
-      <div style="display:flex;align-items:center;gap:10px;padding:2px 4px;">
-        <div style="flex:1;height:1px;background:var(--border);opacity:0.5;"></div>
-        <span style="font-size:10px;color:var(--text2);font-weight:700;letter-spacing:0.5px;">할 일</span>
-        <div style="flex:1;height:1px;background:var(--border);opacity:0.5;"></div>
-      </div>
-
-      <!-- 할일 추가 -->
-      <div class="card" style="padding:12px 14px;">
-        <div class="input-row">
-          <input id="todoInput" class="input-field" placeholder="할 일 입력..." onkeydown="if(event.key==='Enter') addTodo()" />
-          <button class="btn-primary" onclick="addTodo()">추가</button>
-        </div>
-      </div>
-
-      <!-- 할일 진행중 아코디언 (미리보기 3개) -->
-      <div class="unified-section" id="uniActiveCard">
-        <div class="unified-section-header" onclick="toggleUnifiedSection('active')">
-          <div class="unified-section-title">
-            <span style="color:var(--blue);">● 진행중</span>
-            <span class="unified-section-count" id="uni-count-active"></span>
-          </div>
-          <span class="unified-section-arrow open" id="uni-arrow-active">▼</span>
-        </div>
-        <div class="unified-section-body" id="uni-body-active" style="display:block;">
-          <!-- 미리보기 (접혔을 때) -->
-          <div id="activePreview" style="padding-bottom:4px;"></div>
-          <!-- 전체 (펼쳤을 때) -->
-          <div id="activeList" style="padding:4px 0; display:none;"></div>
-          <!-- 더보기/접기 버튼 -->
-          <div id="activeMoreBtn" style="display:none;"></div>
-        </div>
-      </div>
-
-      <!-- 할일 완료 아코디언 (미리보기 2개) -->
-      <div class="unified-section" id="uniDoneCard">
-        <div class="unified-section-header" onclick="toggleUnifiedSection('done')">
-          <div class="unified-section-title">
-            <span style="color:var(--text2);">✓ 완료</span>
-            <span class="unified-section-count" id="uni-count-done"></span>
-          </div>
-          <span class="unified-section-arrow" id="uni-arrow-done">▼</span>
-        </div>
-        <div class="unified-section-body" id="uni-body-done" style="display:none;">
-          <div id="donePreview" style="padding-bottom:4px;"></div>
-          <div id="doneList" style="padding:4px 0; display:none;"></div>
-          <div id="doneMoreBtn" style="display:none;"></div>
-        </div>
-      </div>
-
-      <p class="empty" id="schedTodoEmpty" style="display:none;">일정과 할 일이 없어요 🎉</p>
+      <p class="empty" id="schedEmpty" style="display:none;">등록된 일정이 없어요</p>
     </div>
 
     <!-- 메모 -->
@@ -394,7 +323,6 @@
         </div>
         <div id="salesSummaryBox"><p class="empty">데이터 불러오는 중...</p></div>
       </div>
-      <!-- 이번달일 때 지난달 비교 카드 -->
       <div class="card" id="compareCard" style="display:none;">
         <p class="card-label">📊 지난달 대비</p>
         <div id="compareBox"></div>
@@ -419,7 +347,7 @@
 
   <nav class="nav">
     <button class="nav-btn active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">⌂</span><span class="nav-label">홈</span></button>
-    <button class="nav-btn" onclick="switchTab('schedule')" id="nav-schedule"><span class="nav-icon">◫</span><span class="nav-label">일정·할일</span></button>
+    <button class="nav-btn" onclick="switchTab('schedule')" id="nav-schedule"><span class="nav-icon">◫</span><span class="nav-label">일정</span></button>
     <button class="nav-btn" onclick="switchTab('memo')" id="nav-memo"><span class="nav-icon">◪</span><span class="nav-label">메모</span></button>
     <button class="nav-btn" onclick="switchTab('sales')" id="nav-sales"><span class="nav-icon">₩</span><span class="nav-label">매출</span></button>
     <button class="nav-btn" onclick="switchTab('team')" id="nav-team"><span class="nav-icon">👥</span><span class="nav-label">팀</span></button>
@@ -434,18 +362,21 @@ const SUPABASE_URL='https://ksrvkezznejsnqjkuezi.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzcnZrZXp6bmVqc25xamt1ZXppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1Mjg3MjksImV4cCI6MjA5MDEwNDcyOX0.mctJE39vdbfuJBVGjf-30qgNpLh0HJKB-E_00raM5TM';
 const CALENDAR_WEBHOOK='https://script.google.com/macros/s/AKfycby7hRNhH_nr6_92I49BaDqf7j7J5zMup98xUz0xpVvHvhH_yCLP9PUM3pVp-3dAK5FEuw/exec';
 const BRANCH='응암점';
+const MAX_FOCUS=5;
+const PREVIEW_COUNT=3;
 const {createClient}=supabase;
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 let currentUser=null,currentProfile=null;
-let schedules=[],memos=[],todos=[],focuses=[];
+let schedules=[],memos=[],focuses=[];
 let salesSummaryData={},trainerSalesData={},trainerNames=[];
 let currentMemoType='personal';
 let currentSalesPeriod='month',currentTab='home',currentSchedType='personal';
 let calendarIntervalId=null,salesIntervalId=null;
 let openMemoSections={};
 let calendarFetchInProgress=false;
-let unifiedSectionState={today:true,upcoming:true,active:true,done:false};
+let schedSectionOpen={today:true,upcoming:true};
+let schedExpanded={today:false,upcoming:false};
 
 const MEMO_TYPES={personal:{label:'개인',emoji:'👤'},branch:{label:'지점',emoji:'🏢'},trainer:{label:'트레이너',emoji:'💪'}};
 const DAY_MAP={일:0,월:1,화:2,수:3,목:4,금:5,토:6};
@@ -471,20 +402,15 @@ async function ensureProfile(user){
 
 // ── 데이터 로드 ──
 async function loadFromSupabase(userId){
-  const today=getLocalDateString();
   const yesterday=getLocalDateString(new Date(Date.now()-86400000));
-  // 포커스: 오늘 + 어제(밀린것) 같이 불러오기
-  const[schedsRes,memosRes,todosRes,focusesRes]=await Promise.all([
+  const[schedsRes,memosRes,focusesRes]=await Promise.all([
     sb.from('schedules').select('*').is('deleted_at',null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
     sb.from('memos').select('*').is('deleted_at',null).order('created_at',{ascending:false}),
-    sb.from('todos').select('*').eq('user_id',userId).is('deleted_at',null),
     sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).is('deleted_at',null)
   ]);
   schedules=(schedsRes.data||[]).map(s=>({id:s.id,title:s.title,date:s.date+'T00:00:00',hour:s.hour,minute:s.minute,shared:s.shared,color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',fromSupabase:true}));
   memos=(memosRes.data||[]).map(m=>({id:m.id,text:m.text,type:m.category||'personal',trainer_name:m.trainer_name||null,pinned:m.pinned,author_name:m.author_name||null,date:m.created_at,fromSupabase:true}));
-  todos=(todosRes.data||[]).map(t=>({id:t.id,text:t.text,status:t.status,source:t.source,date:t.created_at,fromSupabase:true}));
-  // 포커스: 어제 미완료 + 오늘 전체
-  focuses=(focusesRes.data||[]).map(f=>({id:f.id,text:f.text,done:f.done,date:f.date||today,createdAt:f.created_at,fromSupabase:true}));
+  focuses=(focusesRes.data||[]).map(f=>({id:f.id,text:f.text,done:f.done,date:f.date||getLocalDateString(),fromSupabase:true}));
 }
 
 // ── 매출 ──
@@ -494,138 +420,49 @@ async function loadSalesFromSupabase(){
     const[summaryRes,trainersRes]=await Promise.all([sb.from('sales_summary').select('*').eq('branch',BRANCH),sb.from('sales_trainers').select('*')]);
     salesSummaryData={};
     for(const row of(summaryRes.data||[]))salesSummaryData[row.period_type]=row;
-    trainerSalesData={month:[],week:[],today:[],last_month:[]};
+    trainerSalesData={month:[],today:[],last_month:[]};
     const nameSet=new Set();
     for(const row of(trainersRes.data||[])){if(trainerSalesData[row.period_type])trainerSalesData[row.period_type].push(row);nameSet.add(row.trainer_name);}
-    for(const p of['month','week','today','last_month'])if(trainerSalesData[p])trainerSalesData[p].sort((a,b)=>Number(b.net_sales||0)-Number(a.net_sales||0));
+    for(const p of['month','today','last_month'])if(trainerSalesData[p])trainerSalesData[p].sort((a,b)=>Number(b.net_sales||0)-Number(a.net_sales||0));
     trainerNames=[...nameSet].sort();
     renderTrainerSelects();renderHomeSales();
     if(currentTab==='sales')renderSalesTab();
     if(currentTab==='team')renderTeamTab();
-  }catch(e){console.log('매출 로드 실패:',e);document.getElementById('homeSalesBox').innerHTML='<p class="empty">매출 데이터를 불러오지 못했어요</p>';}
+  }catch(e){document.getElementById('homeSalesBox').innerHTML='<p class="empty">매출 데이터를 불러오지 못했어요</p>';}
 }
-
 function renderHomeSales(){
   const d=salesSummaryData['month'];
   if(!d){document.getElementById('homeSalesBox').innerHTML='<p class="empty">데이터 없음</p>';return;}
-  const grand=Number(d.grand_total||0),target=100000000;
-  const pct=Math.min((grand/target)*100,100),over=Math.max(grand-target,0),remaining=Math.max(target-grand,0);
-  // 지난달 비교
+  const grand=Number(d.grand_total||0),target=100000000,pct=Math.min((grand/target)*100,100),over=Math.max(grand-target,0),remaining=Math.max(target-grand,0);
   const ld=salesSummaryData['last_month'];
-  let compareHtml='';
-  if(ld){
-    const lgrand=Number(ld.grand_total||0);
-    const diff=grand-lgrand;
-    const diffPct=lgrand>0?((diff/lgrand)*100).toFixed(1):0;
-    const cls=diff>0?'compare-up':diff<0?'compare-down':'compare-same';
-    const sign=diff>0?'▲':diff<0?'▼':'=';
-    compareHtml=`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:11px;color:var(--text2);">지난달(${Number(ld.grand_total||0).toLocaleString()}원) 대비</span>
-      <span class="compare-badge ${cls}">${sign} ${Math.abs(diff).toLocaleString()}원 (${Math.abs(diffPct)}%)</span>
-    </div>`;
-  }
-  document.getElementById('homeSalesBox').innerHTML=`
-    <div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div>
-    <div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div>
-    <div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>
-    <div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div>
-    <div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>
-    <div style="margin-top:10px;">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;">
-        <span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div>
-      <div style="font-size:11px;color:var(--text2);text-align:right;margin-top:4px;">${over>0?`🎉 목표 ${over.toLocaleString()}원 초과!`:`목표까지 ${remaining.toLocaleString()}원 남음`}</div>
-    </div>
-    ${compareHtml}`;
+  let cmp='';
+  if(ld){const diff=grand-Number(ld.grand_total||0),cls=diff>0?'compare-up':diff<0?'compare-down':'compare-same',sign=diff>0?'▲':diff<0?'▼':'=',pct2=Number(ld.grand_total||0)>0?((diff/Number(ld.grand_total||0))*100).toFixed(1):0;cmp=`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:var(--text2);">지난달 대비</span><span class="compare-badge ${cls}">${sign} ${Math.abs(diff).toLocaleString()}원 (${Math.abs(pct2)}%)</span></div>`;}
+  document.getElementById('homeSalesBox').innerHTML=`<div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div><div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div><div style="font-size:11px;color:var(--text2);text-align:right;margin-top:4px;">${over>0?`🎉 목표 ${over.toLocaleString()}원 초과!`:`목표까지 ${remaining.toLocaleString()}원 남음`}</div></div>${cmp}`;
 }
-
-function setSalesPeriod(p){
-  currentSalesPeriod=p;
-  ['month','last_month','today'].forEach(x=>{
-    const el=document.getElementById('period-'+x);
-    if(el)el.classList.toggle('active',x===p);
-  });
-  renderSalesTab();
-}
-
+function setSalesPeriod(p){currentSalesPeriod=p;['month','last_month','today'].forEach(x=>{const el=document.getElementById('period-'+x);if(el)el.classList.toggle('active',x===p);});renderSalesTab();}
 function renderSalesTab(){
   const d=salesSummaryData[currentSalesPeriod],box=document.getElementById('salesSummaryBox');
-  const compareCard=document.getElementById('compareCard');
-
   if(!d){box.innerHTML='<p class="empty">데이터가 없어요</p>';}
   else{
-    const grand=Number(d.grand_total||0);
-    const target=100000000;
-    const pct=Math.min((grand/target)*100,100);
-    const progressHtml=currentSalesPeriod==='month'?`
-      <div style="margin-top:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;">
-          <span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div>
-      </div>`:'';
-    box.innerHTML=`
-      <div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div>
-      <div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div>
-      <div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>
-      ${currentSalesPeriod!=='today'?`<div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>`:''}
-      ${progressHtml}`;
+    const grand=Number(d.grand_total||0),target=100000000,pct=Math.min((grand/target)*100,100);
+    box.innerHTML=`<div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>${currentSalesPeriod!=='today'?`<div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>`:''}${currentSalesPeriod==='month'?`<div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div></div>`:''}`;
   }
-
-  // 이번달일 때만 지난달 비교 카드
+  const compareCard=document.getElementById('compareCard');
   if(currentSalesPeriod==='month'&&salesSummaryData['last_month']){
     const m=salesSummaryData['month'],lm=salesSummaryData['last_month'];
-    const fields=[
-      {label:'회원권',cur:Number(m?.health_total||0),prev:Number(lm?.health_total||0)},
-      {label:'PT매출',cur:Number(m?.pt_total||0),prev:Number(lm?.pt_total||0)},
-      {label:'총합계',cur:Number(m?.grand_total||0),prev:Number(lm?.grand_total||0)},
-    ];
-    document.getElementById('compareBox').innerHTML=fields.map(f=>{
-      const diff=f.cur-f.prev;
-      const cls=diff>0?'compare-up':diff<0?'compare-down':'compare-same';
-      const sign=diff>0?'▲':diff<0?'▼':'=';
-      return`<div class="stat-row">
-        <span class="stat-label">${f.label}</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:12px;color:var(--text2);">${f.prev.toLocaleString()}→${f.cur.toLocaleString()}</span>
-          <span class="compare-badge ${cls}">${sign}${Math.abs(diff).toLocaleString()}</span>
-        </div>
-      </div>`;
-    }).join('');
+    document.getElementById('compareBox').innerHTML=[{label:'회원권',cur:Number(m?.health_total||0),prev:Number(lm?.health_total||0)},{label:'PT매출',cur:Number(m?.pt_total||0),prev:Number(lm?.pt_total||0)},{label:'총합계',cur:Number(m?.grand_total||0),prev:Number(lm?.grand_total||0)}].map(f=>{const diff=f.cur-f.prev,cls=diff>0?'compare-up':diff<0?'compare-down':'compare-same',sign=diff>0?'▲':diff<0?'▼':'=';return`<div class="stat-row"><span class="stat-label">${f.label}</span><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;color:var(--text2);">${f.prev.toLocaleString()}→${f.cur.toLocaleString()}</span><span class="compare-badge ${cls}">${sign}${Math.abs(diff).toLocaleString()}</span></div></div>`;}).join('');
     compareCard.style.display='block';
-  } else {
-    compareCard.style.display='none';
-  }
-
-  // 트레이너 목록: 이번달/지난달은 month 기준, 오늘은 today
+  }else{compareCard.style.display='none';}
   const periodKey=currentSalesPeriod==='last_month'?'last_month':currentSalesPeriod==='today'?'today':'month';
   const trainers=trainerSalesData[periodKey]||[],list=document.getElementById('trainerSalesList');
   if(!trainers.length){list.innerHTML='<p class="empty">데이터가 없어요</p>';return;}
-  list.innerHTML=trainers.map(t=>{
-    const sales=Number(t.net_sales||0),target=Number(t.target||0),rate=target>0?(sales/target*100):0;
-    const rateClass=rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low';
-    const pct=Math.min(rate,100);
-    return`<div class="trainer-card">
-      <div class="trainer-card-header">
-        <span class="trainer-name">${t.trainer_name}</span>
-        <span class="trainer-sales">${sales.toLocaleString()}원</span>
-      </div>
-      ${target>0?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-        <span class="${rateClass}">${rate.toFixed(1)}% 달성</span>
-        <span style="font-size:11px;color:var(--text2);">목표 ${target.toLocaleString()}원</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${rate>=100?'var(--green)':rate>=80?'var(--amber)':'var(--blue)'};"></div></div>`:''}
-    </div>`;
-  }).join('');
+  list.innerHTML=trainers.map(t=>{const sales=Number(t.net_sales||0),target=Number(t.target||0),rate=target>0?(sales/target*100):0,rateClass=rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low',pct=Math.min(rate,100);return`<div class="trainer-card"><div class="trainer-card-header"><span class="trainer-name">${t.trainer_name}</span><span class="trainer-sales">${sales.toLocaleString()}원</span></div>${target>0?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span class="${rateClass}">${rate.toFixed(1)}% 달성</span><span style="font-size:11px;color:var(--text2);">목표 ${target.toLocaleString()}원</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${rate>=100?'var(--green)':rate>=80?'var(--amber)':'var(--blue)'};"></div></div>`:''}</div>`;}).join('');
 }
-
 function renderTeamTab(){
   const container=document.getElementById('teamTrainerList'),trainers=trainerSalesData['month']||[];
   if(!trainers.length){container.innerHTML='<p class="empty">데이터를 불러오는 중...</p>';return;}
   container.innerHTML=trainers.map(t=>{const sales=Number(t.net_sales||0),target=Number(t.target||0),rate=target>0?(sales/target*100):0,rateClass=rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low',trainerMemos=memos.filter(m=>m.type==='trainer'&&m.trainer_name===t.trainer_name),preview=trainerMemos.slice(0,2).map(m=>`• ${m.text.substring(0,40)}${m.text.length>40?'...':''}`).join('<br>');return`<div class="team-trainer-card" onclick="openTrainerOverlay('${t.trainer_name}')"><div class="team-card-header"><div><div class="team-trainer-name">${t.trainer_name}</div><div class="team-trainer-sales">${sales.toLocaleString()}원</div></div><div style="text-align:right;">${target>0?`<div class="${rateClass}">${rate.toFixed(1)}%</div>`:''}<span class="badge badge-gray" style="margin-top:4px;">메모 ${trainerMemos.length}</span></div></div>${preview?`<div class="team-memo-preview">${preview}</div>`:'<div style="font-size:12px;color:var(--text2);margin-top:6px;">메모 없음</div>'}</div>`;}).join('');
 }
-
 function openTrainerOverlay(trainerName){
   const monthData=(trainerSalesData['month']||[]).find(t=>t.trainer_name===trainerName)||{},weekData=(trainerSalesData['week']||[]).find(t=>t.trainer_name===trainerName)||{};
   const trainerMemos=memos.filter(m=>m.type==='trainer'&&m.trainer_name===trainerName);
@@ -634,9 +471,8 @@ function openTrainerOverlay(trainerName){
   document.getElementById('trainerOverlay').classList.add('show');document.getElementById('trainerPanel').style.display='block';
 }
 async function addTrainerMemoFromOverlay(trainerName){
-  const input=document.getElementById('overlayMemoInput'),text=input.value.trim();
-  if(!text)return;
-  const{data}=await sb.from('memos').insert({user_id:currentUser.id,text,category:'trainer',trainer_name:trainerName,pinned:false,author_name:currentProfile?.name||currentProfile?.display_name||''}).select().single();
+  const input=document.getElementById('overlayMemoInput'),text=input.value.trim();if(!text)return;
+  const{data}=await sb.from('memos').insert({user_id:currentUser.id,text,category:'trainer',trainer_name:trainerName,pinned:false,author_name:currentProfile?.name||''}).select().single();
   if(data)memos.unshift({id:data.id,text,type:'trainer',trainer_name:trainerName,pinned:false,author_name:currentProfile?.name||null,date:data.created_at,fromSupabase:true});
   input.value='';openTrainerOverlay(trainerName);renderTeamTab();
 }
@@ -646,12 +482,11 @@ function renderTrainerSelects(){const opts=`<option value="">트레이너 선택
 // ── 마이그레이션 ──
 async function migrateFromLocalStorage(userId){
   if(localStorage.getItem('supabase_migrated')==='true')return;
-  const lsS=JSON.parse(localStorage.getItem('schedules')||'[]'),lsM=JSON.parse(localStorage.getItem('memos')||'[]'),lsT=JSON.parse(localStorage.getItem('todos')||'[]'),lsF=JSON.parse(localStorage.getItem('focuses')||'[]');
-  if(!lsS.length&&!lsM.length&&!lsT.length&&!lsF.length){localStorage.setItem('supabase_migrated','true');return;}
+  const lsS=JSON.parse(localStorage.getItem('schedules')||'[]'),lsM=JSON.parse(localStorage.getItem('memos')||'[]'),lsF=JSON.parse(localStorage.getItem('focuses')||'[]');
+  if(!lsS.length&&!lsM.length&&!lsF.length){localStorage.setItem('supabase_migrated','true');return;}
   try{
     if(lsS.length)await sb.from('schedules').insert(lsS.filter(s=>!s.fromGoogle).map(s=>({user_id:userId,title:s.title,date:new Date(s.date).toISOString().split('T')[0],hour:s.hour||0,minute:s.minute||0,color:'#4a7dff',shared:false,status:'pending'})));
     if(lsM.length)await sb.from('memos').insert(lsM.map(m=>({user_id:userId,text:m.text,category:m.category||'personal',pinned:m.pinned||false})));
-    if(lsT.length)await sb.from('todos').insert(lsT.map(t=>({user_id:userId,text:t.text,status:(t.status==='ASAP'||t.status==='진행중')?'진행중':'완료',source:t.from||'manual'})));
     if(lsF.length)await sb.from('focuses').insert(lsF.map(f=>({user_id:userId,text:f.text,done:f.done||false,date:getLocalDateString()})));
     localStorage.setItem('supabase_migrated','true');
   }catch(e){console.log('마이그레이션 실패:',e);}
@@ -682,14 +517,10 @@ function parseNaturalDate(input){
   if(input.startsWith('오늘'))return{date:today,rest:input.slice(2).trim()};
   if(input.startsWith('내일')){const d=new Date(today);d.setDate(d.getDate()+1);return{date:d,rest:input.slice(2).trim()};}
   if(input.startsWith('모레')){const d=new Date(today);d.setDate(d.getDate()+2);return{date:d,rest:input.slice(2).trim()};}
-  const nw=input.match(/^다음\s*주\s*([일월화수목금토])요일\s*/);
-  if(nw){const t=DAY_MAP[nw[1]],d=new Date(today);let diff=t-dow;if(diff<=0)diff+=7;d.setDate(d.getDate()+diff);return{date:d,rest:input.slice(nw[0].length).trim()};}
-  const tw=input.match(/^이번\s*주\s*([일월화수목금토])요일\s*/);
-  if(tw){const t=DAY_MAP[tw[1]],d=new Date(today);let diff=t-dow;if(diff<=0)diff+=7;d.setDate(d.getDate()+diff);return{date:d,rest:input.slice(tw[0].length).trim()};}
-  const fd=input.match(/^(\d{4})-(\d{2})-(\d{2})\s*/);
-  if(fd)return{date:new Date(+fd[1],+fd[2]-1,+fd[3]),rest:input.slice(fd[0].length).trim()};
-  const sd=input.match(/^(\d{2})-(\d{2})\s*/);
-  if(sd)return{date:new Date(now.getFullYear(),+sd[1]-1,+sd[2]),rest:input.slice(sd[0].length).trim()};
+  const nw=input.match(/^다음\s*주\s*([일월화수목금토])요일\s*/);if(nw){const t=DAY_MAP[nw[1]],d=new Date(today);let diff=t-dow;if(diff<=0)diff+=7;d.setDate(d.getDate()+diff);return{date:d,rest:input.slice(nw[0].length).trim()};}
+  const tw=input.match(/^이번\s*주\s*([일월화수목금토])요일\s*/);if(tw){const t=DAY_MAP[tw[1]],d=new Date(today);let diff=t-dow;if(diff<=0)diff+=7;d.setDate(d.getDate()+diff);return{date:d,rest:input.slice(tw[0].length).trim()};}
+  const fd=input.match(/^(\d{4})-(\d{2})-(\d{2})\s*/);if(fd)return{date:new Date(+fd[1],+fd[2]-1,+fd[3]),rest:input.slice(fd[0].length).trim()};
+  const sd=input.match(/^(\d{2})-(\d{2})\s*/);if(sd)return{date:new Date(now.getFullYear(),+sd[1]-1,+sd[2]),rest:input.slice(sd[0].length).trim()};
   return null;
 }
 function parseTimeAndTitle(rest){
@@ -722,22 +553,11 @@ async function addSchedule(){
   const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
   const isShared=currentSchedType==='work'||currentSchedType==='urgent';
   const dateStr=getLocalDateString(p.date);
-  const{data}=await sb.from('schedules').insert({
-    user_id:currentUser.id,title:t.title,date:dateStr,
-    hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],
-    shared:isShared,status:'pending'
-  }).select().single();
+  const{data}=await sb.from('schedules').insert({user_id:currentUser.id,title:t.title,date:dateStr,hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],shared:isShared,status:'pending'}).select().single();
   if(data){
     schedules.push({id:data.id,title:t.title,date:dateStr+'T00:00:00',hour:t.hour,minute:t.minute,color:currentSchedType,shared:isShared,fromSupabase:true});
-    // 구글 캘린더 POST (no-cors 방식으로 CORS 에러 회피)
-    fetch(CALENDAR_WEBHOOK,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({title:t.title,date:dateStr,hour:t.hour,minute:t.minute})
-    }).then(()=>{
-      setTimeout(()=>fetchGoogleCalendar(),3000);
-    }).catch(e=>console.log('구글 캘린더 쓰기 실패:',e));
+    fetch(CALENDAR_WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:t.title,date:dateStr,hour:t.hour,minute:t.minute})})
+      .then(()=>setTimeout(()=>fetchGoogleCalendar(),3000)).catch(e=>console.log('캘린더 쓰기 실패:',e));
   }
   document.getElementById('schedInput').value='';renderAll();
 }
@@ -747,39 +567,40 @@ async function deleteSchedule(id){
   renderAll();
 }
 
-// ── 일정+할일 통합 아코디언 ──
-function toggleUnifiedSection(key){
-  unifiedSectionState[key]=!unifiedSectionState[key];
-  const body=document.getElementById('uni-body-'+key);
-  const arrow=document.getElementById('uni-arrow-'+key);
-  body.style.display=unifiedSectionState[key]?'block':'none';
-  arrow.classList.toggle('open',unifiedSectionState[key]);
+// ── 일정 아코디언 + 더보기 ──
+function toggleSchedSection(key){
+  schedSectionOpen[key]=!schedSectionOpen[key];
+  document.getElementById('sched-body-'+key).style.display=schedSectionOpen[key]?'block':'none';
+  document.getElementById('sched-arrow-'+key).classList.toggle('open',schedSectionOpen[key]);
 }
-
-// ── 메모 아코디언 ──
-function toggleMemoAdd(){
-  const body=document.getElementById('memoAddBody'),arrow=document.getElementById('memoAddArrow');
-  const isOpen=body.classList.contains('open');
-  body.classList.toggle('open',!isOpen);
-  arrow.style.transform=isOpen?'':'rotate(180deg)';
-}
-function toggleMemoSection(type){
-  const body=document.getElementById('body-'+type),arrow=document.getElementById('arrow-'+type);
-  const isOpen=body.classList.contains('open');
-  body.classList.toggle('open',!isOpen);
-  arrow.classList.toggle('open',!isOpen);
-  openMemoSections[type]=!isOpen;
+function toggleSchedExpand(key){schedExpanded[key]=!schedExpanded[key];renderSchedules();}
+function renderSchedSection(items,key,showDate){
+  document.getElementById('sched-count-'+key).textContent=items.length?`(${items.length})`:'';
+  const makeHtml=s=>`<div class="sched-item"><div class="sched-dot" style="background:${COLORS[s.color]};"></div><div style="flex:1;"><div class="sched-title">${s.title}</div><div class="sched-sub">${showDate?fmt(s.date)+' · ':''}${fmtTime(s.hour,s.minute)}</div></div>${!s.fromGoogle?`<button class="btn-icon" onclick="deleteSchedule('${s.id}')">×</button>`:''}</div>`;
+  const emptyMsg=showDate?'예정된 일정이 없어요':'오늘 일정이 없어요';
+  const preview=document.getElementById(key+'SchedPreview');
+  const full=document.getElementById(key+'SchedFull');
+  const more=document.getElementById(key+'SchedMore');
+  if(!items.length){preview.innerHTML=`<p class="empty" style="padding:10px 0;">${emptyMsg}</p>`;full.style.display='none';more.innerHTML='';return;}
+  const rest=items.length-PREVIEW_COUNT;
+  if(schedExpanded[key]){
+    preview.innerHTML='';full.innerHTML=items.map(makeHtml).join('');full.style.display='block';
+    more.innerHTML=`<button class="collapse-btn" onclick="toggleSchedExpand('${key}')">▲ 접기</button>`;
+  }else{
+    preview.innerHTML=items.slice(0,PREVIEW_COUNT).map(makeHtml).join('');full.style.display='none';
+    more.innerHTML=rest>0?`<button class="more-btn" onclick="toggleSchedExpand('${key}')">+ ${rest}개 더보기</button>`:'';
+  }
 }
 
 // ── 메모 ──
+function toggleMemoAdd(){const body=document.getElementById('memoAddBody'),arrow=document.getElementById('memoAddArrow');const isOpen=body.classList.contains('open');body.classList.toggle('open',!isOpen);arrow.style.transform=isOpen?'':'rotate(180deg)';}
+function toggleMemoSection(type){const body=document.getElementById('body-'+type),arrow=document.getElementById('arrow-'+type);const isOpen=body.classList.contains('open');body.classList.toggle('open',!isOpen);arrow.classList.toggle('open',!isOpen);openMemoSections[type]=!isOpen;}
 function setMemoType(type){currentMemoType=type;renderMemoTypePills();document.getElementById('memoTrainerRow').classList.toggle('show',type==='trainer');}
 async function addMemo(){
   const text=document.getElementById('memoInput').value.trim();if(!text)return;
   const trainer=currentMemoType==='trainer'?document.getElementById('memoTrainerSelect').value:null;
-  const now=new Date(),day=now.getDay(),diff=day===0?-6:1-day;
-  const monday=new Date(now);monday.setDate(now.getDate()+diff);
-  const weekStart=monday.toISOString().split('T')[0];
-  const{data}=await sb.from('memos').insert({user_id:currentUser.id,text,category:currentMemoType,trainer_name:trainer||null,pinned:false,week_start:weekStart,author_role:currentProfile?.role||'team_leader',author_name:currentProfile?.name||currentProfile?.display_name||''}).select().single();
+  const now=new Date(),day=now.getDay(),diff=day===0?-6:1-day,monday=new Date(now);monday.setDate(now.getDate()+diff);
+  const{data}=await sb.from('memos').insert({user_id:currentUser.id,text,category:currentMemoType,trainer_name:trainer||null,pinned:false,week_start:monday.toISOString().split('T')[0],author_role:currentProfile?.role||'team_leader',author_name:currentProfile?.name||''}).select().single();
   if(data)memos.unshift({id:data.id,text,type:currentMemoType,trainer_name:trainer||null,pinned:false,author_name:currentProfile?.name||null,date:data.created_at,fromSupabase:true});
   document.getElementById('memoInput').value='';
   if(!openMemoSections[currentMemoType])toggleMemoSection(currentMemoType);
@@ -791,32 +612,13 @@ async function deleteMemo(id){
   memos=memos.filter(m=>m.id!==id);renderAll();
 }
 
-// ── 할 일 ──
-async function addTodo(){
-  const text=document.getElementById('todoInput').value.trim();if(!text)return;
-  const{data}=await sb.from('todos').insert({user_id:currentUser.id,text,status:'진행중',source:'manual'}).select().single();
-  if(data)todos.push({id:data.id,text,status:'진행중',source:'manual',date:data.created_at,fromSupabase:true});
-  document.getElementById('todoInput').value='';renderAll();
-}
-async function moveTodo(id,status){
-  todos=todos.map(t=>t.id===id?{...t,status}:t);
-  if(typeof id==='string'&&id.includes('-'))await sb.from('todos').update({status}).eq('id',id);
-  renderAll();
-}
-async function deleteTodo(id){
-  const{error}=await sb.from('todos').delete().eq('id',id);
-  if(error){console.error('할일 삭제 실패:',error);return;}
-  todos=todos.filter(t=>t.id!==id);renderAll();
-}
-
-// ── 포커스 ──
+// ── 포커스 (최대 5개) ──
 async function addFocus(){
   const input=document.getElementById('focusInput'),text=input.value.trim();
   const today=getLocalDateString();
-  const todayFocuses=focuses.filter(f=>f.date===today&&!f.done);
-  if(!text||todayFocuses.length>=3)return;
+  if(!text||focuses.filter(f=>f.date===today&&!f.done).length>=MAX_FOCUS)return;
   const{data}=await sb.from('focuses').insert({user_id:currentUser.id,text,done:false,date:today}).select().single();
-  if(data)focuses.push({id:data.id,text,done:false,date:today,createdAt:data.created_at,fromSupabase:true});
+  if(data)focuses.push({id:data.id,text,done:false,date:today,fromSupabase:true});
   input.value='';renderAll();
 }
 async function toggleFocus(id){
@@ -827,157 +629,56 @@ async function toggleFocus(id){
 }
 async function deleteFocus(id){
   focuses=focuses.filter(f=>f.id!==id);
-  if(typeof id==='string'&&id.includes('-')){
-    const{error}=await sb.from('focuses').delete().eq('id',id);
-    if(error)console.error('포커스 삭제 실패:',error);
-  }
+  if(typeof id==='string'&&id.includes('-'))await sb.from('focuses').delete().eq('id',id).catch(e=>console.error(e));
   renderAll();
 }
 
-// ── 구글 캘린더 (CORS 우회: GAS doGet을 jsonp 대신 iframe 없이 처리) ──
+// ── 구글 캘린더 ──
 async function fetchGoogleCalendar(){
   if(calendarFetchInProgress)return;
   calendarFetchInProgress=true;
   try{
-    // no-cors로는 응답을 읽을 수 없어서 일반 GET 시도, 실패 시 조용히 넘어감
-    const controller=new AbortController();
-    const timeoutId=setTimeout(()=>controller.abort(),8000);
+    const controller=new AbortController(),tid=setTimeout(()=>controller.abort(),8000);
     const res=await fetch(CALENDAR_WEBHOOK+'?t='+Date.now(),{signal:controller.signal});
-    clearTimeout(timeoutId);
-    if(!res.ok){calendarFetchInProgress=false;return;}
+    clearTimeout(tid);
+    if(!res.ok)return;
     const data=await res.json();
     if(data.events){
-      const gEvents=data.events.map(e=>({
-        id:'google_'+e.start,title:e.title,
-        date:new Date(e.start).toISOString(),
-        hour:new Date(e.start).getHours(),
-        minute:new Date(e.start).getMinutes(),
-        color:e.color==='5'?'work':e.color==='6'?'urgent':'personal',
-        fromGoogle:true,shared:false
-      }));
+      const gEvents=data.events.map(e=>({id:'google_'+e.start,title:e.title,date:new Date(e.start).toISOString(),hour:new Date(e.start).getHours(),minute:new Date(e.start).getMinutes(),color:e.color==='5'?'work':e.color==='6'?'urgent':'personal',fromGoogle:true,shared:false}));
       schedules=[...schedules.filter(s=>!s.fromGoogle),...gEvents];
       renderAll();
     }
-  }catch(e){
-    // CORS 에러 or timeout - 조용히 무시
-    console.log('캘린더 fetch 실패 (무시됨):', e.name);
-  }
+  }catch(e){console.log('캘린더 fetch 실패:',e.name);}
   finally{calendarFetchInProgress=false;}
 }
 
 // ── 렌더 ──
 function renderHome(){
-  const now=new Date(),todayStr=now.toDateString(),todayDate=getLocalDateString();
+  const now=new Date(),todayStr=now.toDateString(),todayDate=getLocalDateString(),yesterday=getLocalDateString(new Date(Date.now()-86400000));
   const todayScheds=schedules.filter(s=>new Date(s.date).toDateString()===todayStr).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   document.getElementById('homeTodayScheds').innerHTML=todayScheds.length?todayScheds.map(s=>`<div class="row"><div style="display:flex;align-items:center;gap:8px;"><div class="sched-dot" style="background:${COLORS[s.color]};"></div><span style="font-size:14px;">${s.title}</span></div><span style="font-size:12px;color:var(--text2);">${fmtTime(s.hour,s.minute)}</span></div>`).join(''):'<p class="empty">오늘 일정이 없어요</p>';
-
-  // 포커스 렌더 (밀린것 포함)
-  const yesterday=getLocalDateString(new Date(Date.now()-86400000));
   const overdueFocuses=focuses.filter(f=>f.date===yesterday&&!f.done);
   const todayFocuses=focuses.filter(f=>f.date===todayDate);
   const activeTodayCount=todayFocuses.filter(f=>!f.done).length;
-
-  document.getElementById('focusCount').textContent=`${activeTodayCount}/3`;
-
-  const allFocuses=[...overdueFocuses,...todayFocuses];
-  document.getElementById('focusList').innerHTML=allFocuses.map(f=>{
+  document.getElementById('focusCount').textContent=`${activeTodayCount}/${MAX_FOCUS}`;
+  document.getElementById('focusList').innerHTML=[...overdueFocuses,...todayFocuses].map(f=>{
     const isOverdue=f.date===yesterday&&!f.done;
-    return`<div class="focus-item ${isOverdue?'overdue':''}">
-      <div class="focus-check ${f.done?'done':''}" onclick="toggleFocus('${f.id}')">${f.done?'✓':''}</div>
-      <span class="focus-text" style="flex:1;font-size:14px;${f.done?'text-decoration:line-through;color:var(--text2);':''}">${f.text}</span>
-      ${isOverdue?'<span class="overdue-badge">어제</span>':''}
-      <button class="btn-icon" onclick="deleteFocus('${f.id}')">×</button>
-    </div>`;
+    return`<div class="focus-item ${isOverdue?'overdue':''}"><div class="focus-check ${f.done?'done':''}" onclick="toggleFocus('${f.id}')">${f.done?'✓':''}</div><span class="focus-text" style="flex:1;font-size:14px;${f.done?'text-decoration:line-through;color:var(--text2);':''}">${f.text}</span>${isOverdue?'<span class="overdue-badge">어제</span>':''}<button class="btn-icon" onclick="deleteFocus('${f.id}')">×</button></div>`;
   }).join('');
-
-  document.getElementById('focusInputArea').style.display=activeTodayCount<3?'flex':'none';
+  document.getElementById('focusInputArea').style.display=activeTodayCount<MAX_FOCUS?'flex':'none';
   const fm=document.getElementById('focusMsg');
-  if(todayFocuses.length>0&&todayFocuses.every(f=>f.done)){fm.style.display='block';fm.style.color='var(--blue)';fm.textContent='🎉 오늘 포커스 완료! 수고했어요';}
+  if(todayFocuses.length>0&&todayFocuses.every(f=>f.done)){fm.style.display='block';fm.style.color='var(--blue)';fm.textContent='🎉 오늘 포커스 모두 완료! 수고했어요';}
   else fm.style.display='none';
 }
-
 function renderMemoTypePills(){document.getElementById('memoTypePills').innerHTML=Object.entries(MEMO_TYPES).map(([key,val])=>`<button class="type-pill ${currentMemoType===key?'active':'inactive'}" onclick="setMemoType('${key}')">${val.emoji} ${val.label}</button>`).join('');}
-
-const PREVIEW_COUNT=3; // 미리보기 개수
-// 각 섹션의 펼침 상태 (헤더 토글과 별개로 "더보기" 펼침)
-let expandedSections={active:false,done:false,today:false,upcoming:false};
-
-function makeTodoHtml(t,isDone){
-  return`<div class="todo-item ${isDone?'todo-done':''}">
-    <button onclick="moveTodo('${t.id}','${isDone?'진행중':'완료'}')" style="font-size:18px;color:${isDone?'#aaa':'var(--text2)'};flex-shrink:0;">${isDone?'✓':'○'}</button>
-    <p class="todo-text">${t.text}</p>
-    <button class="btn-icon" onclick="deleteTodo('${t.id}')">×</button>
-  </div>`;
-}
-function makeSchedHtml(s,showDate=false){
-  return`<div class="sched-item">
-    <div class="sched-dot" style="background:${COLORS[s.color]};"></div>
-    <div style="flex:1;">
-      <div class="sched-title">${s.title}</div>
-      <div class="sched-sub">${showDate?fmt(s.date)+' · ':''}${fmtTime(s.hour,s.minute)}</div>
-    </div>
-    ${!s.fromGoogle?`<button class="btn-icon" onclick="deleteSchedule('${s.id}')">×</button>`:''}
-  </div>`;
-}
-function renderWithPreview(items,previewId,fullId,moreBtnId,renderFn,emptyMsg,sectionKey){
-  const preview=document.getElementById(previewId);
-  const full=document.getElementById(fullId);
-  const moreBtn=document.getElementById(moreBtnId);
-  const isExpanded=expandedSections[sectionKey];
-  if(!items.length){
-    preview.innerHTML=`<p class="empty" style="padding:10px 0;">${emptyMsg}</p>`;
-    full.style.display='none';moreBtn.style.display='none';return;
-  }
-  const previewItems=items.slice(0,PREVIEW_COUNT);
-  const restCount=items.length-PREVIEW_COUNT;
-  if(isExpanded){
-    preview.innerHTML='';
-    full.innerHTML=items.map(renderFn).join('');
-    full.style.display='block';
-    moreBtn.style.display='block';
-    moreBtn.innerHTML=`<button onclick="toggleExpand('${sectionKey}')" style="width:100%;font-size:11px;color:var(--text2);padding:8px 0;text-align:center;cursor:pointer;">▲ 접기</button>`;
-  } else {
-    preview.innerHTML=previewItems.map(renderFn).join('');
-    full.style.display='none';
-    if(restCount>0){
-      moreBtn.style.display='block';
-      moreBtn.innerHTML=`<button onclick="toggleExpand('${sectionKey}')" style="width:100%;font-size:11px;color:var(--blue);padding:8px 0;text-align:center;cursor:pointer;font-weight:600;">+ ${restCount}개 더보기</button>`;
-    } else {
-      moreBtn.style.display='none';
-    }
-  }
-}
-function toggleExpand(key){
-  expandedSections[key]=!expandedSections[key];
-  renderSchedules();
-}
-
 function renderSchedules(){
   const now=new Date(),todayStr=now.toDateString();
   const todayS=schedules.filter(s=>new Date(s.date).toDateString()===todayStr).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   const upS=schedules.filter(s=>new Date(s.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const active=todos.filter(t=>t.status==='진행중');
-  const done=todos.filter(t=>t.status==='완료');
-  const total=schedules.length+todos.length;
-  document.getElementById('schedTodoEmpty').style.display=total===0?'block':'none';
-
-  // 오늘 일정
-  document.getElementById('uni-count-today').textContent=todayS.length?`(${todayS.length})`:'';
-  renderWithPreview(todayS,'todaySchedList','todaySchedFull','todayMoreBtn',s=>makeSchedHtml(s,false),'오늘 일정이 없어요','today');
-
-  // 예정
-  document.getElementById('uni-count-upcoming').textContent=upS.length?`(${upS.length})`:'';
-  renderWithPreview(upS,'upcomingSchedList','upcomingSchedFull','upcomingMoreBtn',s=>makeSchedHtml(s,true),'예정된 일정이 없어요','upcoming');
-
-  // 진행중
-  document.getElementById('uni-count-active').textContent=active.length?`(${active.length})`:'';
-  renderWithPreview(active,'activePreview','activeList','activeMoreBtn',t=>makeTodoHtml(t,false),'진행중인 할 일이 없어요','active');
-
-  // 완료
-  document.getElementById('uni-count-done').textContent=done.length?`(${done.length})`:'';
-  renderWithPreview(done,'donePreview','doneList','doneMoreBtn',t=>makeTodoHtml(t,true),'완료한 할 일이 없어요','done');
+  document.getElementById('schedEmpty').style.display=schedules.length===0?'block':'none';
+  renderSchedSection(todayS,'today',false);
+  renderSchedSection(upS,'upcoming',true);
 }
-
 function renderMemos(){
   const search=(document.getElementById('memoSearch')?.value||'').toLowerCase();
   ['personal','branch','trainer'].forEach(type=>{
@@ -985,12 +686,9 @@ function renderMemos(){
     if(search)filtered=filtered.filter(m=>m.text.toLowerCase().includes(search)||(m.trainer_name||'').toLowerCase().includes(search));
     filtered=filtered.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||new Date(b.date)-new Date(a.date));
     document.getElementById('count-'+type).textContent=filtered.length?`(${filtered.length})`:'';
-    const listEl=document.getElementById('list-'+type);
-    if(!filtered.length){listEl.innerHTML='<p class="empty" style="padding:12px 0;">메모가 없어요</p>';return;}
-    listEl.innerHTML=filtered.map(m=>`<div class="memo-item"><div class="memo-top"><div style="display:flex;align-items:center;gap:6px;">${m.trainer_name?`<span class="badge badge-blue">${m.trainer_name}</span>`:''}</div><button class="btn-icon" onclick="deleteMemo(\`${m.id}\`)">×</button></div><p class="memo-text">${m.text}</p><p class="memo-meta">${m.author_name?m.author_name+' · ':''}${fmtDate(m.date)}</p></div>`).join('');
+    document.getElementById('list-'+type).innerHTML=filtered.length?filtered.map(m=>`<div class="memo-item"><div class="memo-top"><div>${m.trainer_name?`<span class="badge badge-blue">${m.trainer_name}</span>`:''}</div><button class="btn-icon" onclick="deleteMemo(\`${m.id}\`)">×</button></div><p class="memo-text">${m.text}</p><p class="memo-meta">${m.author_name?m.author_name+' · ':''}${fmtDate(m.date)}</p></div>`).join(''):'<p class="empty" style="padding:12px 0;">메모가 없어요</p>';
   });
 }
-
 function renderAll(){
   renderHome();renderSchedules();renderMemos();renderMemoTypePills();
   if(currentTab==='sales')renderSalesTab();
@@ -1009,8 +707,7 @@ async function initApp(user){
     updateUserUI();renderAll();
     if(calendarIntervalId)clearInterval(calendarIntervalId);
     if(salesIntervalId)clearInterval(salesIntervalId);
-    fetchGoogleCalendar();
-    loadSalesFromSupabase();
+    fetchGoogleCalendar();loadSalesFromSupabase();
     calendarIntervalId=setInterval(fetchGoogleCalendar,5*60*1000);
     salesIntervalId=setInterval(loadSalesFromSupabase,15*60*1000);
   }catch(e){console.error('초기화 오류:',e);renderAll();}
