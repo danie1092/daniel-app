@@ -407,13 +407,16 @@ async function ensureProfile(user){
 }
 
 async function loadFromSupabase(userId){
-  const today=new Date().toISOString().split('T')[0];
-  const[schedsRes,memosRes,todosRes,focusesRes]=await Promise.all([
-    sb.from('schedules').select('*').is('deleted_at',null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
-    sb.from('memos').select('*').is('deleted_at',null).order('created_at',{ascending:false}),
-    sb.from('todos').select('*').eq('user_id',userId).is('deleted_at',null),
-    sb.from('focuses').select('*').eq('user_id',userId).eq('date',today).is('deleted_at',null)
-  ]);
+  // 👇 이 부분을 .toISOString() 대신 우리가 만든 함수로 바꿔야 합니다!
+  const today = getLocalDateString(new Date()); 
+  
+  const[schedsRes,memosRes,todosRes,focusesRes]=await Promise.all([
+    sb.from('schedules').select('*').is('deleted_at',null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
+    sb.from('memos').select('*').is('deleted_at',null).order('created_at',{ascending:false}),
+    sb.from('todos').select('*').eq('user_id',userId).is('deleted_at',null),
+    // 이제 여기서 'today'가 한국 날짜로 정확히 들어갑니다!
+    sb.from('focuses').select('*').eq('user_id',userId).eq('date',today).is('deleted_at',null)
+  ]);
   schedules=(schedsRes.data||[]).map(s=>({id:s.id,title:s.title,date:s.date+'T00:00:00',hour:s.hour,minute:s.minute,shared:s.shared,color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',fromSupabase:true}));
   memos=(memosRes.data||[]).map(m=>({id:m.id,text:m.text,type:m.category||'personal',trainer_name:m.trainer_name||null,pinned:m.pinned,author_name:m.author_name||null,date:m.created_at,fromSupabase:true}));
   todos=(todosRes.data||[]).map(t=>({id:t.id,text:t.text,status:t.status,source:t.source,date:t.created_at,fromSupabase:true}));
