@@ -402,6 +402,7 @@ async function ensureProfile(user){
 
 // ── 데이터 로드 ──
 async function loadFromSupabase(userId){
+  const today=getLocalDateString();
   const yesterday=getLocalDateString(new Date(Date.now()-86400000));
   const[schedsRes,memosRes,focusesRes]=await Promise.all([
     sb.from('schedules').select('*').is('deleted_at',null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
