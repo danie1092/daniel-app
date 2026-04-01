@@ -406,8 +406,7 @@ async function loadFromSupabase(userId){
   const[schedsRes,memosRes,focusesRes]=await Promise.all([
     sb.from('schedules').select('*').is('deleted_at',null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
     sb.from('memos').select('*').is('deleted_at',null).order('created_at',{ascending:false}),
-    sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).is('deleted_at',null)
-  ]);
+sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).lte('date',today).is('deleted_at',null)  ]);
   schedules=(schedsRes.data||[]).map(s=>({id:s.id,title:s.title,date:s.date+'T00:00:00',hour:s.hour,minute:s.minute,shared:s.shared,color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',fromSupabase:true}));
   memos=(memosRes.data||[]).map(m=>({id:m.id,text:m.text,type:m.category||'personal',trainer_name:m.trainer_name||null,pinned:m.pinned,author_name:m.author_name||null,date:m.created_at,fromSupabase:true}));
   focuses=(focusesRes.data||[]).map(f=>({id:f.id,text:f.text,done:f.done,date:f.date||getLocalDateString(),fromSupabase:true}));
@@ -632,7 +631,10 @@ async function toggleFocus(id){
 }
 async function deleteFocus(id){
   focuses=focuses.filter(f=>f.id!==id);
-  if(typeof id==='string'&&id.includes('-'))await sb.from('focuses').delete().eq('id',id).catch(e=>console.error(e));
+  if(typeof id==='string'&&id.includes('-')){
+    try{ await sb.from('focuses').delete().eq('id',id); }
+    catch(e){ console.error('포커스 삭제 실패:',e); }
+  }
   renderAll();
 }
 
