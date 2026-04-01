@@ -406,7 +406,8 @@ async function loadFromSupabase(userId){
   const[schedsRes,memosRes,focusesRes]=await Promise.all([
     sb.from('schedules').select('*').is('deleted_at',null).or(`user_id.eq.${userId},shared.eq.true`).order('date'),
     sb.from('memos').select('*').is('deleted_at',null).order('created_at',{ascending:false}),
-sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).lte('date',today).is('deleted_at',null)  ]);
+    sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).lte('date',today).is('deleted_at',null)
+  ]);
   schedules=(schedsRes.data||[]).map(s=>({id:s.id,title:s.title,date:s.date+'T00:00:00',hour:s.hour,minute:s.minute,shared:s.shared,color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',fromSupabase:true}));
   memos=(memosRes.data||[]).map(m=>({id:m.id,text:m.text,type:m.category||'personal',trainer_name:m.trainer_name||null,pinned:m.pinned,author_name:m.author_name||null,date:m.created_at,fromSupabase:true}));
   focuses=(focusesRes.data||[]).map(f=>({id:f.id,text:f.text,done:f.done,date:f.date||getLocalDateString(),fromSupabase:true}));
@@ -415,9 +416,6 @@ sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).lte('d
 // ── 매출 ──
 async function loadSalesFromSupabase(){
   document.getElementById('homeSalesBox').innerHTML='<p class="empty" style="padding:8px 0;">새로고침 중... ⏳</p>';
-   // GAS sync 먼저 기다렸다가 Supabase 읽기
-  try { await fetch(CALENDAR_WEBHOOK+'?action=sync'); } catch(e){}
-  // 나머지 기존 코드...
   try{
     const[summaryRes,trainersRes]=await Promise.all([sb.from('sales_summary').select('*').eq('branch',BRANCH),sb.from('sales_trainers').select('*')]);
     salesSummaryData={};
@@ -649,7 +647,17 @@ async function fetchGoogleCalendar(){
     if(!res.ok)return;
     const data=await res.json();
     if(data.events){
-      const gEvents=data.events.map(e=>({id:'google_'+e.start,title:e.title,date:new Date(e.start).toISOString(),hour:new Date(e.start).getHours(),minute:new Date(e.start).getMinutes(),color:e.color==='5'?'work':e.color==='6'?'urgent':'personal',fromGoogle:true,shared:false}));
+      // 구글 캘린더 이벤트를 ID 기반으로 중복 제거
+      const gEvents=data.events.map(e=>({
+        id:'google_'+new Date(e.start).getTime(),
+        title:e.title,
+        date:new Date(e.start).toISOString(),
+        hour:new Date(e.start).getHours(),
+        minute:new Date(e.start).getMinutes(),
+        color:e.color==='5'?'work':e.color==='6'?'urgent':'personal',
+        fromGoogle:true,shared:false
+      }));
+      // 기존 구글 일정 완전 교체 (중복 방지)
       schedules=[...schedules.filter(s=>!s.fromGoogle),...gEvents];
       renderAll();
     }
