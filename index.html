@@ -415,6 +415,8 @@ async function loadFromSupabase(userId){
 
 // ── 매출 ──
 async function loadSalesFromSupabase(){
+   // ▼ 이 한 줄 추가 (GAS sync 먼저 호출)
+  fetch(CALENDAR_WEBHOOK+'?action=sync').catch(()=>{});
   document.getElementById('homeSalesBox').innerHTML='<p class="empty" style="padding:8px 0;">새로고침 중... ⏳</p>';
   try{
     const[summaryRes,trainersRes]=await Promise.all([sb.from('sales_summary').select('*').eq('branch',BRANCH),sb.from('sales_trainers').select('*')]);
