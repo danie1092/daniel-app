@@ -313,48 +313,22 @@
     <!-- 일정 -->
     <div id="tab-schedule" class="tab-content fade">
 
-      <!-- 일정 추가 접기형 -->
-      <div class="sched-add-section">
-        <div class="sched-add-header" onclick="toggleSchedAdd()">
-          <span style="font-size:13px;font-weight:700;">➕ 일정 추가</span>
-          <span id="schedAddArrow" style="font-size:11px;color:var(--text2);transition:transform 0.2s;">▼</span>
-        </div>
-        <div class="sched-add-body" id="schedAddBody">
-          <div style="display:flex;gap:8px;margin-bottom:10px;" id="schedCatBtns">
-            <button class="sched-cat-btn sel-personal" onclick="setSchedType('personal')">개인</button>
-            <button class="sched-cat-btn" onclick="setSchedType('work')">업무</button>
-            <button class="sched-cat-btn" onclick="setSchedType('urgent')">긴급</button>
-          </div>
-          <div class="input-row">
-            <input id="schedInput" class="input-field" placeholder="내일 10시 PT상담" onkeydown="if(event.key==='Enter') addSchedule()" />
-            <button class="btn-primary" onclick="addSchedule()">추가</button>
-          </div>
-          <p class="err" id="schedErr" style="display:none;"></p>
-          <p class="hint">오늘·내일·모레·이번주 금요일·다음주 토요일·MM-DD / 시간: 10시·15시 30분·10:00</p>
-        </div>
+      <!-- 일정 추가 모달 -->
+      <div class="modal-overlay" id="addEventModal" onclick="closeAddEventModal()"></div>
+      <div class="modal-sheet" id="addEventModalSheet" style="display:none;">
+        <div class="modal-handle"></div>
+        <div id="addEventModalContent"></div>
       </div>
 
       <!-- 뷰 전환 탭 -->
       <div class="card" style="padding:10px 14px;">
         <div class="cal-view-tabs">
-          <div class="cal-view-tab active" id="view-tab-week" onclick="setCalView('week')">주간</div>
-          <div class="cal-view-tab" id="view-tab-month" onclick="setCalView('month')">월간</div>
-        </div>
-
-        <!-- 주간 뷰 -->
-        <div id="cal-week-view">
-          <div class="week-nav">
-            <button class="week-nav-btn" onclick="moveWeek(-1)">‹</button>
-            <span class="week-nav-title" id="weekNavTitle"></span>
-            <button class="week-nav-btn" onclick="moveWeek(1)">›</button>
-          </div>
-          <div class="week-days-header" id="weekDaysHeader"></div>
-          <div class="week-days-row" id="weekDaysRow"></div>
-          <div class="week-day-events" id="weekDayEvents"></div>
+          <div class="cal-view-tab active" id="view-tab-month" onclick="setCalView('month')">월간</div>
+          <div class="cal-view-tab" id="view-tab-week" onclick="setCalView('week')">주간</div>
         </div>
 
         <!-- 월간 뷰 -->
-        <div id="cal-month-view" style="display:none;">
+        <div id="cal-month-view">
           <div class="month-nav">
             <button class="month-nav-btn" onclick="moveMonth(-1)">‹</button>
             <span class="month-nav-title" id="monthNavTitle"></span>
@@ -372,7 +346,22 @@
           <div class="month-grid" id="monthGrid"></div>
           <div class="month-selected-events" id="monthSelectedEvents" style="display:none;"></div>
         </div>
+
+        <!-- 주간 뷰 -->
+        <div id="cal-week-view" style="display:none;">
+          <div class="week-nav">
+            <button class="week-nav-btn" onclick="moveWeek(-1)">‹</button>
+            <span class="week-nav-title" id="weekNavTitle"></span>
+            <button class="week-nav-btn" onclick="moveWeek(1)">›</button>
+          </div>
+          <div class="week-days-header" id="weekDaysHeader"></div>
+          <div class="week-days-row" id="weekDaysRow"></div>
+          <div class="week-day-events" id="weekDayEvents"></div>
+        </div>
       </div>
+
+      <!-- FAB 추가 버튼 -->
+      <button onclick="openAddEventModal(selectedDate)" style="position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);right:max(16px, calc(50vw - 224px));width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;font-size:24px;box-shadow:0 4px 14px rgba(74,125,255,0.4);z-index:500;display:flex;align-items:center;justify-content:center;line-height:1;">+</button>
     </div>
 
     <!-- 메모 -->
@@ -487,7 +476,7 @@ let salesIntervalId=null;
 let openMemoSections={};
 
 // 캘린더 상태
-let calView='week'; // 'week' | 'month'
+let calView='month'; // 'week' | 'month'
 let weekOffset=0;   // 현재 주에서 ±
 let monthOffset=0;  // 현재 달에서 ±
 let selectedDate=getLocalDateString(); // 선택된 날짜
@@ -666,44 +655,80 @@ function fmt(dateStr){
 function fmtTime(h,m){const p=h<12?'AM':'PM';return`${p} ${h%12||12}:${String(m).padStart(2,'0')}`;}
 function fmtDate(d){return new Date(d).toLocaleString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
 
-// ── 일정 추가 ──
-function toggleSchedAdd(){
-  const body=document.getElementById('schedAddBody'),arrow=document.getElementById('schedAddArrow');
-  const isOpen=body.classList.contains('open');
-  body.classList.toggle('open',!isOpen);
-  arrow.style.transform=isOpen?'':'rotate(180deg)';
+// ── 일정 추가 모달 (구글 캘린더 스타일) ──
+function openAddEventModal(dateStr){
+  dateStr=dateStr||getLocalDateString();
+  document.getElementById('addEventModal').classList.add('show');
+  document.getElementById('addEventModalSheet').style.display='block';
+  const now=new Date();
+  const defaultTime=`${String(now.getHours()).padStart(2,'0')}:00`;
+  const defaultEndTime=`${String(now.getHours()+1<24?now.getHours()+1:now.getHours()).padStart(2,'0')}:00`;
+  document.getElementById('addEventModalContent').innerHTML=`
+    <div class="modal-handle"></div>
+    <div style="font-size:15px;font-weight:800;margin-bottom:16px;">새 일정</div>
+    <div style="margin-bottom:12px;">
+      <input id="newEventTitle" class="modal-input" placeholder="제목" style="font-size:16px;font-weight:600;" />
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:12px;">
+      <span style="font-size:16px;">📅</span>
+      <input id="newEventDate" type="date" class="modal-input" value="${dateStr}" style="font-size:14px;flex:1;" />
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:12px;">
+      <span style="font-size:16px;">🕐</span>
+      <input id="newEventStart" type="time" class="modal-input" value="${defaultTime}" style="font-size:14px;flex:1;" />
+      <span style="font-size:13px;color:var(--text2);">~</span>
+      <input id="newEventEnd" type="time" class="modal-input" value="${defaultEndTime}" style="font-size:14px;flex:1;" />
+    </div>
+    <div style="display:flex;gap:6px;padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:12px;">
+      <button class="sched-cat-btn sel-personal" id="cat-personal" onclick="setNewEventCat('personal')">개인</button>
+      <button class="sched-cat-btn" id="cat-work" onclick="setNewEventCat('work')">업무</button>
+      <button class="sched-cat-btn" id="cat-urgent" onclick="setNewEventCat('urgent')">긴급</button>
+    </div>
+    <div style="padding:10px 0;border-bottom:1px solid var(--border);margin-bottom:16px;">
+      <textarea id="newEventNote" class="modal-input" placeholder="메모 (선택)" rows="2" style="resize:none;font-size:14px;line-height:1.6;"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-sm" style="flex:1;" onclick="closeAddEventModal()">취소</button>
+      <button class="btn-primary" style="flex:2;" onclick="saveNewEvent()">저장</button>
+    </div>
+  `;
+  _newEventCat='personal';
+  document.getElementById('newEventTitle').focus();
 }
-function setSchedType(type){
-  currentSchedType=type;
-  document.querySelectorAll('#schedCatBtns .sched-cat-btn').forEach(btn=>{
-    btn.className='sched-cat-btn';
-    if(btn.textContent.trim()==='개인'&&type==='personal')btn.classList.add('sel-personal');
-    else if(btn.textContent.trim()==='업무'&&type==='work')btn.classList.add('sel-work');
-    else if(btn.textContent.trim()==='긴급'&&type==='urgent')btn.classList.add('sel-urgent');
+let _newEventCat='personal';
+function setNewEventCat(cat){
+  _newEventCat=cat;
+  ['personal','work','urgent'].forEach(c=>{
+    const btn=document.getElementById('cat-'+c);
+    btn.className='sched-cat-btn'+(c===cat?' sel-'+c:'');
   });
 }
-async function addSchedule(){
-  const input=document.getElementById('schedInput').value;
-  const p=parseNaturalDate(input.trim()),errEl=document.getElementById('schedErr');
-  if(!p){errEl.textContent='형식: 내일 10시 PT상담';errEl.style.display='block';return;}
-  const t=parseTimeAndTitle(p.rest);
-  if(!t){errEl.textContent='시간 형식: 10시, 15시 30분, 10:00';errEl.style.display='block';return;}
-  errEl.style.display='none';
+function closeAddEventModal(){
+  document.getElementById('addEventModal').classList.remove('show');
+  document.getElementById('addEventModalSheet').style.display='none';
+}
+async function saveNewEvent(){
+  const title=document.getElementById('newEventTitle')?.value.trim();
+  const dateStr=document.getElementById('newEventDate')?.value;
+  const startTime=document.getElementById('newEventStart')?.value||'09:00';
+  const endTime=document.getElementById('newEventEnd')?.value||'10:00';
+  const note=document.getElementById('newEventNote')?.value.trim()||'';
+  if(!title||!dateStr)return;
+  const [sh,sm]=startTime.split(':').map(Number);
+  const [eh,em]=endTime.split(':').map(Number);
   const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
-  const isShared=currentSchedType==='work'||currentSchedType==='urgent';
-  const dateStr=getLocalDateString(p.date);
+  const isShared=_newEventCat==='work'||_newEventCat==='urgent';
   const{data}=await sb.from('schedules').insert({
-    user_id:currentUser.id,title:t.title,date:dateStr,
-    hour:t.hour,minute:t.minute,color:colorMap[currentSchedType],
-    shared:isShared,status:'pending',
-    repeat_type:'none',category:currentSchedType
+    user_id:currentUser.id,title,date:dateStr,
+    hour:sh,minute:sm,end_hour:eh,end_minute:em,
+    color:colorMap[_newEventCat],shared:isShared,
+    status:'pending',repeat_type:'none',category:_newEventCat,note
   }).select().single();
   if(data){
-    schedules.push({id:data.id,title:t.title,date:dateStr,hour:t.hour,minute:t.minute,color:currentSchedType,shared:isShared,repeat_type:'none',category:currentSchedType,fromSupabase:true});
+    schedules.push({id:data.id,title,date:dateStr,hour:sh,minute:sm,end_hour:eh,end_minute:em,
+      color:_newEventCat,shared:isShared,repeat_type:'none',category:_newEventCat,note,fromSupabase:true});
   }
-  document.getElementById('schedInput').value='';
-  renderAll();
-  renderCalendar();
+  closeAddEventModal();renderAll();renderCalendar();
 }
 async function deleteSchedule(id){
   schedules=schedules.filter(s=>s.id!==id);
@@ -711,52 +736,56 @@ async function deleteSchedule(id){
   renderAll();renderCalendar();
 }
 
-// ── 일정 상세/수정 모달 ──
+// ── 일정 상세/수정 모달 (compact) ──
 function openEventModal(schedId){
   const s=schedules.find(x=>x.id===schedId);if(!s)return;
-  const isOwner=s.user_id===currentUser?.id||!s.user_id;
+  const isOwner=!s.shared||(s.user_id===currentUser?.id);
   document.getElementById('eventModal').classList.add('show');
   document.getElementById('eventModalSheet').style.display='block';
   const colorHex=COLORS[s.color]||COLORS.personal;
+  const startVal=`${String(s.hour).padStart(2,'0')}:${String(s.minute).padStart(2,'0')}`;
+  const endVal=s.end_hour!=null?`${String(s.end_hour).padStart(2,'0')}:${String(s.end_minute||0).padStart(2,'0')}`:'';
+  _editRepeat=s.repeat_type||'none';
   document.getElementById('eventModalContent').innerHTML=`
     <div class="modal-handle"></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-      <div style="width:4px;height:32px;border-radius:2px;background:${colorHex};flex-shrink:0;"></div>
-      <div>
-        <div style="font-size:16px;font-weight:800;">${s.title}</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:2px;">${fmt(s.date)} · ${fmtTime(s.hour,s.minute)}${s.shared?'<span class="event-badge event-badge-shared" style="margin-left:6px;">공유</span>':''}${s.repeat_type&&s.repeat_type!=='none'?`<span class="event-badge event-badge-repeat" style="margin-left:4px;">${REPEAT_LABELS[s.repeat_type]||''}</span>`:''}</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="width:4px;height:28px;border-radius:2px;background:${colorHex};flex-shrink:0;"></div>
+      <div style="flex:1;">
+        ${isOwner
+          ?`<input class="modal-input" id="editTitle" value="${s.title}" style="font-size:16px;font-weight:800;padding:0;background:none;" />`
+          :`<div style="font-size:16px;font-weight:800;">${s.title}</div>`
+        }
+        <div style="font-size:11px;color:var(--text2);margin-top:2px;">${fmt(s.date)}${s.shared?'<span class="event-badge event-badge-shared" style="margin-left:6px;">공유</span>':''}</div>
       </div>
     </div>
     ${isOwner?`
-    <div class="modal-field">
-      <label>제목</label>
-      <input class="modal-input" id="editTitle" value="${s.title}" />
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--border);">
+      <span style="font-size:14px;">📅</span>
+      <input id="editDate" type="date" class="modal-input" value="${s.date}" style="font-size:13px;flex:1;padding:4px 8px;" />
     </div>
-    <div class="modal-row">
-      <div class="modal-field" style="flex:1;">
-        <label>시간</label>
-        <input class="modal-input" id="editHour" type="number" min="0" max="23" value="${s.hour}" style="text-align:center;" />
-      </div>
-      <div style="padding-top:28px;font-size:16px;color:var(--text2);">:</div>
-      <div class="modal-field" style="flex:1;">
-        <label>분</label>
-        <input class="modal-input" id="editMinute" type="number" min="0" max="59" value="${s.minute}" style="text-align:center;" />
-      </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--border);">
+      <span style="font-size:14px;">🕐</span>
+      <input id="editStart" type="time" class="modal-input" value="${startVal}" style="font-size:13px;flex:1;padding:4px 8px;" />
+      <span style="font-size:12px;color:var(--text2);">~</span>
+      <input id="editEnd" type="time" class="modal-input" value="${endVal}" style="font-size:13px;flex:1;padding:4px 8px;" />
     </div>
-    <div class="modal-field">
-      <label>반복</label>
+    <div style="padding:10px 0;border-top:1px solid var(--border);">
       <div class="repeat-btns">
-        ${['none','daily','weekly','monthly'].map(r=>`<button class="repeat-btn${s.repeat_type===r?' active':''}" onclick="selectRepeat('${r}',this)">${REPEAT_LABELS[r]}</button>`).join('')}
+        ${['none','daily','weekly','monthly'].map(r=>`<button class="repeat-btn${(s.repeat_type||'none')===r?' active':''}" onclick="selectRepeat('${r}',this)">${REPEAT_LABELS[r]}</button>`).join('')}
       </div>
     </div>
-    <div class="modal-field">
-      <label>메모</label>
-      <textarea class="modal-input" id="editNote" rows="3" placeholder="일정 메모..." style="resize:none;line-height:1.6;">${s.note||''}</textarea>
+    <div style="padding:10px 0;border-top:1px solid var(--border);">
+      <textarea id="editNote" class="modal-input" rows="2" placeholder="메모..." style="resize:none;font-size:13px;line-height:1.6;">${s.note||''}</textarea>
     </div>
-    <div class="modal-actions">
+    <div style="display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border);">
       <button class="btn-danger" onclick="deleteSchedule('${s.id}');closeEventModal();">삭제</button>
       <button class="btn-primary" style="flex:1;" onclick="saveEventEdit('${s.id}')">저장</button>
-    </div>`:`<div style="padding:4px 0;">${s.note?`<p style="font-size:13px;color:var(--text2);line-height:1.6;margin-top:8px;">📝 ${s.note}</p>`:'<p style="font-size:13px;color:var(--text2);text-align:center;padding:8px 0;">팀원이 등록한 일정이에요</p>'}</div>`}
+    </div>`
+    :`<div style="padding:12px 0;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:14px;">🕐</span><span style="font-size:13px;">${fmtTime(s.hour,s.minute)}${endVal?' ~ '+endVal:''}</span></div>
+        ${s.note?`<div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:14px;">📝</span><span style="font-size:13px;color:var(--text2);line-height:1.6;">${s.note}</span></div>`:''}
+      </div>`
+    }
   `;
 }
 let _editRepeat='none';
@@ -767,13 +796,17 @@ function selectRepeat(val,btn){
 }
 async function saveEventEdit(id){
   const title=document.getElementById('editTitle')?.value.trim();
-  const hour=parseInt(document.getElementById('editHour')?.value||'0');
-  const minute=parseInt(document.getElementById('editMinute')?.value||'0');
-  const repeat=_editRepeat;
+  const dateStr=document.getElementById('editDate')?.value||'';
+  const startTime=document.getElementById('editStart')?.value||'09:00';
+  const endTime=document.getElementById('editEnd')?.value||'';
   const note=document.getElementById('editNote')?.value.trim()||'';
   if(!title)return;
-  await sb.from('schedules').update({title,hour,minute,repeat_type:repeat,note}).eq('id',id);
-  schedules=schedules.map(s=>s.id===id?{...s,title,hour,minute,repeat_type:repeat,note}:s);
+  const [sh,sm]=startTime.split(':').map(Number);
+  const endParts=endTime?endTime.split(':').map(Number):null;
+  const updates={title,date:dateStr,hour:sh,minute:sm,repeat_type:_editRepeat,note};
+  if(endParts){updates.end_hour=endParts[0];updates.end_minute=endParts[1];}
+  await sb.from('schedules').update(updates).eq('id',id);
+  schedules=schedules.map(s=>s.id===id?{...s,...updates}:s);
   closeEventModal();renderAll();renderCalendar();
 }
 function closeEventModal(){
@@ -832,6 +865,16 @@ function selectDay(dateStr){
   selectedDate=dateStr;
   renderWeekView();
   renderMonthView();
+}
+function tapDay(dateStr){
+  // 이미 선택된 날 다시 탭하면 일정 추가 모달
+  if(selectedDate===dateStr){
+    openAddEventModal(dateStr);
+  } else {
+    selectedDate=dateStr;
+    renderWeekView();
+    renderMonthView();
+  }
 }
 function renderWeekDayEvents(){
   const dayScheds=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
@@ -897,7 +940,7 @@ function renderMonthView(){
     const isSel=dateStr===selectedDate;
     const dayNum=new Date(dateStr+'T00:00:00').getDate();
     const dots=dayScheds.slice(0,4).map(s=>`<div class="month-cell-dot" style="background:${COLORS[s.color]||COLORS.personal};"></div>`).join('');
-    return`<div class="month-cell${otherMonth?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" onclick="selectDay('${dateStr}')">
+    return`<div class="month-cell${otherMonth?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" onclick="tapDay('${dateStr}')">
       <div class="month-cell-num">${dayNum}</div>
       <div class="month-cell-dots">${dots}</div>
     </div>`;
