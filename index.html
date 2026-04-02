@@ -534,6 +534,7 @@ async function loadFromSupabase(userId){
     color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',
     repeat_type:s.repeat_type||'none',
     category:s.category||'personal',
+    note:s.note||'',
     fromSupabase:true
   }));
   memos=(memosRes.data||[]).map(m=>({id:m.id,text:m.text,type:m.category||'personal',trainer_name:m.trainer_name||null,pinned:m.pinned,author_name:m.author_name||null,date:m.created_at,fromSupabase:true}));
@@ -748,10 +749,14 @@ function openEventModal(schedId){
         ${['none','daily','weekly','monthly'].map(r=>`<button class="repeat-btn${s.repeat_type===r?' active':''}" onclick="selectRepeat('${r}',this)">${REPEAT_LABELS[r]}</button>`).join('')}
       </div>
     </div>
+    <div class="modal-field">
+      <label>메모</label>
+      <textarea class="modal-input" id="editNote" rows="3" placeholder="일정 메모..." style="resize:none;line-height:1.6;">${s.note||''}</textarea>
+    </div>
     <div class="modal-actions">
       <button class="btn-danger" onclick="deleteSchedule('${s.id}');closeEventModal();">삭제</button>
       <button class="btn-primary" style="flex:1;" onclick="saveEventEdit('${s.id}')">저장</button>
-    </div>`:'<p style="font-size:13px;color:var(--text2);text-align:center;padding:8px 0;">팀원이 등록한 일정이에요</p>'}
+    </div>`:`<div style="padding:4px 0;">${s.note?`<p style="font-size:13px;color:var(--text2);line-height:1.6;margin-top:8px;">📝 ${s.note}</p>`:'<p style="font-size:13px;color:var(--text2);text-align:center;padding:8px 0;">팀원이 등록한 일정이에요</p>'}</div>`}
   `;
 }
 let _editRepeat='none';
@@ -765,9 +770,10 @@ async function saveEventEdit(id){
   const hour=parseInt(document.getElementById('editHour')?.value||'0');
   const minute=parseInt(document.getElementById('editMinute')?.value||'0');
   const repeat=_editRepeat;
+  const note=document.getElementById('editNote')?.value.trim()||'';
   if(!title)return;
-  await sb.from('schedules').update({title,hour,minute,repeat_type:repeat}).eq('id',id);
-  schedules=schedules.map(s=>s.id===id?{...s,title,hour,minute,repeat_type:repeat}:s);
+  await sb.from('schedules').update({title,hour,minute,repeat_type:repeat,note}).eq('id',id);
+  schedules=schedules.map(s=>s.id===id?{...s,title,hour,minute,repeat_type:repeat,note}:s);
   closeEventModal();renderAll();renderCalendar();
 }
 function closeEventModal(){
@@ -848,6 +854,7 @@ function renderWeekDayEvents(){
       html+=`<div class="time-event-block" style="background:${lightHex};border-left:3px solid ${colorHex};" onclick="openEventModal('${s.id}')">
         <div class="time-event-title" style="color:${colorHex};">${s.title}</div>
         <div class="time-event-sub" style="color:${colorHex};">${fmtTime(s.hour,s.minute)}${s.shared?' · 공유':''}${s.repeat_type&&s.repeat_type!=='none'?' · 반복':''}</div>
+        ${s.note?`<div style="font-size:10px;color:${colorHex};opacity:0.75;margin-top:2px;">${s.note.length>30?s.note.slice(0,30)+'...':s.note}</div>`:''}
       </div>`;
     });
     html+=`</div></div>`;
