@@ -739,7 +739,7 @@ async function deleteSchedule(id){
 // ── 일정 상세/수정 모달 (compact) ──
 function openEventModal(schedId){
   const s=schedules.find(x=>x.id===schedId);if(!s)return;
-  const isOwner=!s.shared||(s.user_id===currentUser?.id);
+  const isOwner=s.user_id===currentUser?.id;
   document.getElementById('eventModal').classList.add('show');
   document.getElementById('eventModalSheet').style.display='block';
   const colorHex=COLORS[s.color]||COLORS.personal;
