@@ -515,10 +515,13 @@ async function loadFromSupabase(userId){
   ]);
   schedules=(schedsRes.data||[]).map(s=>({
     id:s.id,
+    user_id:s.user_id,
     title:s.title,
-    date:s.date, // YYYY-MM-DD 문자열 그대로 보관
+    date:s.date,
     hour:s.hour,
     minute:s.minute,
+    end_hour:s.end_hour??null,
+    end_minute:s.end_minute??null,
     shared:s.shared,
     color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',
     repeat_type:s.repeat_type||'none',
