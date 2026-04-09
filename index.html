@@ -17,7 +17,7 @@
     :root {
       --bg: #f7f7f5; --surface: #ffffff; --surface2: #f0f0ed; --text: #111; --text2: #777;
       --border: #e4e4e0; --blue: #4a7dff; --green: #16a34a; --red: #ff5e3a; --amber: #f5a623;
-      --radius: 14px; --nav-h: 72px;
+      --radius: 14px; --nav-h: 56px;
     }
     @media (prefers-color-scheme: dark) {
       :root { --bg: #0f0f0e; --surface: #1a1a18; --surface2: #222220; --text: #f0f0ee; --text2: #666; --border: #2c2c2a; }
@@ -26,7 +26,7 @@
     input, textarea, button { font-family: inherit; }
     input, textarea { background: none; border: none; outline: none; color: var(--text); width: 100%; }
     button { cursor: pointer; border: none; background: none; color: var(--text); }
-    .app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 8px); }
+    .app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px); }
     .header { padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: flex-start; }
     .header-left .header-date { font-size: 12px; color: var(--text2); margin-bottom: 2px; }
     .header-left .header-title { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
@@ -57,8 +57,17 @@
     .err { font-size: 12px; color: var(--red); margin-top: 4px; }
     .tab-content { display: none; }
     .tab-content.active { display: flex; flex-direction: column; gap: 10px; }
-    .nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: var(--nav-h); background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: flex-start; padding-top: 8px; padding-bottom: env(safe-area-inset-bottom); }
-    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0; color: var(--text2); }
+    /* ── 네비게이션 (홈인디케이터 대응) ── */
+    .nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: var(--surface); border-top: 1px solid var(--border);
+      display: flex; align-items: flex-start;
+      padding-top: 10px;
+      padding-bottom: max(env(safe-area-inset-bottom), 12px);
+      height: calc(var(--nav-h) + max(env(safe-area-inset-bottom), 12px));
+    }
+    .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 0; color: var(--text2); min-height: 44px; justify-content: center; }
     .nav-btn.active { color: var(--text); }
     .nav-icon { font-size: 20px; line-height: 1; }
     .nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; }
@@ -88,13 +97,11 @@
     .sched-cat-btn.sel-personal { border-color: #4a7dff; color: #4a7dff; background: #e8eeff; }
     .sched-cat-btn.sel-work { border-color: #f5a623; color: #f5a623; background: #fff8ec; }
     .sched-cat-btn.sel-urgent { border-color: #ff5e3a; color: #ff5e3a; background: #fff0ed; }
-
-    /* ── 캘린더 뷰 탭 ── */
+    /* 캘린더 뷰 탭 */
     .cal-view-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 10px; padding: 4px; margin-bottom: 12px; }
     .cal-view-tab { flex: 1; text-align: center; font-size: 12px; font-weight: 600; padding: 7px 4px; border-radius: 8px; cursor: pointer; color: var(--text2); transition: all 0.15s; }
     .cal-view-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-
-    /* ── 주간 뷰 ── */
+    /* 주간 뷰 */
     .week-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .week-nav-title { font-size: 14px; font-weight: 700; }
     .week-nav-btn { font-size: 18px; color: var(--text2); padding: 4px 10px; border-radius: 8px; background: var(--surface2); }
@@ -112,8 +119,7 @@
     .week-day-dot { width: 5px; height: 5px; border-radius: 50%; }
     .week-day-events { border-top: 1px solid var(--border); padding-top: 10px; }
     .week-day-events-title { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
-
-    /* ── 시간대별 블록 뷰 ── */
+    /* 시간대별 블록 뷰 */
     .time-block-wrap { position: relative; }
     .time-row { display: flex; gap: 8px; min-height: 44px; }
     .time-label { font-size: 10px; color: var(--text2); width: 32px; flex-shrink: 0; padding-top: 2px; text-align: right; }
@@ -122,8 +128,7 @@
     .time-event-block:active { opacity: 0.7; }
     .time-event-title { font-size: 12px; font-weight: 700; }
     .time-event-sub { font-size: 10px; opacity: 0.8; margin-top: 1px; }
-
-    /* ── 월간 뷰 ── */
+    /* 월간 뷰 */
     .month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .month-nav-title { font-size: 15px; font-weight: 800; }
     .month-nav-btn { font-size: 18px; color: var(--text2); padding: 4px 10px; border-radius: 8px; background: var(--surface2); }
@@ -142,8 +147,7 @@
     .month-cell-dot { width: 5px; height: 5px; border-radius: 50%; }
     .month-selected-events { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
     .month-selected-title { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
-
-    /* ── 일정 이벤트 아이템 (공통) ── */
+    /* 일정 이벤트 아이템 */
     .event-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
     .event-item:last-child { border-bottom: none; }
     .event-color-bar { width: 3px; border-radius: 2px; align-self: stretch; flex-shrink: 0; min-height: 36px; }
@@ -153,11 +157,10 @@
     .event-badge { font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 5px; margin-left: 4px; }
     .event-badge-shared { background: #e8eeff; color: var(--blue); }
     .event-badge-repeat { background: #f0fdf4; color: var(--green); }
-
-    /* ── 일정 상세/수정 모달 ── */
+    /* 모달 */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; }
     .modal-overlay.show { display: block; }
-    .modal-sheet { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px 16px calc(20px + env(safe-area-inset-bottom)); max-height: 85vh; overflow-y: auto; z-index: 2001; }
+    .modal-sheet { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px 16px calc(20px + max(env(safe-area-inset-bottom), 12px)); max-height: 85vh; overflow-y: auto; z-index: 2001; }
     .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
     .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
     .modal-field { margin-bottom: 14px; }
@@ -169,7 +172,6 @@
     .repeat-btns { display: flex; gap: 6px; flex-wrap: wrap; }
     .repeat-btn { font-size: 12px; padding: 6px 12px; border-radius: 16px; font-weight: 600; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text2); cursor: pointer; }
     .repeat-btn.active { border-color: var(--blue); color: var(--blue); background: #e8eeff; }
-
     /* 메모 */
     .memo-item { padding: 11px 0; border-bottom: 1px solid var(--border); }
     .memo-item:last-child { border-bottom: none; }
@@ -224,16 +226,29 @@
     .team-memo-preview { font-size: 12px; color: var(--text2); margin-top: 8px; line-height: 1.5; }
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; }
     .overlay.show { display: block; }
-    .overlay-panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px 16px; max-height: 80vh; overflow-y: auto; z-index: 1001; }
+    .overlay-panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px 16px max(env(safe-area-inset-bottom), 20px); max-height: 80vh; overflow-y: auto; z-index: 1001; }
     .overlay-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 16px; }
     .overlay-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     .fade { animation: fadeIn 0.2s ease; }
-    /* 일정 추가 카드 접기/펼치기 */
     .sched-add-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
     .sched-add-header { display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; cursor: pointer; user-select: none; }
     .sched-add-body { display: none; border-top: 1px solid var(--border); padding: 14px; }
     .sched-add-body.open { display: block; }
+    /* 리포트 탭 */
+    .report-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden; cursor: pointer; }
+    .report-card-header { padding: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .report-card-title { font-size: 14px; font-weight: 700; }
+    .report-card-date { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    .report-card-arrow { font-size: 14px; color: var(--text2); transition: transform 0.2s; }
+    .report-card-arrow.open { transform: rotate(180deg); }
+    .report-card-body { display: none; border-top: 1px solid var(--border); padding: 14px; }
+    .report-card-body.open { display: block; }
+    .report-content { font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: var(--text); }
+    .report-content h1, .report-content h2, .report-content h3 { font-size: 14px; font-weight: 700; margin: 12px 0 6px; }
+    .report-content table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+    .report-content th, .report-content td { padding: 6px 8px; border: 1px solid var(--border); text-align: left; }
+    .report-content th { background: var(--surface2); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -312,22 +327,16 @@
 
     <!-- 일정 -->
     <div id="tab-schedule" class="tab-content fade">
-
-      <!-- 일정 추가 모달 -->
       <div class="modal-overlay" id="addEventModal" onclick="closeAddEventModal()"></div>
       <div class="modal-sheet" id="addEventModalSheet" style="display:none;">
         <div class="modal-handle"></div>
         <div id="addEventModalContent"></div>
       </div>
-
-      <!-- 뷰 전환 탭 -->
       <div class="card" style="padding:10px 14px;">
         <div class="cal-view-tabs">
           <div class="cal-view-tab active" id="view-tab-month" onclick="setCalView('month')">월간</div>
           <div class="cal-view-tab" id="view-tab-week" onclick="setCalView('week')">주간</div>
         </div>
-
-        <!-- 월간 뷰 -->
         <div id="cal-month-view">
           <div class="month-nav">
             <button class="month-nav-btn" onclick="moveMonth(-1)">‹</button>
@@ -346,8 +355,6 @@
           <div class="month-grid" id="monthGrid"></div>
           <div class="month-selected-events" id="monthSelectedEvents" style="display:none;"></div>
         </div>
-
-        <!-- 주간 뷰 -->
         <div id="cal-week-view" style="display:none;">
           <div class="week-nav">
             <button class="week-nav-btn" onclick="moveWeek(-1)">‹</button>
@@ -359,9 +366,7 @@
           <div class="week-day-events" id="weekDayEvents"></div>
         </div>
       </div>
-
-      <!-- FAB 추가 버튼 -->
-      <button onclick="openAddEventModal(selectedDate)" style="position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);right:max(16px, calc(50vw - 224px));width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;font-size:24px;box-shadow:0 4px 14px rgba(74,125,255,0.4);z-index:500;display:flex;align-items:center;justify-content:center;line-height:1;">+</button>
+      <button onclick="openAddEventModal(selectedDate)" style="position:fixed;bottom:calc(var(--nav-h) + max(env(safe-area-inset-bottom),12px) + 16px);right:max(16px, calc(50vw - 224px));width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;font-size:24px;box-shadow:0 4px 14px rgba(74,125,255,0.4);z-index:500;display:flex;align-items:center;justify-content:center;line-height:1;">+</button>
     </div>
 
     <!-- 메모 -->
@@ -417,7 +422,7 @@
         <div class="sales-period-tabs">
           <div class="period-tab active" onclick="setSalesPeriod('month')" id="period-month">이번달</div>
           <div class="period-tab" onclick="setSalesPeriod('last_month')" id="period-last_month">지난달</div>
-          <div class="period-tab" onclick="setSalesPeriod('today')" id="period-today">오늘</div>
+          <div class="period-tab" onclick="setSalesPeriod('week')" id="period-week">주간</div>
         </div>
         <div id="salesSummaryBox"><p class="empty">데이터 불러오는 중...</p></div>
       </div>
@@ -441,6 +446,17 @@
       </div>
       <div id="teamTrainerList"><p class="empty">데이터 불러오는 중...</p></div>
     </div>
+
+    <!-- 리포트 -->
+    <div id="tab-report" class="tab-content fade">
+      <div class="card" style="padding:10px 14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="card-label" style="margin-bottom:0;">📋 주간 리포트</span>
+          <button class="btn-sm" onclick="loadReports()">↻</button>
+        </div>
+      </div>
+      <div id="reportList"><p class="empty">리포트를 불러오는 중...</p></div>
+    </div>
   </div>
 
   <nav class="nav">
@@ -449,11 +465,11 @@
     <button class="nav-btn" onclick="switchTab('memo')" id="nav-memo"><span class="nav-icon">◪</span><span class="nav-label">메모</span></button>
     <button class="nav-btn" onclick="switchTab('sales')" id="nav-sales"><span class="nav-icon">₩</span><span class="nav-label">매출</span></button>
     <button class="nav-btn" onclick="switchTab('team')" id="nav-team"><span class="nav-icon">👥</span><span class="nav-label">팀</span></button>
+    <button class="nav-btn" onclick="switchTab('report')" id="nav-report"><span class="nav-icon">📋</span><span class="nav-label">리포트</span></button>
   </nav>
 </div>
 
 <script>
-// ── 유틸 ──
 function getLocalDateString(date=new Date()){
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 }
@@ -474,12 +490,10 @@ let currentMemoType='personal';
 let currentSalesPeriod='month', currentTab='home', currentSchedType='personal';
 let salesIntervalId=null;
 let openMemoSections={};
-
-// 캘린더 상태
-let calView='month'; // 'week' | 'month'
-let weekOffset=0;   // 현재 주에서 ±
-let monthOffset=0;  // 현재 달에서 ±
-let selectedDate=getLocalDateString(); // 선택된 날짜
+let calView='month';
+let weekOffset=0;
+let monthOffset=0;
+let selectedDate=getLocalDateString();
 
 const MEMO_TYPES={personal:{label:'개인',emoji:'👤'},branch:{label:'지점',emoji:'🏢'},trainer:{label:'트레이너',emoji:'💪'}};
 const DAY_MAP={일:0,월:1,화:2,수:3,목:4,금:5,토:6};
@@ -514,20 +528,10 @@ async function loadFromSupabase(userId){
     sb.from('focuses').select('*').eq('user_id',userId).gte('date',yesterday).lte('date',today).is('deleted_at',null)
   ]);
   schedules=(schedsRes.data||[]).map(s=>({
-    id:s.id,
-    user_id:s.user_id,
-    title:s.title,
-    date:s.date,
-    hour:s.hour,
-    minute:s.minute,
-    end_hour:s.end_hour??null,
-    end_minute:s.end_minute??null,
-    shared:s.shared,
+    id:s.id,user_id:s.user_id,title:s.title,date:s.date,hour:s.hour,minute:s.minute,
+    end_hour:s.end_hour??null,end_minute:s.end_minute??null,shared:s.shared,
     color:s.color==='#4a7dff'?'personal':s.color==='#f5a623'?'work':'urgent',
-    repeat_type:s.repeat_type||'none',
-    category:s.category||'personal',
-    note:s.note||'',
-    fromSupabase:true
+    repeat_type:s.repeat_type||'none',category:s.category||'personal',note:s.note||'',fromSupabase:true
   }));
   memos=(memosRes.data||[]).map(m=>({id:m.id,text:m.text,type:m.category||'personal',trainer_name:m.trainer_name||null,pinned:m.pinned,author_name:m.author_name||null,date:m.created_at,fromSupabase:true}));
   focuses=(focusesRes.data||[]).map(f=>({id:f.id,text:f.text,done:f.done,date:f.date||getLocalDateString(),fromSupabase:true}));
@@ -540,10 +544,10 @@ async function loadSalesFromSupabase(){
     const[summaryRes,trainersRes]=await Promise.all([sb.from('sales_summary').select('*').eq('branch',BRANCH),sb.from('sales_trainers').select('*')]);
     salesSummaryData={};
     for(const row of(summaryRes.data||[]))salesSummaryData[row.period_type]=row;
-    trainerSalesData={month:[],today:[],last_month:[]};
+    trainerSalesData={month:[],week:[],today:[],last_month:[]};
     const nameSet=new Set();
     for(const row of(trainersRes.data||[])){if(trainerSalesData[row.period_type])trainerSalesData[row.period_type].push(row);nameSet.add(row.trainer_name);}
-    for(const p of['month','today','last_month'])if(trainerSalesData[p])trainerSalesData[p].sort((a,b)=>Number(b.net_sales||0)-Number(a.net_sales||0));
+    for(const p of['month','week','today','last_month'])if(trainerSalesData[p])trainerSalesData[p].sort((a,b)=>Number(b.net_sales||0)-Number(a.net_sales||0));
     trainerNames=[...nameSet].sort();
     renderTrainerSelects();renderHomeSales();
     if(currentTab==='sales')renderSalesTab();
@@ -559,13 +563,16 @@ function renderHomeSales(){
   if(ld){const diff=grand-Number(ld.grand_total||0),cls=diff>0?'compare-up':diff<0?'compare-down':'compare-same',sign=diff>0?'▲':diff<0?'▼':'=',pct2=Number(ld.grand_total||0)>0?((diff/Number(ld.grand_total||0))*100).toFixed(1):0;cmp=`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:var(--text2);">지난달 대비</span><span class="compare-badge ${cls}">${sign} ${Math.abs(diff).toLocaleString()}원 (${Math.abs(pct2)}%)</span></div>`;}
   document.getElementById('homeSalesBox').innerHTML=`<div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div><div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div><div style="font-size:11px;color:var(--text2);text-align:right;margin-top:4px;">${over>0?`🎉 목표 ${over.toLocaleString()}원 초과!`:`목표까지 ${remaining.toLocaleString()}원 남음`}</div></div>${cmp}`;
 }
-function setSalesPeriod(p){currentSalesPeriod=p;['month','last_month','today'].forEach(x=>{const el=document.getElementById('period-'+x);if(el)el.classList.toggle('active',x===p);});renderSalesTab();}
+function setSalesPeriod(p){currentSalesPeriod=p;['month','last_month','week'].forEach(x=>{const el=document.getElementById('period-'+x);if(el)el.classList.toggle('active',x===p);});renderSalesTab();}
 function renderSalesTab(){
   const d=salesSummaryData[currentSalesPeriod],box=document.getElementById('salesSummaryBox');
-  if(!d){box.innerHTML='<p class="empty">데이터가 없어요</p>';}
-  else{
+  if(currentSalesPeriod==='week'){
+    box.innerHTML='';
+  } else if(!d){
+    box.innerHTML='<p class="empty">데이터가 없어요</p>';
+  } else {
     const grand=Number(d.grand_total||0),target=100000000,pct=Math.min((grand/target)*100,100);
-    box.innerHTML=`<div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>${currentSalesPeriod!=='today'?`<div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>`:''}${currentSalesPeriod==='month'?`<div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div></div>`:''}`;
+    box.innerHTML=`<div class="stat-row"><span class="stat-label">회원권</span><span class="stat-value">${Number(d.health_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label">PT</span><span class="stat-value">${Number(d.pt_total||0).toLocaleString()}원</span></div><div class="stat-row"><span class="stat-label" style="font-weight:700;">총합계</span><span class="stat-total">${grand.toLocaleString()}원</span></div>${currentSalesPeriod!=='week'?`<div class="stat-row"><span class="stat-label">신규</span><span class="stat-value">${Number(d.member_new||0)}명</span></div><div class="stat-row"><span class="stat-label">재등록</span><span class="stat-value">${Number(d.member_renewal||0)}명 / 목표 ${Number(d.renewal_target||50)}명</span></div>`:''}${currentSalesPeriod==='month'?`<div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;"><span>목표 ${target.toLocaleString()}원</span><span>${pct.toFixed(1)}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;"></div></div></div>`:''}`;
   }
   const compareCard=document.getElementById('compareCard');
   if(currentSalesPeriod==='month'&&salesSummaryData['last_month']){
@@ -573,10 +580,10 @@ function renderSalesTab(){
     document.getElementById('compareBox').innerHTML=[{label:'회원권',cur:Number(m?.health_total||0),prev:Number(lm?.health_total||0)},{label:'PT매출',cur:Number(m?.pt_total||0),prev:Number(lm?.pt_total||0)},{label:'총합계',cur:Number(m?.grand_total||0),prev:Number(lm?.grand_total||0)}].map(f=>{const diff=f.cur-f.prev,cls=diff>0?'compare-up':diff<0?'compare-down':'compare-same',sign=diff>0?'▲':diff<0?'▼':'=';return`<div class="stat-row"><span class="stat-label">${f.label}</span><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;color:var(--text2);">${f.prev.toLocaleString()}→${f.cur.toLocaleString()}</span><span class="compare-badge ${cls}">${sign}${Math.abs(diff).toLocaleString()}</span></div></div>`;}).join('');
     compareCard.style.display='block';
   }else{compareCard.style.display='none';}
-  const periodKey=currentSalesPeriod==='last_month'?'last_month':currentSalesPeriod==='today'?'today':'month';
+  const periodKey=currentSalesPeriod==='last_month'?'last_month':currentSalesPeriod==='week'?'week':'month';
   const trainers=trainerSalesData[periodKey]||[],list=document.getElementById('trainerSalesList');
   if(!trainers.length){list.innerHTML='<p class="empty">데이터가 없어요</p>';return;}
-  list.innerHTML=trainers.map(t=>{const sales=Number(t.net_sales||0),target=Number(t.target||0),rate=target>0?(sales/target*100):0,rateClass=rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low',pct=Math.min(rate,100);return`<div class="trainer-card"><div class="trainer-card-header"><span class="trainer-name">${t.trainer_name}</span><span class="trainer-sales">${sales.toLocaleString()}원</span></div>${target>0?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span class="${rateClass}">${rate.toFixed(1)}% 달성</span><span style="font-size:11px;color:var(--text2);">목표 ${target.toLocaleString()}원</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${rate>=100?'var(--green)':rate>=80?'var(--amber)':'var(--blue)'};"></div></div>`:''}</div>`;}).join('');
+  list.innerHTML=trainers.map(t=>{const sales=Number(t.net_sales||0),target=Number(t.target||0),rate=target>0?(sales/target*100):0,rateClass=rate>=100?'rate-good':rate>=80?'rate-mid':'rate-low',pct=Math.min(rate,100);return`<div class="trainer-card"><div class="trainer-card-header"><span class="trainer-name">${t.trainer_name}</span><span class="trainer-sales">${sales.toLocaleString()}원</span></div>${target>0&&currentSalesPeriod==='month'?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span class="${rateClass}">${rate.toFixed(1)}% 달성</span><span style="font-size:11px;color:var(--text2);">목표 ${target.toLocaleString()}원</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${rate>=100?'var(--green)':rate>=80?'var(--amber)':'var(--blue)'};"></div></div>`:''}</div>`;}).join('');
 }
 function renderTeamTab(){
   const container=document.getElementById('teamTrainerList'),trainers=trainerSalesData['month']||[];
@@ -598,6 +605,42 @@ async function addTrainerMemoFromOverlay(trainerName){
 }
 function closeTrainerOverlay(){document.getElementById('trainerOverlay').classList.remove('show');document.getElementById('trainerPanel').style.display='none';}
 function renderTrainerSelects(){const opts=`<option value="">트레이너 선택...</option>`+trainerNames.map(n=>`<option value="${n}">${n}</option>`).join('');document.getElementById('memoTrainerSelect').innerHTML=opts;}
+
+// ── 리포트 ──
+async function loadReports(){
+  const list=document.getElementById('reportList');
+  list.innerHTML='<p class="empty">불러오는 중...</p>';
+  try{
+    const{data,error}=await sb.from('weekly_reports').select('*').order('created_at',{ascending:false}).limit(10);
+    if(error||!data||!data.length){list.innerHTML='<p class="empty">리포트가 없어요</p>';return;}
+    list.innerHTML=data.map((r,i)=>{
+      const date=new Date(r.created_at);
+      const dateStr=`${date.getFullYear()}년 ${date.getMonth()+1}월 ${date.getDate()}일`;
+      const period=r.week_start?`${r.week_start} ~ ${r.week_end||''}`:dateStr;
+      const content=r.content||r.report_text||r.summary||JSON.stringify(r);
+      const safeContent=content.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return`<div class="report-card">
+        <div class="report-card-header" onclick="toggleReport('report-${i}')">
+          <div>
+            <div class="report-card-title">📋 주간 리포트</div>
+            <div class="report-card-date">${period}</div>
+          </div>
+          <span class="report-card-arrow" id="arrow-report-${i}">▼</span>
+        </div>
+        <div class="report-card-body" id="report-${i}">
+          <div class="report-content">${safeContent}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){list.innerHTML='<p class="empty">리포트를 불러오지 못했어요</p>';}
+}
+function toggleReport(id){
+  const body=document.getElementById(id);
+  const arrow=document.getElementById('arrow-'+id);
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  if(arrow)arrow.classList.toggle('open',!isOpen);
+}
 
 // ── 마이그레이션 ──
 async function migrateFromLocalStorage(userId){
@@ -630,10 +673,10 @@ function switchTab(tab){
   document.getElementById('nav-'+tab).classList.add('active');
   currentTab=tab;
   if(tab==='schedule')renderCalendar();
+  if(tab==='report')loadReports();
   renderAll();
 }
 
-// ── 파싱 유틸 ──
 function parseNaturalDate(input){
   const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),dow=today.getDay();
   if(input.startsWith('오늘'))return{date:today,rest:input.slice(2).trim()};
@@ -651,14 +694,11 @@ function parseTimeAndTitle(rest){
   const co=rest.match(/^(\d{1,2}):(\d{2})\s+(.+)$/);if(co)return{hour:+co[1],minute:+co[2],title:co[3]};
   return null;
 }
-function fmt(dateStr){
-  const d=new Date(dateStr+'T00:00:00');
-  return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});
-}
+function fmt(dateStr){const d=new Date(dateStr+'T00:00:00');return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',weekday:'short'});}
 function fmtTime(h,m){const p=h<12?'AM':'PM';return`${p} ${h%12||12}:${String(m).padStart(2,'0')}`;}
 function fmtDate(d){return new Date(d).toLocaleString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
 
-// ── 일정 추가 모달 (구글 캘린더 스타일) ──
+// ── 일정 추가 모달 ──
 function openAddEventModal(dateStr){
   dateStr=dateStr||getLocalDateString();
   document.getElementById('addEventModal').classList.add('show');
@@ -669,9 +709,7 @@ function openAddEventModal(dateStr){
   document.getElementById('addEventModalContent').innerHTML=`
     <div class="modal-handle"></div>
     <div style="font-size:15px;font-weight:800;margin-bottom:16px;">새 일정</div>
-    <div style="margin-bottom:12px;">
-      <input id="newEventTitle" class="modal-input" placeholder="제목" style="font-size:16px;font-weight:600;" />
-    </div>
+    <div style="margin-bottom:12px;"><input id="newEventTitle" class="modal-input" placeholder="제목" style="font-size:16px;font-weight:600;" /></div>
     <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:12px;">
       <span style="font-size:16px;">📅</span>
       <input id="newEventDate" type="date" class="modal-input" value="${dateStr}" style="font-size:14px;flex:1;" />
@@ -693,23 +731,16 @@ function openAddEventModal(dateStr){
     <div style="display:flex;gap:8px;">
       <button class="btn-sm" style="flex:1;" onclick="closeAddEventModal()">취소</button>
       <button class="btn-primary" style="flex:2;" onclick="saveNewEvent()">저장</button>
-    </div>
-  `;
+    </div>`;
   _newEventCat='personal';
   document.getElementById('newEventTitle').focus();
 }
 let _newEventCat='personal';
 function setNewEventCat(cat){
   _newEventCat=cat;
-  ['personal','work','urgent'].forEach(c=>{
-    const btn=document.getElementById('cat-'+c);
-    btn.className='sched-cat-btn'+(c===cat?' sel-'+c:'');
-  });
+  ['personal','work','urgent'].forEach(c=>{const btn=document.getElementById('cat-'+c);btn.className='sched-cat-btn'+(c===cat?' sel-'+c:'');});
 }
-function closeAddEventModal(){
-  document.getElementById('addEventModal').classList.remove('show');
-  document.getElementById('addEventModalSheet').style.display='none';
-}
+function closeAddEventModal(){document.getElementById('addEventModal').classList.remove('show');document.getElementById('addEventModalSheet').style.display='none';}
 async function saveNewEvent(){
   const title=document.getElementById('newEventTitle')?.value.trim();
   const dateStr=document.getElementById('newEventDate')?.value;
@@ -721,16 +752,8 @@ async function saveNewEvent(){
   const [eh,em]=endTime.split(':').map(Number);
   const colorMap={personal:'#4a7dff',work:'#f5a623',urgent:'#ff5e3a'};
   const isShared=_newEventCat==='work'||_newEventCat==='urgent';
-  const{data}=await sb.from('schedules').insert({
-    user_id:currentUser.id,title,date:dateStr,
-    hour:sh,minute:sm,end_hour:eh,end_minute:em,
-    color:colorMap[_newEventCat],shared:isShared,
-    status:'pending',repeat_type:'none',category:_newEventCat,note
-  }).select().single();
-  if(data){
-    schedules.push({id:data.id,title,date:dateStr,hour:sh,minute:sm,end_hour:eh,end_minute:em,
-      color:_newEventCat,shared:isShared,repeat_type:'none',category:_newEventCat,note,fromSupabase:true});
-  }
+  const{data}=await sb.from('schedules').insert({user_id:currentUser.id,title,date:dateStr,hour:sh,minute:sm,end_hour:eh,end_minute:em,color:colorMap[_newEventCat],shared:isShared,status:'pending',repeat_type:'none',category:_newEventCat,note}).select().single();
+  if(data){schedules.push({id:data.id,title,date:dateStr,hour:sh,minute:sm,end_hour:eh,end_minute:em,color:_newEventCat,shared:isShared,repeat_type:'none',category:_newEventCat,note,fromSupabase:true});}
   closeAddEventModal();renderAll();renderCalendar();
 }
 async function deleteSchedule(id){
@@ -739,7 +762,7 @@ async function deleteSchedule(id){
   renderAll();renderCalendar();
 }
 
-// ── 일정 상세/수정 모달 (compact) ──
+// ── 일정 모달 ──
 function openEventModal(schedId){
   const s=schedules.find(x=>x.id===schedId);if(!s)return;
   const isOwner=s.user_id===currentUser?.id;
@@ -754,10 +777,7 @@ function openEventModal(schedId){
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
       <div style="width:4px;height:28px;border-radius:2px;background:${colorHex};flex-shrink:0;"></div>
       <div style="flex:1;">
-        ${isOwner
-          ?`<input class="modal-input" id="editTitle" value="${s.title}" style="font-size:16px;font-weight:800;padding:0;background:none;" />`
-          :`<div style="font-size:16px;font-weight:800;">${s.title}</div>`
-        }
+        ${isOwner?`<input class="modal-input" id="editTitle" value="${s.title}" style="font-size:16px;font-weight:800;padding:0;background:none;" />`:`<div style="font-size:16px;font-weight:800;">${s.title}</div>`}
         <div style="font-size:11px;color:var(--text2);margin-top:2px;">${fmt(s.date)}${s.shared?'<span class="event-badge event-badge-shared" style="margin-left:6px;">공유</span>':''}</div>
       </div>
     </div>
@@ -773,9 +793,7 @@ function openEventModal(schedId){
       <input id="editEnd" type="time" class="modal-input" value="${endVal}" style="font-size:13px;flex:1;padding:4px 8px;" />
     </div>
     <div style="padding:10px 0;border-top:1px solid var(--border);">
-      <div class="repeat-btns">
-        ${['none','daily','weekly','monthly'].map(r=>`<button class="repeat-btn${(s.repeat_type||'none')===r?' active':''}" onclick="selectRepeat('${r}',this)">${REPEAT_LABELS[r]}</button>`).join('')}
-      </div>
+      <div class="repeat-btns">${['none','daily','weekly','monthly'].map(r=>`<button class="repeat-btn${(s.repeat_type||'none')===r?' active':''}" onclick="selectRepeat('${r}',this)">${REPEAT_LABELS[r]}</button>`).join('')}</div>
     </div>
     <div style="padding:10px 0;border-top:1px solid var(--border);">
       <textarea id="editNote" class="modal-input" rows="2" placeholder="메모..." style="resize:none;font-size:13px;line-height:1.6;">${s.note||''}</textarea>
@@ -783,20 +801,13 @@ function openEventModal(schedId){
     <div style="display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border);">
       <button class="btn-danger" onclick="deleteSchedule('${s.id}');closeEventModal();">삭제</button>
       <button class="btn-primary" style="flex:1;" onclick="saveEventEdit('${s.id}')">저장</button>
-    </div>`
-    :`<div style="padding:12px 0;border-top:1px solid var(--border);">
+    </div>`:`<div style="padding:12px 0;border-top:1px solid var(--border);">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:14px;">🕐</span><span style="font-size:13px;">${fmtTime(s.hour,s.minute)}${endVal?' ~ '+endVal:''}</span></div>
         ${s.note?`<div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:14px;">📝</span><span style="font-size:13px;color:var(--text2);line-height:1.6;">${s.note}</span></div>`:''}
-      </div>`
-    }
-  `;
+      </div>`}`;
 }
 let _editRepeat='none';
-function selectRepeat(val,btn){
-  _editRepeat=val;
-  document.querySelectorAll('.repeat-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-}
+function selectRepeat(val,btn){_editRepeat=val;document.querySelectorAll('.repeat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 async function saveEventEdit(id){
   const title=document.getElementById('editTitle')?.value.trim();
   const dateStr=document.getElementById('editDate')?.value||'';
@@ -812,83 +823,44 @@ async function saveEventEdit(id){
   schedules=schedules.map(s=>s.id===id?{...s,...updates}:s);
   closeEventModal();renderAll();renderCalendar();
 }
-function closeEventModal(){
-  document.getElementById('eventModal').classList.remove('show');
-  document.getElementById('eventModalSheet').style.display='none';
-}
+function closeEventModal(){document.getElementById('eventModal').classList.remove('show');document.getElementById('eventModalSheet').style.display='none';}
 
-// ── 캘린더 뷰 전환 ──
+// ── 캘린더 ──
 function setCalView(view){
   calView=view;
-  ['week','month'].forEach(v=>{
-    document.getElementById('view-tab-'+v).classList.toggle('active',v===view);
-    document.getElementById('cal-'+v+'-view').style.display=v===view?'block':'none';
-  });
+  ['week','month'].forEach(v=>{document.getElementById('view-tab-'+v).classList.toggle('active',v===view);document.getElementById('cal-'+v+'-view').style.display=v===view?'block':'none';});
   renderCalendar();
 }
-
-// ── 주간 뷰 ──
 function moveWeek(dir){weekOffset+=dir;selectedDate=getWeekDates()[0];renderCalendar();}
 function getWeekDates(){
-  const now=new Date();
-  const monday=new Date(now);
-  const dow=now.getDay();
-  const diff=dow===0?-6:1-dow;
+  const now=new Date();const monday=new Date(now);const dow=now.getDay();const diff=dow===0?-6:1-dow;
   monday.setDate(now.getDate()+diff+(weekOffset*7));
   return Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return getLocalDateString(d);});
 }
 function renderWeekView(){
-  const dates=getWeekDates();
-  const todayStr=getLocalDateString();
+  const dates=getWeekDates();const todayStr=getLocalDateString();
   const start=dates[0],end=dates[6];
   const startD=new Date(start+'T00:00:00'),endD=new Date(end+'T00:00:00');
-  document.getElementById('weekNavTitle').textContent=
-    `${startD.getMonth()+1}월 ${startD.getDate()}일 – ${endD.getMonth()+1}월 ${endD.getDate()}일`;
-
+  document.getElementById('weekNavTitle').textContent=`${startD.getMonth()+1}월 ${startD.getDate()}일 – ${endD.getMonth()+1}월 ${endD.getDate()}일`;
   const DAY_LABELS=['월','화','수','목','금','토','일'];
-  document.getElementById('weekDaysHeader').innerHTML=DAY_LABELS.map((l,i)=>
-    `<div class="week-day-label${i===5?' sat':i===6?' sun':''}">${l}</div>`
-  ).join('');
-
+  document.getElementById('weekDaysHeader').innerHTML=DAY_LABELS.map((l,i)=>`<div class="week-day-label${i===5?' sat':i===6?' sun':''}">${l}</div>`).join('');
   document.getElementById('weekDaysRow').innerHTML=dates.map((dateStr,i)=>{
     const dayScheds=schedules.filter(s=>s.date===dateStr);
-    const isToday=dateStr===todayStr;
-    const isSel=dateStr===selectedDate;
+    const isToday=dateStr===todayStr;const isSel=dateStr===selectedDate;
     const dots=dayScheds.slice(0,3).map(s=>`<div class="week-day-dot" style="background:${COLORS[s.color]||COLORS.personal};"></div>`).join('');
     const dayNum=new Date(dateStr+'T00:00:00').getDate();
-    return`<div class="week-day-cell${isToday?' today':''}${isSel?' selected':''}" onclick="selectDay('${dateStr}')">
-      <div class="week-day-num">${dayNum}</div>
-      <div class="week-day-dots">${dots}</div>
-    </div>`;
+    return`<div class="week-day-cell${isToday?' today':''}${isSel?' selected':''}" onclick="selectDay('${dateStr}')"><div class="week-day-num">${dayNum}</div><div class="week-day-dots">${dots}</div></div>`;
   }).join('');
-
   renderWeekDayEvents();
 }
-function selectDay(dateStr){
-  selectedDate=dateStr;
-  renderWeekView();
-  renderMonthView();
-}
-function tapDay(dateStr){
-  // 이미 선택된 날 다시 탭하면 일정 추가 모달
-  if(selectedDate===dateStr){
-    openAddEventModal(dateStr);
-  } else {
-    selectedDate=dateStr;
-    renderWeekView();
-    renderMonthView();
-  }
-}
+function selectDay(dateStr){selectedDate=dateStr;renderWeekView();renderMonthView();}
+function tapDay(dateStr){if(selectedDate===dateStr){openAddEventModal(dateStr);}else{selectedDate=dateStr;renderWeekView();renderMonthView();}}
 function renderWeekDayEvents(){
   const dayScheds=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   const selD=new Date(selectedDate+'T00:00:00');
   const title=`${selD.getMonth()+1}월 ${selD.getDate()}일 (${['일','월','화','수','목','금','토'][selD.getDay()]})`;
   const container=document.getElementById('weekDayEvents');
-  if(!dayScheds.length){
-    container.innerHTML=`<p class="week-day-events-title">${title}</p><p class="empty" style="padding:8px 0;">일정이 없어요</p>`;
-    return;
-  }
-  // 시간대별 블록 뷰
+  if(!dayScheds.length){container.innerHTML=`<p class="week-day-events-title">${title}</p><p class="empty" style="padding:8px 0;">일정이 없어요</p>`;return;}
   const hours=[...new Set(dayScheds.map(s=>s.hour))].sort((a,b)=>a-b);
   let html=`<p class="week-day-events-title">${title}</p><div class="time-block-wrap">`;
   hours.forEach(h=>{
@@ -897,85 +869,39 @@ function renderWeekDayEvents(){
     items.forEach(s=>{
       const colorHex=COLORS[s.color]||COLORS.personal;
       const lightHex=s.color==='personal'?'#e8eeff':s.color==='work'?'#fff8ec':'#fff0ed';
-      html+=`<div class="time-event-block" style="background:${lightHex};border-left:3px solid ${colorHex};" onclick="openEventModal('${s.id}')">
-        <div class="time-event-title" style="color:${colorHex};">${s.title}</div>
-        <div class="time-event-sub" style="color:${colorHex};">${fmtTime(s.hour,s.minute)}${s.shared?' · 공유':''}${s.repeat_type&&s.repeat_type!=='none'?' · 반복':''}</div>
-        ${s.note?`<div style="font-size:10px;color:${colorHex};opacity:0.75;margin-top:2px;">${s.note.length>30?s.note.slice(0,30)+'...':s.note}</div>`:''}
-      </div>`;
+      html+=`<div class="time-event-block" style="background:${lightHex};border-left:3px solid ${colorHex};" onclick="openEventModal('${s.id}')"><div class="time-event-title" style="color:${colorHex};">${s.title}</div><div class="time-event-sub" style="color:${colorHex};">${fmtTime(s.hour,s.minute)}${s.shared?' · 공유':''}${s.repeat_type&&s.repeat_type!=='none'?' · 반복':''}</div>${s.note?`<div style="font-size:10px;color:${colorHex};opacity:0.75;margin-top:2px;">${s.note.length>30?s.note.slice(0,30)+'...':s.note}</div>`:''}</div>`;
     });
     html+=`</div></div>`;
   });
   html+=`</div>`;
   container.innerHTML=html;
 }
-
-// ── 월간 뷰 ──
 function moveMonth(dir){monthOffset+=dir;renderCalendar();}
 function renderMonthView(){
-  const now=new Date();
-  const target=new Date(now.getFullYear(),now.getMonth()+monthOffset,1);
+  const now=new Date();const target=new Date(now.getFullYear(),now.getMonth()+monthOffset,1);
   const year=target.getFullYear(),month=target.getMonth();
   document.getElementById('monthNavTitle').textContent=`${year}년 ${month+1}월`;
-
-  const firstDay=new Date(year,month,1).getDay(); // 0=일
-  const lastDate=new Date(year,month+1,0).getDate();
-  const todayStr=getLocalDateString();
-
+  const firstDay=new Date(year,month,1).getDay();const lastDate=new Date(year,month+1,0).getDate();const todayStr=getLocalDateString();
   let cells=[];
-  // 이전 달 빈칸
-  for(let i=0;i<firstDay;i++){
-    const d=new Date(year,month,-(firstDay-1-i));
-    cells.push({dateStr:getLocalDateString(d),otherMonth:true});
-  }
-  // 이번 달
-  for(let d=1;d<=lastDate;d++){
-    cells.push({dateStr:`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,otherMonth:false});
-  }
-  // 다음 달 빈칸 (6주 고정)
-  while(cells.length<42){
-    const d=new Date(year,month+1,cells.length-firstDay-lastDate+1);
-    cells.push({dateStr:getLocalDateString(d),otherMonth:true});
-  }
-
+  for(let i=0;i<firstDay;i++){const d=new Date(year,month,-(firstDay-1-i));cells.push({dateStr:getLocalDateString(d),otherMonth:true});}
+  for(let d=1;d<=lastDate;d++){cells.push({dateStr:`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,otherMonth:false});}
+  while(cells.length<42){const d=new Date(year,month+1,cells.length-firstDay-lastDate+1);cells.push({dateStr:getLocalDateString(d),otherMonth:true});}
   document.getElementById('monthGrid').innerHTML=cells.map(({dateStr,otherMonth})=>{
     const dayScheds=schedules.filter(s=>s.date===dateStr);
-    const isToday=dateStr===todayStr;
-    const isSel=dateStr===selectedDate;
+    const isToday=dateStr===todayStr;const isSel=dateStr===selectedDate;
     const dayNum=new Date(dateStr+'T00:00:00').getDate();
     const dots=dayScheds.slice(0,4).map(s=>`<div class="month-cell-dot" style="background:${COLORS[s.color]||COLORS.personal};"></div>`).join('');
-    return`<div class="month-cell${otherMonth?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" onclick="tapDay('${dateStr}')">
-      <div class="month-cell-num">${dayNum}</div>
-      <div class="month-cell-dots">${dots}</div>
-    </div>`;
+    return`<div class="month-cell${otherMonth?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" onclick="tapDay('${dateStr}')"><div class="month-cell-num">${dayNum}</div><div class="month-cell-dots">${dots}</div></div>`;
   }).join('');
-
-  // 선택된 날 이벤트
   const selScheds=schedules.filter(s=>s.date===selectedDate).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   const selEvents=document.getElementById('monthSelectedEvents');
   if(selScheds.length){
     const selD=new Date(selectedDate+'T00:00:00');
-    const title=`${selD.getMonth()+1}월 ${selD.getDate()}일`;
     selEvents.style.display='block';
-    selEvents.innerHTML=`<p class="month-selected-title">${title} · ${selScheds.length}개</p>`+
-      selScheds.map(s=>{
-        const colorHex=COLORS[s.color]||COLORS.personal;
-        return`<div class="event-item" onclick="openEventModal('${s.id}')">
-          <div class="event-color-bar" style="background:${colorHex};"></div>
-          <div class="event-info">
-            <div class="event-title">${s.title}${s.shared?'<span class="event-badge event-badge-shared">공유</span>':''}${s.repeat_type&&s.repeat_type!=='none'?`<span class="event-badge event-badge-repeat">${REPEAT_LABELS[s.repeat_type]}</span>`:''}</div>
-            <div class="event-meta">${fmtTime(s.hour,s.minute)}</div>
-          </div>
-        </div>`;
-      }).join('');
-  }else{
-    selEvents.style.display='none';
-  }
+    selEvents.innerHTML=`<p class="month-selected-title">${selD.getMonth()+1}월 ${selD.getDate()}일 · ${selScheds.length}개</p>`+selScheds.map(s=>{const colorHex=COLORS[s.color]||COLORS.personal;return`<div class="event-item" onclick="openEventModal('${s.id}')"><div class="event-color-bar" style="background:${colorHex};"></div><div class="event-info"><div class="event-title">${s.title}${s.shared?'<span class="event-badge event-badge-shared">공유</span>':''}${s.repeat_type&&s.repeat_type!=='none'?`<span class="event-badge event-badge-repeat">${REPEAT_LABELS[s.repeat_type]}</span>`:''}</div><div class="event-meta">${fmtTime(s.hour,s.minute)}</div></div></div>`;}).join('');
+  }else{selEvents.style.display='none';}
 }
-
-function renderCalendar(){
-  if(calView==='week')renderWeekView();
-  else renderMonthView();
-}
+function renderCalendar(){if(calView==='week')renderWeekView();else renderMonthView();}
 
 // ── 메모 ──
 function toggleMemoAdd(){const body=document.getElementById('memoAddBody'),arrow=document.getElementById('memoAddArrow');const isOpen=body.classList.contains('open');body.classList.toggle('open',!isOpen);arrow.style.transform=isOpen?'':'rotate(180deg)';}
@@ -1020,7 +946,7 @@ async function deleteFocus(id){
 
 // ── 렌더 ──
 function renderHome(){
-  const now=new Date(),todayStr=getLocalDateString(),yesterday=getLocalDateString(new Date(Date.now()-86400000));
+  const todayStr=getLocalDateString(),yesterday=getLocalDateString(new Date(Date.now()-86400000));
   const todayScheds=schedules.filter(s=>s.date===todayStr).sort((a,b)=>a.hour*60+a.minute-b.hour*60-b.minute);
   document.getElementById('homeTodayScheds').innerHTML=todayScheds.length?todayScheds.map(s=>`<div class="row"><div style="display:flex;align-items:center;gap:8px;"><div class="sched-dot" style="background:${COLORS[s.color]||COLORS.personal};"></div><span style="font-size:14px;">${s.title}</span></div><span style="font-size:12px;color:var(--text2);">${fmtTime(s.hour,s.minute)}</span></div>`).join(''):'<p class="empty">오늘 일정이 없어요</p>';
   const overdueFocuses=focuses.filter(f=>f.date===yesterday&&!f.done);
@@ -1070,7 +996,6 @@ async function initApp(user){
   }catch(e){console.error('초기화 오류:',e);renderAll();}
 }
 
-// ── 세션 ──
 let appInitialized=false;
 sb.auth.onAuthStateChange((event,session)=>{
   if(event==='SIGNED_OUT'){appInitialized=false;currentUser=null;currentProfile=null;showLoginScreen();}
